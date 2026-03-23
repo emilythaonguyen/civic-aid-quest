@@ -1,59 +1,62 @@
 import { useState } from "react";
 
-const citizenData = {
-  persona: "Citizen User",
-  role: "Community Member reporting a service issue",
-  pov: "A concerned resident needs a way to know their service request is being acted on because once they submit it, they feel completely invisible — with no confirmation, no updates, and no idea if anyone even received it.",
+const sandraData = {
+  persona: "Sandra Chen",
+  role: "Senior Service Officer, Local Government Council",
+  pov: "A senior service officer needs a way to maintain visibility of every request from receipt to resolution because the current process — shared inboxes, manual spreadsheets, and email-based handoffs — causes jobs to fall through the gaps, makes the team look incompetent, and leaves her managing paper rather than managing work.",
   painPoints: [
-    "No confirmation after submitting a request",
-    "No visibility into request status without logging back in",
-    "Uncertainty about whether the right department received it",
-    "Generic or absent communication during delays",
+    "Requests arrive with insufficient detail via free-text emails",
+    "No automatic resident acknowledgements after submission",
+    "Loses visibility once a job is forwarded to field teams",
+    "Spreadsheet tracking is error-prone and manual",
+    "Communication failures make the team look incompetent even when work is done",
+    "Overdue items must be spotted manually",
   ],
   hmw: [
-    "How might we make a citizen feel heard the moment they submit a request?",
-    "How might we reduce the anxiety of waiting without requiring citizens to log back in?",
-    "How might we give citizens confidence that their request reached the right person?",
-    "How might we make status updates feel personal rather than automated and generic?",
-    "How might we help citizens who aren't tech-savvy still successfully submit a request?",
-    "How might we let citizens know when something is delayed without making them feel ignored?",
+    "How might we make Sandra feel confident that every request has enough detail to act on immediately?",
+    "How might we give Sandra real-time visibility of a job's status after she forwards it?",
+    "How might we eliminate the manual data entry that drains Sandra's time and morale?",
+    "How might we ensure residents receive instant acknowledgement so Sandra isn't fielding complaint calls?",
+    "How might we surface overdue items automatically instead of relying on Sandra to spot them?",
+    "How might we let Sandra spend more time on complex, human-facing work instead of repetitive admin?",
   ],
 };
 
-const staffData = {
-  persona: "Staff User",
-  role: "Government Service Staff managing incoming tickets",
-  pov: "A government service staff member needs a way to quickly understand and prioritize incoming requests because they're drowning in unstructured submissions with no context — and every minute spent manually reading and sorting is a minute not spent actually resolving issues.",
+const marcusData = {
+  persona: "Marcus",
+  role: "Field Operations Coordinator, Local Government Council",
+  pov: "A field operations coordinator needs a way to receive complete, reliable job information and track crew progress in one place because the current system — WhatsApp dispatch, personal spreadsheets, and informal update handoffs — causes rework, missed completions, and an end-of-day admin backlog that keeps him from the hands-on work he values.",
   painPoints: [
-    "Manual reading and sorting of every incoming request",
-    "No clear priority signals on new submissions",
-    "High-urgency tickets get buried under low-priority ones",
-    "Lack of context when picking up someone else's ticket",
+    "Incomplete job details cause crews to attend wrong locations",
+    "No formal dispatch system — WhatsApp is used instead",
+    "Three separate spreadsheets that do not sync with each other",
+    "Completion updates fall through during busy periods",
+    "Stopped raising improvement ideas after proposals went nowhere",
   ],
   hmw: [
-    "How might we help staff instantly understand the urgency of a new ticket without reading the full description?",
-    "How might we reduce the time between a request coming in and a staff member acting on it?",
-    "How might we prevent high-priority tickets from getting buried under low-priority ones?",
-    "How might we give staff the context they need to resolve a ticket faster?",
-    "How might we alert supervisors automatically before an SLA breach happens — not after?",
-    "How might we make the handoff between staff members seamless when a ticket changes hands?",
+    "How might we ensure field crews always have complete job information before attending a site?",
+    "How might we replace WhatsApp dispatch with a system that provides an audit trail?",
+    "How might we give Marcus a single source of truth for all open jobs instead of three spreadsheets?",
+    "How might we make job completion logging so fast that updates never fall through on busy days?",
+    "How might we reduce Marcus's end-of-day admin backlog so he can return to field-facing work?",
+    "How might we make Marcus feel that raising improvement ideas is worthwhile again?",
   ],
 };
 
 const colors = {
-  citizen: {
-    accent: "#2563EB",
-    light: "#EFF6FF",
-    border: "#BFDBFE",
-    tag: "#1D4ED8",
-    tagBg: "#DBEAFE",
+  sandra: {
+    accent: "#1B6B5A",
+    light: "#E8F4F0",
+    border: "#A7D5C8",
+    tag: "#1B6B5A",
+    tagBg: "#D1EDE5",
   },
-  staff: {
-    accent: "#7C3AED",
-    light: "#F5F3FF",
-    border: "#DDD6FE",
-    tag: "#6D28D9",
-    tagBg: "#EDE9FE",
+  marcus: {
+    accent: "#C05A1F",
+    light: "#FDF0E8",
+    border: "#F0C8A8",
+    tag: "#C05A1F",
+    tagBg: "#FAE0CC",
   },
 };
 
@@ -432,8 +435,8 @@ export default function HCDArtefactsPage() {
             gap: "24px",
           }}
         >
-          <PersonaCard data={citizenData} colorKey="citizen" />
-          <PersonaCard data={staffData} colorKey="staff" />
+          <PersonaCard data={sandraData} colorKey="sandra" />
+          <PersonaCard data={marcusData} colorKey="marcus" />
         </div>
 
         {/* Footer note */}
