@@ -439,6 +439,75 @@ export default function HCDArtifactsPage() {
           <PersonaCard data={marcusData} colorKey="marcus" />
         </div>
 
+        {/* Future Opportunities */}
+        <div style={{ marginTop: "48px" }}>
+          <div style={{ marginBottom: "24px" }}>
+            <h2 style={{ margin: "0 0 8px", fontSize: "24px", fontWeight: "800", color: "#111827" }}>
+              Future Opportunities
+            </h2>
+            <p style={{ margin: 0, color: "#6B7280", fontSize: "14px", lineHeight: "1.6", maxWidth: "620px" }}>
+              Ideas identified during HCD research that are out of scope for v1.0 but worth revisiting.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            {[
+              {
+                label: "Personalized Status Language",
+                description:
+                  'Instead of generic labels like "In Review", generate citizen-facing status messages that reference their specific issue.',
+                hmw: "How might we make status updates feel personal rather than automated and generic?",
+              },
+              {
+                label: "Accessibility-First Submission Flow",
+                description:
+                  "Offer a simplified, high-contrast, large-text submission mode for citizens who aren't tech-savvy or have accessibility needs.",
+                hmw: "How might we help citizens who aren't tech-savvy still successfully submit a request?",
+              },
+              {
+                label: "Proactive SLA Warnings to Staff",
+                description:
+                  "Alert staff when a ticket is approaching its SLA threshold, giving them time to act before escalation fires.",
+                hmw: "How might we alert supervisors automatically before an SLA breach happens — not after?",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: "12px",
+                  padding: "22px 26px",
+                  boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+                }}
+              >
+                <h3 style={{ margin: "0 0 8px", fontSize: "16px", fontWeight: "700", color: "#111827" }}>
+                  {item.label}
+                </h3>
+                <p style={{ margin: "0 0 14px", fontSize: "14px", color: "#374151", lineHeight: "1.6" }}>
+                  {item.description}
+                </p>
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "#F3F4F6",
+                    color: "#6B7280",
+                    borderRadius: "6px",
+                    padding: "5px 12px",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  <span style={{ fontWeight: "600", color: "#374151" }}>HMW:</span> {item.hmw}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Footer note */}
         <p
           style={{
