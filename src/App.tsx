@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import EmpathyMap from "./pages/EmpathyMap.tsx";
 import JourneyMapStaff from "./pages/JourneyMapStaff.tsx";
+import HCDArtefactsPage from "./pages/HCDArtefactsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
