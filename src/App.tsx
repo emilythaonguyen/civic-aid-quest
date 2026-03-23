@@ -21,7 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/hcd/empathy-map" element={<EmpathyMap />} />
           <Route path="/hcd/journey-map-staff" element={<JourneyMapStaff />} />
-          <Route path="/hcd/artefacts" element={<HCDArtefactsPage />} />
+          <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
