@@ -189,8 +189,8 @@ function PersonaCard({ data, colorKey }) {
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {[
                   { label: "User", desc: data.persona },
-                  { label: "Need", desc: "A way to stay informed and feel heard" },
-                  { label: "Insight", desc: "Current process creates invisibility after submission" },
+                  { label: "Need", desc: "A way to maintain visibility and control over service requests" },
+                  { label: "Insight", desc: "Current manual processes create gaps, rework, and invisible outcomes" },
                 ].map((item) => (
                   <div
                     key={item.label}
