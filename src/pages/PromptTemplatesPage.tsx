@@ -404,6 +404,115 @@ export default function PromptTemplatesPage() {
           </p>
         </div>
 
+        {/* Future Enhancements */}
+        <div style={{ marginTop: "40px" }}>
+          <div style={{ marginBottom: "20px" }}>
+            <h2 style={{ margin: "0 0 8px", fontSize: "24px", fontWeight: "800", color: "#111827" }}>
+              Future Prompt Enhancements
+            </h2>
+            <p style={{ margin: 0, color: "#6B7280", fontSize: "14px", lineHeight: "1.6", maxWidth: "620px" }}>
+              Planned extensions to the AI automation layer, deferred to post-v1.0.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: "#fff",
+              border: "1px solid #E5E7EB",
+              borderRadius: "12px",
+              padding: "24px 28px",
+              boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", flexWrap: "wrap" }}>
+              <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "700", color: "#111827" }}>
+                Duplicate Request Detection
+              </h3>
+              <span
+                style={{
+                  background: "#F3F4F6",
+                  color: "#6B7280",
+                  borderRadius: "6px",
+                  padding: "3px 10px",
+                  fontSize: "11px",
+                  fontWeight: "600",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                }}
+              >
+                F2 Extension
+              </span>
+            </div>
+            <p style={{ margin: "0 0 16px", fontSize: "14px", color: "#374151", lineHeight: "1.7" }}>
+              Extend the triage workflow with a Supabase similarity check before confirming a new submission.
+              If an open request with the same type and location already exists, surface it to the citizen
+              and give them the option to link to the existing ticket rather than creating a duplicate.
+            </p>
+
+            <div style={{ marginBottom: "16px" }}>
+              <p style={{ margin: "0 0 10px", fontSize: "12px", fontWeight: "600", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                Implementation Requirements
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {[
+                  "A new n8n workflow step querying Supabase for matching open tickets by request_type and location",
+                  "A Lovable UI update to the submission confirmation screen showing matched tickets",
+                  "A possible_duplicate_of UUID field added to the requests table in Supabase",
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "10px",
+                      padding: "10px 14px",
+                      background: "#FAFAFA",
+                      borderRadius: "8px",
+                      border: "1px solid #F3F4F6",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                        background: "#F3F4F6",
+                        color: "#6B7280",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "11px",
+                        fontWeight: "700",
+                        flexShrink: 0,
+                        marginTop: "1px",
+                      }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span style={{ fontSize: "13px", color: "#374151", lineHeight: "1.5" }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                background: "#FEF3C7",
+                color: "#B45309",
+                borderRadius: "6px",
+                padding: "5px 12px",
+                fontSize: "12px",
+                fontWeight: "600",
+              }}
+            >
+              Deferred due to testing complexity and Sprint 2 timeline constraints
+            </div>
+          </div>
+        </div>
+
         <p style={{ textAlign: "center", color: "#9CA3AF", fontSize: "13px", marginTop: "32px" }}>
           Authored by Dev 2 (Emily) · Sprint 1 · Civic Service Request Tracker
         </p>
