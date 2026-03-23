@@ -6,7 +6,7 @@ const sandraData = {
   pov: "A senior service officer needs a way to maintain visibility of every request from receipt to resolution because the current process — shared inboxes, manual spreadsheets, and email-based handoffs — causes jobs to fall through the gaps, makes the team look incompetent, and leaves her managing paper rather than managing work.",
   painPoints: [
     "Requests arrive with insufficient detail via free-text emails",
-    "No automatic resident acknowledgements after submission",
+    "No automatic resident acknowledgments after submission",
     "Loses visibility once a job is forwarded to field teams",
     "Spreadsheet tracking is error-prone and manual",
     "Communication failures make the team look incompetent even when work is done",
@@ -16,7 +16,7 @@ const sandraData = {
     "How might we make Sandra feel confident that every request has enough detail to act on immediately?",
     "How might we give Sandra real-time visibility of a job's status after she forwards it?",
     "How might we eliminate the manual data entry that drains Sandra's time and morale?",
-    "How might we ensure residents receive instant acknowledgement so Sandra isn't fielding complaint calls?",
+    "How might we ensure residents receive instant acknowledgment so Sandra isn't fielding complaint calls?",
     "How might we surface overdue items automatically instead of relying on Sandra to spot them?",
     "How might we let Sandra spend more time on complex, human-facing work instead of repetitive admin?",
   ],
@@ -345,7 +345,7 @@ function PersonaCard({ data, colorKey }) {
   );
 }
 
-export default function HCDArtefactsPage() {
+export default function HCDArtifactsPage() {
   return (
     <div
       style={{
@@ -374,7 +374,7 @@ export default function HCDArtefactsPage() {
               marginBottom: "16px",
             }}
           >
-            Sprint 1 · HCD Artefacts
+            Sprint 1 · HCD Artifacts
           </div>
           <h1
             style={{
@@ -388,7 +388,7 @@ export default function HCDArtefactsPage() {
             POV Statements &amp; How Might We
           </h1>
           <p style={{ margin: 0, color: "#6B7280", fontSize: "16px", maxWidth: "600px", lineHeight: "1.6" }}>
-            Human-Centered Design artefacts grounding our build decisions in real user needs.
+            Human-Centered Design artifacts grounding our build decisions in real user needs.
             Each POV is derived from empathy research; each HMW reframes a pain point as an opportunity.
           </p>
         </div>
@@ -448,7 +448,7 @@ export default function HCDArtefactsPage() {
             marginTop: "40px",
           }}
         >
-          Artefacts authored by Dev 2 (Emily) · Sprint 1 · Civic Service Request Tracker
+          Artifacts authored by Dev 2 (Emily) · Sprint 1 · Civic Service Request Tracker
         </p>
       </div>
     </div>
