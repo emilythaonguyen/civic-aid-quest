@@ -29,17 +29,17 @@ const stageCards = [
       "No structured intake — requests arrive as free-text emails with no required fields",
       "Requests frequently missing key details (exact location, photo, contact info)",
       "Inbox is shared — risk of two officers picking up the same request",
-      "No automatic acknowledgement sent to the resident at this stage",
+      "No automatic acknowledgment sent to the resident at this stage",
     ],
     emotional: { emoji: "😟", text: "Anxious and uncertain — she can't tell from the subject line whether the request is actionable or will require significant chasing." },
-    sprint3: "F1 (submission form) must enforce required fields. F4 (automated notifications) must send an instant acknowledgement the moment a request is submitted, before Sandra even opens it.",
+    sprint3: "F1 (submission form) must enforce required fields. F4 (automated notifications) must send an instant acknowledgment the moment a request is submitted, before Sandra even opens it.",
   },
   {
     actor: "Sandra (Service Officer)",
     whatHappens: "Sandra reads the full request and determines: (a) what type of issue it is, (b) which team is responsible, and (c) whether there is enough information to act. If information is missing, she attempts to call or email the resident. She manually assigns a reference number and logs the request into the shared spreadsheet.",
     tools: "Shared spreadsheet (400+ rows), phone, email",
     painPoints: [
-      "Categorisation is entirely manual and relies on Sandra's institutional knowledge",
+      "Categorization is entirely manual and relies on Sandra's institutional knowledge",
       "Ambiguous requests require guesswork or asking colleagues",
       "If the resident can't be reached, the request stalls",
       "Manual reference number assignment is error-prone",
@@ -91,7 +91,7 @@ const stageCards = [
   },
   {
     actor: "Sandra",
-    whatHappens: "Sandra marks the ticket as Resolved in the spreadsheet and sends a manual email to the resident confirming the job is done. This is her favourite part of the job — she feels genuine satisfaction when a complex case reaches resolution. On difficult jobs, this moment is meaningful.",
+    whatHappens: "Sandra marks the ticket as Resolved in the spreadsheet and sends a manual email to the resident confirming the job is done. This is her favorite part of the job — she feels genuine satisfaction when a complex case reaches resolution. On difficult jobs, this moment is meaningful.",
     tools: "Shared spreadsheet, email",
     painPoints: [
       "Closure email is manually written — no template or automation",
@@ -105,8 +105,8 @@ const stageCards = [
 
 const painSummary = [
   ["Requests arrive with no required fields — key info routinely missing", "F1 submission form must enforce type, location, and description before submission is accepted"],
-  ["No automatic acknowledgement sent to residents at point of receipt", "F4 automated notifications must fire immediately on record creation in Supabase"],
-  ["Triage is entirely manual, relying on Sandra's institutional knowledge", "F2 AI triage must pre-classify type and priority so staff confirm rather than categorise from scratch"],
+  ["No automatic acknowledgment sent to residents at point of receipt", "F4 automated notifications must fire immediately on record creation in Supabase"],
+  ["Triage is entirely manual, relying on Sandra's institutional knowledge", "F2 AI triage must pre-classify type and priority so staff confirm rather than categorize from scratch"],
   ["Ambiguous request types cause misrouting and returned jobs", "F5 staff dashboard must show AI-suggested category with an override control"],
   ["Assignment handoff via email — no formal system, no confirmation", "F5 must include a direct ticket assignment feature replacing email forwarding"],
   ["Sandra has no visibility once a job is forwarded to Marcus", "F13 workload view must show live per-staff queue so Sandra can monitor progress"],
@@ -260,7 +260,7 @@ const JourneyMapStaff = () => {
         <p>S1-04 — Staff Journey Map (Receive → Close)</p>
         <p>Sprint 1 (March 23 – April 5, 2026) · Developer 3 (Connor) · Status: Complete</p>
         <p className="mt-2 max-w-2xl mx-auto" style={{ color: '#999999' }}>
-          Synthesised from S1-02 empathy interviews with Sandra (Service Officer) and Marcus (Field Operations Coordinator). To be referenced in Sprint 3 staff admin dashboard (F5) and workload view (F13) design decisions.
+          Synthesized from S1-02 empathy interviews with Sandra (Service Officer) and Marcus (Field Operations Coordinator). To be referenced in Sprint 3 staff admin dashboard (F5) and workload view (F13) design decisions.
         </p>
       </footer>
     </div>
