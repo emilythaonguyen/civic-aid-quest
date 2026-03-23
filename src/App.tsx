@@ -25,6 +25,7 @@ const App = () => (
           <Route path="/hcd/journey-map-staff" element={<JourneyMapStaff />} />
           <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
           <Route path="/hcd/prompt-templates" element={<PromptTemplatesPage />} />
+          <Route path="/hcd/sprint-board" element={<SprintBoardPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
