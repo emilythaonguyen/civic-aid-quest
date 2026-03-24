@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Priority = "High" | "Medium" | "Low";
-type Priority = "High" | "Medium" | "Low";
 
 interface Epic {
   id: string;
@@ -144,6 +143,8 @@ export default function SprintBoardPage() {
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
   const [view, setView] = useState<"sprint" | "epic">("sprint");
+  const [expandedStory, setExpandedStory] = useState<string | null>(null);
+  const [expandedEpic, setExpandedEpic] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
