@@ -9,6 +9,8 @@ import JourneyMapStaff from "./pages/JourneyMapStaff.tsx";
 import HCDArtefactsPage from "./pages/HCDArtifactsPage.tsx";
 import PromptTemplatesPage from "./pages/PromptTemplatesPage.tsx";
 import SprintBoardPage from "./pages/SprintBoardPage.tsx";
+import CitizenEmpathyMap from "./pages/CitizenEmpathyMap.tsx";
+import CitizenJourneyMap from "./pages/CitizenJourneyMap.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
