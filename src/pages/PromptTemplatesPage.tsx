@@ -315,7 +315,8 @@ function TemplateCard({ template }) {
           </div>
         )}
         {tab === "sample" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+          <div style={{ overflowX: "auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(400px, 1fr) minmax(400px, 1fr)", gap: "16px" }}>
             <div>
               <p style={{ margin: "0 0 10px", fontSize: "12px", color: "#9CA3AF", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Sample Input
