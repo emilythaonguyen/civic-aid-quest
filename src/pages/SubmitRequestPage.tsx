@@ -224,7 +224,7 @@ export default function SubmitRequestPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {REQUEST_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
