@@ -152,7 +152,7 @@ export default function SprintBoardPage() {
     const [storiesRes, epicsRes, devsRes] = await Promise.all([
       supabase.from("user_stories").select("*").order("story_id"),
       supabase.from("epics").select("*").order("epic_id"),
-      supabase.from("developers").select("*").order("name"),
+      supabase.from("developers").select("*"),
     ]);
     if (storiesRes.data) setStories(storiesRes.data as UserStory[]);
     if (epicsRes.data) setEpics(epicsRes.data as Epic[]);
