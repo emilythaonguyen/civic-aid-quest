@@ -56,7 +56,7 @@ export default function AnalyticsDashboardPage() {
       // Fetch all requests (only non-PII aggregate fields)
       const { data: requests, error: reqError } = await supabase
         .from("requests")
-        .select("request_type, status, created_at, resolved_at");
+        .select("type, status, created_at, resolved_at");
 
       if (reqError) throw reqError;
 
