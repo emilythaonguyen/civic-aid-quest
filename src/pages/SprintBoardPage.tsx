@@ -259,6 +259,7 @@ export default function SprintBoardPage() {
               );
             })}
           </div>
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
             {(["all", "High", "Medium", "Low", "Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] as FilterKey[]).map((f) => (
               <button key={f} onClick={() => setFilter(f)} style={{ padding: "5px 13px", borderRadius: "20px", border: `1px solid ${filter === f ? "#4338CA" : "#D1D5DB"}`, background: filter === f ? "#4338CA" : "#fff", color: filter === f ? "#fff" : "#6B7280", fontSize: "12px", fontWeight: "600", cursor: "pointer", transition: "all 0.15s" }}>
                 {f === "all" ? "All" : f}
