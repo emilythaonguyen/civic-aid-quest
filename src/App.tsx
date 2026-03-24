@@ -19,6 +19,7 @@ import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
 import SubmitRequestPage from "./pages/SubmitRequestPage.tsx";
 import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
+import PublicStatusPage from "./pages/PublicStatusPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
