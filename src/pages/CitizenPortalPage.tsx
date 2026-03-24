@@ -1,7 +1,12 @@
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Brain, Eye } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { ClipboardList, Brain, Eye, Loader2 } from "lucide-react";
+import { format } from "date-fns";
 
 const STEPS = [
   {
@@ -21,9 +26,73 @@ const STEPS = [
   },
 ];
 
+interface ServiceRequest {
+  id: string;
+  type: string;
+  location: string;
+  status: string;
+  created_at: string;
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  Open: "bg-muted text-muted-foreground",
+  "In Review": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+  Resolved: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+};
+
+function statusClass(status: string) {
+  return STATUS_STYLES[status] ?? STATUS_STYLES["Open"];
+}
+
+function formatType(type: string) {
+  return type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, " ");
+}
+
 export default function CitizenPortalPage() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
+
+  const fetchRequests = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    setFetchError(false);
+    const { data, error } = await supabase
+      .from("requests")
+      .select("id, type, location, status, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Failed to fetch requests:", error);
+      setFetchError(true);
+    } else {
+      setRequests(data ?? []);
+    }
+    setLoading(false);
+  }, [user]);
+
+  useEffect(() => {
+    fetchRequests();
+  }, [fetchRequests]);
+
+  // Listen for inserts to auto-refresh
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("my-requests")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "requests", filter: `user_id=eq.${user.id}` },
+        () => fetchRequests()
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user, fetchRequests]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -41,7 +110,7 @@ export default function CitizenPortalPage() {
         </div>
       </header>
 
-      <main className="max-w-lg mx-auto px-4 py-10 space-y-10">
+      <main className="max-w-2xl mx-auto px-4 py-10 space-y-10">
         {/* Welcome */}
         <section className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-foreground">Welcome to Your Citizen Portal</h2>
@@ -76,6 +145,49 @@ export default function CitizenPortalPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* My Requests */}
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold text-foreground text-center">My Requests</h3>
+
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : fetchError ? (
+            <p className="text-center text-sm text-destructive">
+              Unable to load your requests. Please refresh the page.
+            </p>
+          ) : requests.length === 0 ? (
+            <p className="text-center text-sm text-muted-foreground">
+              You haven't submitted any requests yet.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {requests.map((req) => (
+                <Card key={req.id}>
+                  <CardContent className="flex flex-col sm:flex-row sm:items-center gap-3 py-4 px-5">
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-xs text-muted-foreground">
+                          #{req.id.slice(0, 8)}
+                        </span>
+                        <Badge variant="outline" className={statusClass(req.status)}>
+                          {req.status}
+                        </Badge>
+                      </div>
+                      <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
+                      <p className="text-xs text-muted-foreground">{req.location}</p>
+                    </div>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                      {format(new Date(req.created_at), "MMM dd, yyyy")}
+                    </span>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>
