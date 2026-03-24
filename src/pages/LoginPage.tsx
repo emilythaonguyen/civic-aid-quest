@@ -21,7 +21,14 @@ export default function LoginPage() {
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (signInError) {
-      setError("Incorrect email or password. Please try again.");
+      const msg = signInError.message;
+      if (msg.includes("Email not confirmed")) {
+        setError("Please confirm your email address before signing in. Check your inbox for a confirmation link.");
+      } else if (msg.includes("Invalid login credentials")) {
+        setError("Incorrect email or password. Please try again.");
+      } else {
+        setError(msg);
+      }
       setSubmitting(false);
       return;
     }
