@@ -56,7 +56,7 @@ export default function AnalyticsDashboardPage() {
       // Fetch all requests (only non-PII aggregate fields)
       const { data: requests, error: reqError } = await supabase
         .from("requests")
-        .select("request_type, status, created_at, resolved_at");
+        .select("type, status, created_at, resolved_at");
 
       if (reqError) throw reqError;
 
@@ -65,7 +65,7 @@ export default function AnalyticsDashboardPage() {
       // Volume by category
       const categoryMap: Record<string, number> = {};
       rows.forEach((r) => {
-        const cat = r.request_type || "Other";
+        const cat = r.type || "Other";
         categoryMap[cat] = (categoryMap[cat] || 0) + 1;
       });
       const volumeByCategory: CategoryCount[] = Object.entries(categoryMap).map(

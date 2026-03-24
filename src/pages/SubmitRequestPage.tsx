@@ -110,7 +110,7 @@ export default function SubmitRequestPage() {
 
     // Step 1: Insert record
     const insertPayload: Record<string, unknown> = {
-      request_type: requestType,
+      type: requestType,
       location: location.trim(),
       description: description.trim(),
       status: "Open",
