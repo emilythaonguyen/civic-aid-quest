@@ -9,6 +9,8 @@ import JourneyMapStaff from "./pages/JourneyMapStaff.tsx";
 import HCDArtefactsPage from "./pages/HCDArtifactsPage.tsx";
 import PromptTemplatesPage from "./pages/PromptTemplatesPage.tsx";
 import SprintBoardPage from "./pages/SprintBoardPage.tsx";
+import CitizenEmpathyMap from "./pages/CitizenEmpathyMap.tsx";
+import CitizenJourneyMap from "./pages/CitizenJourneyMap.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
           <Route path="/hcd/prompt-templates" element={<PromptTemplatesPage />} />
           <Route path="/hcd/sprint-board" element={<SprintBoardPage />} />
+          <Route path="/hcd/citizen-empathy-map" element={<CitizenEmpathyMap />} />
+          <Route path="/hcd/citizen-journey-map" element={<CitizenJourneyMap />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
