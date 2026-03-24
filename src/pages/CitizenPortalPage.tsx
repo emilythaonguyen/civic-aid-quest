@@ -2,7 +2,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ClipboardList, Brain, Eye } from "lucide-react";
-import SubmitRequestForm from "@/components/SubmitRequestForm";
 
 const STEPS = [
   {
@@ -51,9 +50,15 @@ export default function CitizenPortalPage() {
           </p>
         </section>
 
-        {/* Submission Form */}
-        <section>
-          <SubmitRequestForm />
+        {/* CTA Button */}
+        <section className="flex justify-center">
+          <Button
+            size="lg"
+            className="w-full sm:max-w-[400px] text-base font-bold"
+            onClick={() => navigate("/submit-request")}
+          >
+            Submit a Service Request
+          </Button>
         </section>
 
         {/* What Happens Next */}
