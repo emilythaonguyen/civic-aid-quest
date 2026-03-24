@@ -118,7 +118,7 @@ export default function SubmitRequestPage() {
     };
 
     const { data, error } = await supabase
-      .from("service_requests")
+      .from("requests")
       .insert(insertPayload)
       .select("id")
       .single();
