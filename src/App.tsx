@@ -23,7 +23,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/hcd/empathy-map" element={<EmpathyMap />} />
+          <Route path="/hcd/empathy-map-staff" element={<EmpathyMap />} />
           <Route path="/hcd/journey-map-staff" element={<JourneyMapStaff />} />
           <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
           <Route path="/hcd/prompt-templates" element={<PromptTemplatesPage />} />
