@@ -43,6 +43,72 @@ const marcusData = {
   ],
 };
 
+const mariaData = {
+  persona: "Maria Santos",
+  role: "Retired School Administrator, Citizen",
+  pov: "A retired resident needs a way to report neighborhood issues and receive confirmation that her report was received because the current process provides no acknowledgment, no tracking, and no closure — leaving her feeling invisible and causing her to give up on reporting entirely.",
+  painPoints: [
+    "Called the city twice; second representative had no record of her first report",
+    "No confirmation of receipt — form feels like a black hole",
+    "Silence is the default during waiting — no status, no timeline, no contact",
+    "Case number was lost, forcing her to re-explain from scratch",
+    "Feels invisible when reports disappear with no acknowledgment",
+    "Gave up on reporting after repeated failures eroded her trust",
+  ],
+  hmw: [
+    "How might we ensure every citizen receives instant confirmation so no one wonders whether their report was received?",
+    "How might we eliminate the silence during the waiting period that causes citizens to assume their report was lost?",
+    "How might we prevent citizens from having to re-explain their issue when they follow up with a different staff member?",
+    "How might we rebuild trust with citizens like Maria who have already given up on the reporting process?",
+    "How might we design a submission experience simple enough that citizens who prefer phone calls still feel confident using it?",
+    "How might we make the system's response feel personal rather than automated, so citizens feel acknowledged as people?",
+  ],
+};
+
+const darnellData = {
+  persona: "Darnell Washington",
+  role: "Small Business Owner, Citizen",
+  pov: "A tech-savvy business owner needs a way to submit a civic issue report and track its status in real time because the current system creates duplicate tickets, provides no status updates, and forces him to self-solve infrastructure problems while waiting — wasting his time and eroding his confidence in the city.",
+  painPoints: [
+    "Resubmitted the same form twice because there was no confirmation it went through",
+    "Found out his streetlight was fixed from a customer, not the city",
+    "Duplicate tickets were created with no notification or deduplication",
+    "Self-solved while waiting (installed own lighting outside business)",
+    "No way to track status — had to call or resubmit to check progress",
+    "Citizen effort feels completely wasted at the follow-up stage",
+  ],
+  hmw: [
+    "How might we give citizens a trackable ticket number immediately so they never need to resubmit?",
+    "How might we proactively notify citizens when their issue is resolved instead of relying on word of mouth?",
+    "How might we detect and prevent duplicate submissions so neither citizens nor staff waste effort?",
+    "How might we provide real-time status updates so citizens never need to call for a progress check?",
+    "How might we make the system reliable enough that citizens stop self-solving problems the city should handle?",
+    "How might we turn the follow-up stage from the lowest trust point into a moment that reinforces confidence?",
+  ],
+};
+
+const graceData = {
+  persona: "Grace Okafor",
+  role: "Retired Long-Term Resident (34 years), Citizen",
+  pov: "A long-term community resident needs a way to report civic issues through an official channel that demonstrably follows through because the current system rewards personal connections over fairness, excludes neighbors without digital literacy or language access, and has eroded her trust to the point where she routes everything through her council representative as a workaround.",
+  painPoints: [
+    "Stopped using the general city number after a dangerous tree report went unanswered for weeks",
+    "Routes all requests through her council rep — a workaround not available to everyone",
+    "Worries that neighbors without connections or language skills are completely left out",
+    "The system rewards persistence and personal contacts over fairness",
+    "Won't recommend a tool unless it demonstrably follows through",
+    "Skeptical about future reporting — will only re-engage if the process proves reliable",
+  ],
+  hmw: [
+    "How might we make the official reporting channel more reliable than personal workarounds like calling a council rep?",
+    "How might we ensure citizens without digital literacy or English proficiency can access the same reporting system?",
+    "How might we design the system so that equity is built in — not dependent on who you know?",
+    "How might we demonstrate follow-through convincingly enough that skeptical long-term residents re-engage?",
+    "How might we turn satisfied citizens into advocates who help their neighbors access the system?",
+    "How might we close the loop on every report so no citizen ever feels their issue disappeared into a void?",
+  ],
+};
+
 const colors = {
   sandra: {
     accent: "#1B6B5A",
@@ -57,6 +123,27 @@ const colors = {
     border: "#F0C8A8",
     tag: "#C05A1F",
     tagBg: "#FAE0CC",
+  },
+  maria: {
+    accent: "#1D4ED8",
+    light: "#EFF6FF",
+    border: "#BFDBFE",
+    tag: "#1D4ED8",
+    tagBg: "#DBEAFE",
+  },
+  darnell: {
+    accent: "#6D28D9",
+    light: "#F5F3FF",
+    border: "#DDD6FE",
+    tag: "#6D28D9",
+    tagBg: "#EDE9FE",
+  },
+  grace: {
+    accent: "#BE123C",
+    light: "#FFF1F2",
+    border: "#FECDD3",
+    tag: "#BE123C",
+    tagBg: "#FFE4E6",
   },
 };
 
