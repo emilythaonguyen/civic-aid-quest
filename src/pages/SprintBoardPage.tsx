@@ -35,6 +35,12 @@ interface UserStory {
   completed_at: string | null;
 }
 
+interface Developer {
+  id: string;
+  name: string;
+  color: string;
+}
+
 // ─── Lookups ──────────────────────────────────────────────────────────────────
 
 const SPRINT_MAP: Record<string, { label: string; short: string; dates: string }> = {
@@ -50,13 +56,6 @@ const SPRINT_ORDER = [
   "50000000-0000-0000-0000-000000000003",
   "50000000-0000-0000-0000-000000000004",
 ];
-
-const ASSIGNEE_MAP: Record<string, { name: string; color: string }> = {
-  "d1000000-0000-0000-0000-000000000001": { name: "Eli", color: "#2563EB" },
-  "d1000000-0000-0000-0000-000000000002": { name: "Emily", color: "#7C3AED" },
-  "d1000000-0000-0000-0000-000000000003": { name: "Connor", color: "#C2410C" },
-  "d1000000-0000-0000-0000-000000000004": { name: "Nicholas", color: "#059669" },
-};
 
 const PRIORITY_COLORS: Record<Priority, { bg: string; text: string; dot: string }> = {
   High:   { bg: "#FEF2F2", text: "#DC2626", dot: "#EF4444" },
