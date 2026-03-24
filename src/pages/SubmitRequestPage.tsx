@@ -10,7 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Upload, X } from "lucide-react";
 
-const REQUEST_TYPES = ["Pothole", "Broken Streetlight", "Illegal Dumping", "Graffiti", "Other"];
+const REQUEST_TYPES = [
+  { label: "Pothole", value: "pothole" },
+  { label: "Broken Streetlight", value: "streetlight" },
+  { label: "Illegal Dumping", value: "dumping" },
+  { label: "Graffiti", value: "graffiti" },
+  { label: "Other", value: "other" },
+];
 const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -218,7 +224,7 @@ export default function SubmitRequestPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {REQUEST_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
