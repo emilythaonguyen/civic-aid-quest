@@ -16,6 +16,7 @@ import CitizenJourneyMap from "./pages/CitizenJourneyMap.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
+import SubmitRequestPage from "./pages/SubmitRequestPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -37,6 +38,14 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="citizen">
                   <CitizenPortalPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/submit-request"
+              element={
+                <ProtectedRoute requiredRole="citizen">
+                  <SubmitRequestPage />
                 </ProtectedRoute>
               }
             />
