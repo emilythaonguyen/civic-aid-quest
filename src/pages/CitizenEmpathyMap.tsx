@@ -72,6 +72,111 @@ const CitizenEmpathyMap = () => {
       </header>
 
       <div className="max-w-[1200px] mx-auto px-6 py-8 space-y-10">
+        {/* PERSONA SUMMARY CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Maria — Primary Persona */}
+          <div
+            className="rounded-lg p-6"
+            style={{
+              backgroundColor: "#EFF6FF",
+              borderLeft: "4px solid #1D4ED8",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+            }}
+          >
+            <h2 className="text-xl font-bold mb-1" style={{ color: "#2D2D2D" }}>Maria Santos</h2>
+            <p className="text-sm mb-3" style={{ color: "#666666" }}>Primary Persona</p>
+            <div className="text-sm space-y-1 mb-4" style={{ color: "#2D2D2D" }}>
+              <p><span className="font-semibold">Role:</span> Retired School Administrator</p>
+              <p><span className="font-semibold">Age:</span> 54</p>
+              <p><span className="font-semibold">Tech Comfort:</span> Low — prefers phone calls over online forms</p>
+            </div>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: "#1D4ED8" }}>Goals</h3>
+            <ul className="text-sm list-disc list-inside mb-4 space-y-0.5" style={{ color: "#2D2D2D" }}>
+              <li>Report neighborhood issues without having to call multiple times</li>
+              <li>Receive a simple confirmation that her report was received</li>
+              <li>Trust that the city is taking action without needing to follow up</li>
+            </ul>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: "#BE123C" }}>Frustrations</h3>
+            <ul className="text-sm list-disc list-inside mb-4 space-y-0.5" style={{ color: "#2D2D2D" }}>
+              <li>Called the city twice; second rep had no record of her first report</li>
+              <li>Feels invisible when reports disappear with no acknowledgment</li>
+              <li>Believes the process assumes citizens don't know anything</li>
+              <li>Gave up on reporting after her case number was lost</li>
+            </ul>
+            <p className="text-sm italic mt-2" style={{ color: "#1D4ED8" }}>
+              "Just acknowledge that I exist — that's all I need."
+            </p>
+          </div>
+
+          {/* Darnell — Secondary Persona */}
+          <div
+            className="rounded-lg p-6"
+            style={{
+              backgroundColor: "#F5F3FF",
+              borderLeft: "4px solid #6D28D9",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+            }}
+          >
+            <h2 className="text-xl font-bold mb-1" style={{ color: "#2D2D2D" }}>Darnell Washington</h2>
+            <p className="text-sm mb-3" style={{ color: "#666666" }}>Secondary Persona</p>
+            <div className="text-sm space-y-1 mb-4" style={{ color: "#2D2D2D" }}>
+              <p><span className="font-semibold">Role:</span> Small Business Owner</p>
+              <p><span className="font-semibold">Age:</span> 31</p>
+              <p><span className="font-semibold">Tech Comfort:</span> High — uses apps daily, expects digital confirmation</p>
+            </div>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: "#1D4ED8" }}>Goals</h3>
+            <ul className="text-sm list-disc list-inside mb-4 space-y-0.5" style={{ color: "#2D2D2D" }}>
+              <li>Submit a report quickly and get a trackable ticket number</li>
+              <li>Know the status without having to call or resubmit</li>
+              <li>Stop having to manage city infrastructure problems himself while waiting</li>
+            </ul>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: "#BE123C" }}>Frustrations</h3>
+            <ul className="text-sm list-disc list-inside mb-4 space-y-0.5" style={{ color: "#2D2D2D" }}>
+              <li>Resubmitted the same form twice because there was no confirmation</li>
+              <li>Found out his streetlight was fixed from a customer, not the city</li>
+              <li>Duplicate tickets were created; no one told him</li>
+              <li>Wasted time self-solving (installed own lighting) while waiting</li>
+            </ul>
+            <p className="text-sm italic mt-2" style={{ color: "#6D28D9" }}>
+              "Submitted, in queue, assigned, done. Four words. That's all I need to stop worrying about it."
+            </p>
+          </div>
+
+          {/* Grace — Supporting Persona */}
+          <div
+            className="rounded-lg p-6"
+            style={{
+              backgroundColor: "#FFF1F2",
+              borderLeft: "4px solid #BE123C",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+            }}
+          >
+            <h2 className="text-xl font-bold mb-1" style={{ color: "#2D2D2D" }}>Grace Okafor</h2>
+            <p className="text-sm mb-3" style={{ color: "#666666" }}>Supporting Persona</p>
+            <div className="text-sm space-y-1 mb-4" style={{ color: "#2D2D2D" }}>
+              <p><span className="font-semibold">Role:</span> Retired, Long-Term Resident (34 years)</p>
+              <p><span className="font-semibold">Age:</span> 67</p>
+              <p><span className="font-semibold">Tech Comfort:</span> Medium — willing to use a good tool if it proves reliable</p>
+            </div>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: "#1D4ED8" }}>Goals</h3>
+            <ul className="text-sm list-disc list-inside mb-4 space-y-0.5" style={{ color: "#2D2D2D" }}>
+              <li>Report issues through an official channel that actually works</li>
+              <li>Help neighbors (including non-English speakers) access the same system</li>
+              <li>See the city follow through so trust can be rebuilt</li>
+            </ul>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: "#BE123C" }}>Frustrations</h3>
+            <ul className="text-sm list-disc list-inside mb-4 space-y-0.5" style={{ color: "#2D2D2D" }}>
+              <li>Stopped using the general city number after a dangerous tree report went unanswered for weeks</li>
+              <li>Routes all requests through her council rep — a workaround not available to everyone</li>
+              <li>Worries that neighbors without connections or language skills are left out</li>
+              <li>Won't recommend a tool unless it demonstrably follows through</li>
+            </ul>
+            <p className="text-sm italic mt-2" style={{ color: "#BE123C" }}>
+              "If it actually followed through, I'd use it and tell my neighbors to use it too."
+            </p>
+          </div>
+        </div>
+
         {/* 2x2 Quadrant Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {quadrants.map((q) => (
