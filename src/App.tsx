@@ -17,6 +17,7 @@ import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
 import SubmitRequestPage from "./pages/SubmitRequestPage.tsx";
+import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
