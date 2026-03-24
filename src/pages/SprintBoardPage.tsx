@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Priority = "High" | "Medium" | "Low";
 type FilterKey = "all" | "Sprint 1" | "Sprint 2" | "Sprint 3" | "Sprint 4" | Priority;
+type AssigneeFilterKey = "all" | string;
 
 interface Epic {
   id: string;
@@ -144,6 +145,7 @@ export default function SprintBoardPage() {
   const [view, setView] = useState<"sprint" | "epic">("sprint");
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
   const [expandedEpic, setExpandedEpic] = useState<string | null>(null);
+  const [assigneeFilter, setAssigneeFilter] = useState<AssigneeFilterKey>("all");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -175,10 +177,16 @@ export default function SprintBoardPage() {
 
   // Filter
   const filtered = stories.filter((s) => {
-    if (filter === "all") return true;
-    if (filter === "High" || filter === "Medium" || filter === "Low") return s.priority === filter;
-    const sprintEntry = Object.entries(SPRINT_MAP).find(([, v]) => v.label === filter);
-    return sprintEntry ? s.sprint_id === sprintEntry[0] : true;
+    if (filter !== "all") {
+      if (filter === "High" || filter === "Medium" || filter === "Low") {
+        if (s.priority !== filter) return false;
+      } else {
+        const sprintEntry = Object.entries(SPRINT_MAP).find(([, v]) => v.label === filter);
+        if (sprintEntry && s.sprint_id !== sprintEntry[0]) return false;
+      }
+    }
+    if (assigneeFilter !== "all" && s.assignee_id !== assigneeFilter) return false;
+    return true;
   });
 
   // Epic lookup
@@ -238,6 +246,18 @@ export default function SprintBoardPage() {
                 By {v.charAt(0).toUpperCase() + v.slice(1)}
               </button>
             ))}
+          </div>
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+            {(["all", ...Object.keys(ASSIGNEE_MAP)] as AssigneeFilterKey[]).map((aId) => {
+              const info = aId === "all" ? { name: "All Team", color: "#6B7280" } : ASSIGNEE_MAP[aId];
+              const isActive = assigneeFilter === aId;
+              return (
+                <button key={aId} onClick={() => setAssigneeFilter(aId)} style={{ padding: "5px 13px", borderRadius: "20px", border: `1px solid ${isActive ? info.color : "#D1D5DB"}`, background: isActive ? info.color : "#fff", color: isActive ? "#fff" : "#6B7280", fontSize: "12px", fontWeight: "600", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: "5px" }}>
+                  {aId !== "all" && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: isActive ? "#fff" : info.color }} />}
+                  {info.name}
+                </button>
+              );
+            })}
           </div>
           <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
             {(["all", "High", "Medium", "Low", "Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] as FilterKey[]).map((f) => (
