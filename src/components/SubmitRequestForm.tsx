@@ -173,6 +173,9 @@ export default function SubmitRequestForm() {
           <Button onClick={resetForm} className="w-full">
             Submit Another Request
           </Button>
+          <Button onClick={() => navigate("/portal")} className="w-full">
+            Return to Portal
+          </Button>
         </CardContent>
       </Card>
     );
