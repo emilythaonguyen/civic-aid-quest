@@ -113,6 +113,11 @@ function StoryDetail({ story, epic }: { story: UserStory; epic?: Epic }) {
       <DetailSection label="Acceptance Criteria" content={story.acceptance_criteria_text} />
       <DetailSection label="Test Plan" content={story.test_plan_text} />
       <DetailSection label="Definition of Done" content={story.definition_of_done} />
+      {story.completed_at && (
+        <div style={{ marginTop: "10px", fontSize: "12px", color: "#16A34A", fontWeight: "600" }}>
+          ✓ Completed on {new Date(story.completed_at).toLocaleString()}
+        </div>
+      )}
     </div>
   );
 }
