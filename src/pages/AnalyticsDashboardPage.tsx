@@ -195,8 +195,8 @@ export default function AnalyticsDashboardPage() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-yellow-500/10">
-                      <BarChart3 className="h-4 w-4 text-yellow-600" />
+                    <div className="p-2 rounded-md bg-secondary">
+                      <BarChart3 className="h-4 w-4 text-secondary-foreground" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Open</p>
@@ -209,8 +209,8 @@ export default function AnalyticsDashboardPage() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-green-500/10">
-                      <TrendingUp className="h-4 w-4 text-green-600" />
+                    <div className="p-2 rounded-md bg-accent">
+                      <TrendingUp className="h-4 w-4 text-accent-foreground" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Resolved</p>
@@ -223,9 +223,8 @@ export default function AnalyticsDashboardPage() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-blue-500/10">
-                      <Clock className="h-4 w-4 text-blue-600" />
-                    </div>
+                    <div className="p-2 rounded-md bg-muted">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">Avg. Resolution</p>
                       <p className="text-2xl font-bold">
@@ -352,8 +351,8 @@ export default function AnalyticsDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                    <Clock className="h-8 w-8 text-blue-600" />
+                  <div className="p-4 rounded-xl bg-muted border border-border">
+                    <Clock className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <div>
                     <p className="text-4xl font-bold text-foreground">
