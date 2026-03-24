@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,27 +8,34 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 
 const REQUEST_TYPES = ["Pothole", "Broken Streetlight", "Illegal Dumping", "Graffiti", "Other"];
+const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 interface FormErrors {
   request_type?: string;
   location?: string;
   description?: string;
+  attachment?: string;
 }
 
 export default function SubmitRequestPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [requestType, setRequestType] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   // Redirect unauthenticated users
   if (!authLoading && !user) {
@@ -43,6 +50,39 @@ export default function SubmitRequestPage() {
       </div>
     );
   }
+
+  const validateFile = (f: File): string | null => {
+    if (!ACCEPTED_TYPES.includes(f.type)) return "Only PNG and JPG files are accepted.";
+    if (f.size > MAX_FILE_SIZE) return "File is too large. Maximum size is 5MB.";
+    return null;
+  };
+
+  const handleFileSelect = (f: File) => {
+    const err = validateFile(f);
+    if (err) {
+      setErrors((p) => ({ ...p, attachment: err }));
+      return;
+    }
+    setErrors((p) => ({ ...p, attachment: undefined }));
+    setFile(f);
+    const url = URL.createObjectURL(f);
+    setFilePreview(url);
+  };
+
+  const removeFile = () => {
+    if (filePreview) URL.revokeObjectURL(filePreview);
+    setFile(null);
+    setFilePreview(null);
+    setErrors((p) => ({ ...p, attachment: undefined }));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile) handleFileSelect(droppedFile);
+  };
 
   const validate = (): FormErrors => {
     const e: FormErrors = {};
@@ -64,26 +104,68 @@ export default function SubmitRequestPage() {
     if (Object.keys(validationErrors).length > 0) return;
 
     setSubmitting(true);
+
+    // If file selected, we need a request ID first — insert, then upload, then update
+    let attachmentUrl: string | null = null;
+
+    // Step 1: Insert record
+    const insertPayload: Record<string, unknown> = {
+      request_type: requestType,
+      location: location.trim(),
+      description: description.trim(),
+      status: "Open",
+      user_id: user!.id,
+    };
+
     const { data, error } = await supabase
       .from("service_requests")
-      .insert({
-        request_type: requestType,
-        location: location.trim(),
-        description: description.trim(),
-        status: "Open",
-        user_id: user!.id,
-      })
+      .insert(insertPayload)
       .select("id")
       .single();
 
-    setSubmitting(false);
-
     if (error || !data) {
+      setSubmitting(false);
       setSubmitError("Something went wrong. Please try again.");
       return;
     }
 
-    setSubmittedId(data.id);
+    const requestId = data.id;
+
+    // Step 2: Upload file if present
+    if (file) {
+      const filePath = `${user!.id}/${requestId}/${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("request-attachments")
+        .upload(filePath, file, { upsert: false });
+
+      if (uploadError) {
+        // Cleanup: delete the inserted record
+        await supabase.from("service_requests").delete().eq("id", requestId);
+        setSubmitting(false);
+        setSubmitError("File upload failed. Please try again.");
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("request-attachments")
+        .getPublicUrl(filePath);
+
+      attachmentUrl = urlData.publicUrl;
+
+      // Step 3: Update record with attachment URL
+      const { error: updateError } = await supabase
+        .from("service_requests")
+        .update({ attachment_url: attachmentUrl })
+        .eq("id", requestId);
+
+      if (updateError) {
+        // Non-critical — record exists, just missing URL
+        console.error("Failed to save attachment URL", updateError);
+      }
+    }
+
+    setSubmitting(false);
+    setSubmittedId(requestId);
   };
 
   if (submittedId) {
@@ -167,6 +249,61 @@ export default function SubmitRequestPage() {
                 rows={4}
               />
               {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
+            </div>
+
+            {/* Photo Attachment */}
+            <div className="space-y-1.5">
+              <Label>Attach a Photo (Optional)</Label>
+              <p className="text-xs text-muted-foreground">Accepted formats: PNG, JPG. Max size: 5MB.</p>
+
+              {!file ? (
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                  onDragLeave={() => setDragOver(false)}
+                  onDrop={handleDrop}
+                  className={`mt-1 flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-6 transition-colors cursor-pointer ${
+                    dragOver ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-muted-foreground/50"
+                  }`}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload className="h-8 w-8 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    Drag & drop a photo here, or{" "}
+                    <span className="font-medium text-primary underline underline-offset-2">browse files</span>
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".png,.jpg,.jpeg"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleFileSelect(f);
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="mt-1 flex items-center gap-3 rounded-md border border-border bg-muted/50 p-3">
+                  {filePreview && (
+                    <img
+                      src={filePreview}
+                      alt="Preview"
+                      className="h-14 w-14 rounded object-cover border border-border"
+                    />
+                  )}
+                  <span className="flex-1 truncate text-sm">{file.name}</span>
+                  <button
+                    type="button"
+                    onClick={removeFile}
+                    className="rounded-full p-1 hover:bg-muted transition-colors"
+                    aria-label="Remove file"
+                  >
+                    <X className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </div>
+              )}
+
+              {errors.attachment && <p className="text-sm text-destructive">{errors.attachment}</p>}
             </div>
 
             <Button type="submit" className="w-full" disabled={submitting}>
