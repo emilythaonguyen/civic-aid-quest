@@ -17,7 +17,7 @@ const REQUEST_TYPES = [
   { label: "Graffiti", value: "graffiti" },
   { label: "Other", value: "other" },
 ];
-const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
+const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 interface FormErrors {
