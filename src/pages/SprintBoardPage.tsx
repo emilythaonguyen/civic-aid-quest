@@ -4,8 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Priority = "High" | "Medium" | "Low";
-type FilterKey = "all" | "Sprint 1" | "Sprint 2" | "Sprint 3" | "Sprint 4" | Priority;
-type AssigneeFilterKey = "all" | string;
+type Priority = "High" | "Medium" | "Low";
 
 interface Epic {
   id: string;
@@ -141,11 +140,10 @@ export default function SprintBoardPage() {
   const [stories, setStories] = useState<UserStory[]>([]);
   const [epics, setEpics] = useState<Epic[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<FilterKey>("all");
+  const [sprintFilter, setSprintFilter] = useState<string>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
   const [view, setView] = useState<"sprint" | "epic">("sprint");
-  const [expandedStory, setExpandedStory] = useState<string | null>(null);
-  const [expandedEpic, setExpandedEpic] = useState<string | null>(null);
-  const [assigneeFilter, setAssigneeFilter] = useState<AssigneeFilterKey>("all");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
