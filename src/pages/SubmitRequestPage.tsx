@@ -118,7 +118,7 @@ export default function SubmitRequestPage() {
     };
 
     const { data, error } = await supabase
-      .from("service_requests")
+      .from("requests")
       .insert(insertPayload)
       .select("id")
       .single();
@@ -140,7 +140,7 @@ export default function SubmitRequestPage() {
 
       if (uploadError) {
         // Cleanup: delete the inserted record
-        await supabase.from("service_requests").delete().eq("id", requestId);
+        await supabase.from("requests").delete().eq("id", requestId);
         setSubmitting(false);
         setSubmitError("File upload failed. Please try again.");
         return;
@@ -154,7 +154,7 @@ export default function SubmitRequestPage() {
 
       // Step 3: Update record with attachment URL
       const { error: updateError } = await supabase
-        .from("service_requests")
+        .from("requests")
         .update({ attachment_url: attachmentUrl })
         .eq("id", requestId);
 
