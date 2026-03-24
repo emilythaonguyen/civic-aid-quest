@@ -125,7 +125,8 @@ export default function SubmitRequestPage() {
 
     if (error || !data) {
       setSubmitting(false);
-      setSubmitError("Something went wrong. Please try again.");
+      console.error("Supabase insert error:", error);
+      setSubmitError(error?.message || "Something went wrong. Please try again.");
       return;
     }
 
