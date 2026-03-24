@@ -1,160 +1,209 @@
 const stages = [
+  { num: 1, name: "Discovery", bg: "#1B6B5A" },
+  { num: 2, name: "Submission", bg: "#1A5276" },
+  { num: 3, name: "Waiting", bg: "#B7770D" },
+  { num: 4, name: "Follow-Up", bg: "#C05A1F" },
+  { num: 5, name: "Resolution", bg: "#6C3483" },
+  { num: 6, name: "Reflection", bg: "#1E8449" },
+];
+
+const emotionRow = ["Moderate", "Low", "Low", "Lowest", "Moderate", "Low"];
+const emotionColors = ["#B7770D", "#C0392B", "#C0392B", "#C0392B", "#B7770D", "#C0392B"];
+const painRow = ["Low", "High", "High", "Highest", "Medium", "Medium"];
+const painColors = ["#1E8449", "#C0392B", "#C0392B", "#C0392B", "#B7770D", "#B7770D"];
+const channelRow = [
+  "Personal observation",
+  "City phone / website / online form",
+  "None — silence",
+  "Phone / resubmission",
+  "Word of mouth / observation",
+  "Memory of past experience",
+];
+
+const stageCards = [
   {
-    num: 1,
-    name: "Discovery",
-    bg: "#1D4ED8",
-    action: "Citizen notices a civic issue (pothole, broken streetlight, unsafe tree hanging over the road).",
-    emotion: 'Concerned and civic-minded. "Someone should fix this."',
-    arcPosition: "NEUTRAL",
-    arcValue: 50,
-    tag: null,
-    note: "Citizen is engaged and wants to help their community.",
+    actor: "Citizen (Maria, Darnell, or Grace)",
+    whatHappens: "Citizen notices a civic issue in their neighborhood — a pothole, a broken streetlight, an unsafe tree hanging over the road. They feel civic-minded and want to report it.",
+    channel: "Personal observation",
+    painPoints: [
+      "No clear single entry point for reporting — unclear whether to call, email, or use a website",
+    ],
+    emotional: { emoji: "🤔", text: "Concerned and civic-minded — \"Someone should fix this.\" Citizen is engaged and wants to help their community." },
+    designImplication: "The submission entry point must be immediately discoverable. A single, prominent \"Report an Issue\" button should be the clearest path on the city portal.",
   },
   {
-    num: 2,
-    name: "Submission",
-    bg: "#7C3AED",
-    action: "Tries to find how to report — calls a general city phone number, searches the city website, or fills out a long online form.",
-    emotion: "Confused and uncertain. Unclear whether the form was even submitted.",
-    arcPosition: "LOW",
-    arcValue: 20,
-    tag: { type: "pain", text: "No confirmation of receipt. Form feels like a black hole. Multiple channels with no clear single entry point." },
-    note: null,
+    actor: "Citizen",
+    whatHappens: "Tries to find how to report — calls a general city phone number, searches the city website, or fills out a long online form. It is unclear whether the form was even submitted.",
+    channel: "City phone line, city website, online form",
+    painPoints: [
+      "No confirmation of receipt — form feels like a black hole",
+      "Multiple channels with no clear single entry point",
+      "Unclear whether the submission actually went through",
+      "Long, confusing forms discourage completion",
+    ],
+    emotional: { emoji: "😟", text: "Confused and uncertain — the citizen cannot tell whether their report was received. The lack of any acknowledgment triggers immediate doubt." },
+    designImplication: "F1 (submission form) must be short and mobile-friendly. F4 (automated notifications) must send an instant confirmation with a reference number the moment the form is submitted.",
   },
   {
-    num: 3,
-    name: "Waiting",
-    bg: "#C2410C",
-    action: 'Waits with no updates. Wonders if the report was received. May attempt to self-solve (e.g., puts up a battery light outside the business) or give up entirely.',
-    emotion: "Anxious, then resigned.",
-    arcPosition: "LOW",
-    arcValue: 18,
-    tag: { type: "pain", text: "Silence is the default. No status, no estimated timeline, no contact. This is the biggest driver of distrust in the system." },
-    note: null,
+    actor: "Citizen",
+    whatHappens: "Waits with no updates. Wonders if the report was received. May attempt to self-solve (e.g., Darnell installs his own lighting outside his business) or give up entirely.",
+    channel: "None — complete silence from the city",
+    painPoints: [
+      "Silence is the default — no status, no estimated timeline, no contact",
+      "This is the biggest driver of distrust in the system",
+      "Citizens begin to self-solve or disengage entirely",
+      "No way to check status without calling back",
+    ],
+    emotional: { emoji: "😤", text: "Anxious, then resigned — the silence feels deliberate. Citizens interpret no news as no action. This is where most people begin to lose faith in the system." },
+    designImplication: "F3 (status tracker) must provide real-time status visible to the citizen. Even one proactive update (\"Your request is in queue\") would dramatically reduce anxiety and prevent duplicate submissions.",
   },
   {
-    num: 4,
-    name: "Follow-Up Attempt",
-    bg: "#DC2626",
-    action: "Calls back or resubmits the form. Often reaches a different staff member with no record of the original report. Has to re-explain the issue from scratch.",
-    emotion: "Frustrated and dismissed.",
-    arcPosition: "LOWEST",
-    arcValue: 8,
-    tag: { type: "pain", text: "Duplicate tickets created. Citizen effort feels completely wasted. Trust in the system hits its lowest point." },
-    note: null,
+    actor: "Citizen",
+    whatHappens: "Calls back or resubmits the form. Often reaches a different staff member with no record of the original report. Has to re-explain the issue from scratch. Duplicate tickets may be created without anyone noticing.",
+    channel: "Phone callback, form resubmission",
+    painPoints: [
+      "Different staff member has no record of the original report",
+      "Citizen must re-explain the issue from scratch",
+      "Duplicate tickets created — no deduplication or notification",
+      "Citizen effort feels completely wasted",
+      "Trust in the system hits its lowest point",
+    ],
+    emotional: { emoji: "😠", text: "Frustrated and dismissed — this is the emotional low point of the entire journey. Citizens feel invisible and begin to believe the system is not designed to serve them." },
+    designImplication: "F3 (status tracker) with a reference number eliminates the need to call back. F6 (Supabase data layer) must ensure every report is persisted and retrievable by any staff member.",
   },
   {
-    num: 5,
-    name: "Resolution",
-    bg: "#059669",
-    action: "The issue is eventually fixed. Citizen finds out through word of mouth, personal observation, or (rarely) a city notification.",
-    emotion: "Relieved but not impressed.",
-    arcPosition: "MEDIUM",
-    arcValue: 50,
-    tag: { type: "mixed", text: "Problem is solved, but the process felt accidental. No official close-out notification in most cases." },
-    note: null,
+    actor: "Citizen",
+    whatHappens: "The issue is eventually fixed. Citizen finds out through word of mouth, personal observation, or (rarely) a city notification. There is no official close-out communication in most cases.",
+    channel: "Word of mouth, personal observation",
+    painPoints: [
+      "No official close-out notification in most cases",
+      "Citizen discovers resolution accidentally, not proactively",
+      "The process felt accidental — no sense of a system working",
+    ],
+    emotional: { emoji: "😐", text: "Relieved but not impressed — the problem is solved, but the experience felt disjointed. The lack of a closing notification means the city gets no credit for the work done." },
+    designImplication: "F4 (automated notifications) must send a closure notification when a ticket is marked Resolved. F15 (satisfaction survey) should trigger at this moment to capture feedback.",
   },
   {
-    num: 6,
-    name: "Reflection",
-    bg: "#6B7280",
-    action: "Citizen decides whether they would bother to report an issue again in the future.",
-    emotion: '"Skeptical. "Only if there\'s a better way to track it."',
-    arcPosition: "LOW-MEDIUM",
-    arcValue: 35,
-    tag: { type: "opportunity", text: 'If the citizen had received one confirmation and one status update, trust would have been fully rebuilt. Grace\'s quote: "If it actually followed through, I\'d use it and tell my neighbors to use it too."' },
-    note: null,
+    actor: "Citizen",
+    whatHappens: "Citizen decides whether they would bother to report an issue again in the future. Those with bad experiences (Maria, Grace) are unlikely to re-engage unless the process demonstrably improves.",
+    channel: "Memory of past experience",
+    painPoints: [
+      "Citizens who had one bad experience stopped reporting entirely",
+      "Skeptical about future reporting — will only re-engage if the process proves reliable",
+      "The system rewards persistence and personal contacts over fairness",
+    ],
+    emotional: { emoji: "🤨", text: "Skeptical — \"Only if there's a better way to track it.\" Grace: \"If it actually followed through, I'd use it and tell my neighbors to use it too.\"" },
+    designImplication: "The entire flow must be reliable enough to rebuild trust with citizens who have already disengaged. One confirmation and one status update would be enough to change the narrative.",
   },
 ];
 
-const designImplications = [
-  {
-    title: "Immediate Confirmation is Non-Negotiable",
-    text: "Every submission must generate a visible ticket number and a confirmation message. Directly addresses the Stage 2 and Stage 4 pain points. Citizens need proof their report exists.",
-  },
-  {
-    title: "Status Transparency Builds Trust",
-    text: 'Even one proactive status update (e.g., "Your request is in queue") would dramatically improve the Stage 3 and Stage 5 experience. Darnell\'s quote: "Submitted, in queue, assigned, done. Four words. That\'s all I need to stop worrying about it."',
-  },
-  {
-    title: "Equity Must Be Designed In",
-    text: "The current system rewards citizens who have personal contacts and know the back channels. The portal must be the simplest, most reliable channel available — not a last resort. Grace's insight: her neighbor, a non-English speaker, simply lives with problems because she doesn't know where to report them.",
-  },
+const painSummary = [
+  ["No confirmation of receipt — form feels like a black hole", "F1 submission form must generate a visible ticket number; F4 must send instant confirmation"],
+  ["Silence during waiting — no status, no timeline, no contact", "F3 status tracker must provide real-time citizen-facing status updates"],
+  ["Follow-up reaches a different staff member with no record", "F6 Supabase data layer must persist all reports; F3 reference number eliminates re-explanation"],
+  ["Duplicate tickets created with no deduplication or notification", "F2 AI triage should detect potential duplicates before creating new tickets"],
+  ["No official close-out notification when issue is resolved", "F4 must auto-send closure notification on status change to Resolved"],
+  ["Citizens who had bad experiences stopped reporting entirely", "End-to-end reliability and transparency must rebuild trust with disengaged residents"],
+  ["System rewards personal contacts over official channels", "Portal must be the single most reliable channel — more effective than calling a council rep"],
+  ["Neighbors without digital literacy or language access are excluded", "Submission flow must be accessible, multilingual, and usable without technical skill"],
+  ["Citizens self-solve while waiting (e.g., install own lighting)", "Proactive status updates must reassure citizens that action is being taken"],
+  ["No resident feedback collected at any point", "F15 satisfaction survey must trigger automatically when a ticket is marked Resolved"],
 ];
 
-function tagStyle(type: string) {
-  if (type === "pain") return { bg: "#FEF2F2", text: "#DC2626", border: "#FECACA", label: "Pain Point" };
-  if (type === "mixed") return { bg: "#FFFBEB", text: "#D97706", border: "#FDE68A", label: "Mixed" };
-  return { bg: "#F0FDF4", text: "#16A34A", border: "#BBF7D0", label: "Opportunity" };
-}
+const quotes = [
+  "Just acknowledge that I exist — that's all I need.",
+  "I called twice and the second person had no record of my report.",
+  "Submitted, in queue, assigned, done. Four words. That's all I need to stop worrying about it.",
+  "My customer told me it was fixed before the city did.",
+  "If it actually followed through, I'd use it and tell my neighbors to use it too.",
+  "The system should work for everyone, not just people who know the back channels.",
+];
 
 const CitizenJourneyMap = () => {
-  // SVG emotional arc
-  const width = 900;
-  const arcHeight = 100;
-  const points = stages.map((s, i) => ({
-    x: (i / (stages.length - 1)) * (width - 60) + 30,
-    y: arcHeight - (s.arcValue / 100) * (arcHeight - 20) + 10,
-  }));
-  const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
-
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
-      {/* Header */}
-      <header className="py-10 px-6 text-white text-center relative" style={{ backgroundColor: "#1B6B5A" }}>
-        <div className="absolute top-4 right-6 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded">
-          S1-03
-        </div>
-        <p className="text-xs uppercase tracking-widest opacity-70 mb-2">Internal — HCD Research</p>
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Citizen Journey Map — Report to Resolution</h1>
-        <p className="text-sm opacity-90">Civic Service Request Tracker | S1-03 | Developer: Eli</p>
+      {/* HEADER */}
+      <header className="py-10 px-6 text-white text-center" style={{ backgroundColor: '#1B6B5A' }}>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">Citizen Journey Map</h1>
+        <p className="text-base italic opacity-90">Citizen User · Discovery → Submission → Waiting → Follow-Up → Resolution → Reflection</p>
+        <p className="text-sm mt-1 opacity-80">S1-03 · Sprint 1 · Developer 1 (Eli)</p>
       </header>
 
       <div className="max-w-[1200px] mx-auto px-6 py-8 space-y-10">
-        {/* Timeline */}
-        <div className="overflow-x-auto">
-          <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${stages.length}, minmax(170px, 1fr))` }}>
-            {stages.map((s) => {
-              const ts = s.tag ? tagStyle(s.tag.type) : null;
+        {/* SECTION 2 — EMOTIONAL ARC TABLE */}
+        <div>
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#2D2D2D' }}>Emotional Arc at a Glance</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse" style={{ minWidth: 700 }}>
+              <thead>
+                <tr>
+                  <th className="p-3 text-left font-semibold" style={{ color: '#2D2D2D', backgroundColor: '#F5F5F5', border: '1px solid #ddd' }}></th>
+                  {stages.map((s) => (
+                    <th key={s.num} className="p-3 text-center text-white font-semibold" style={{ backgroundColor: s.bg, border: '1px solid #ddd' }}>
+                      {s.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-3 font-semibold" style={{ color: '#2D2D2D', border: '1px solid #ddd', backgroundColor: '#F9F9F9' }}>Emotion level</td>
+                  {emotionRow.map((val, i) => (
+                    <td key={i} className="p-3 text-center font-semibold" style={{ color: emotionColors[i], border: '1px solid #ddd' }}>{val}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold" style={{ color: '#2D2D2D', border: '1px solid #ddd', backgroundColor: '#F9F9F9' }}>Pain level</td>
+                  {painRow.map((val, i) => (
+                    <td key={i} className="p-3 text-center font-semibold" style={{ color: painColors[i], border: '1px solid #ddd' }}>{val}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold" style={{ color: '#2D2D2D', border: '1px solid #ddd', backgroundColor: '#F9F9F9' }}>Channel used</td>
+                  {channelRow.map((val, i) => (
+                    <td key={i} className="p-3 text-center" style={{ color: '#2D2D2D', border: '1px solid #ddd' }}>{val}</td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 rounded-lg p-4 text-sm" style={{ backgroundColor: '#EAFAF1', color: '#1E8449', border: '1px solid #A9DFBF' }}>
+            Stage 4 (Follow-Up) is the emotional low point — trust hits its lowest when citizens must re-explain their issue to a new staff member. Stage 1 (Discovery) is the engagement high — citizens are civic-minded and willing to help. The system must preserve that goodwill.
+          </div>
+        </div>
+
+        {/* SECTION 3 — STAGE CARDS */}
+        <div>
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#2D2D2D' }}>Stage-by-Stage Journey</h2>
+          <div className="space-y-6">
+            {stages.map((stage, i) => {
+              const card = stageCards[i];
               return (
-                <div
-                  key={s.num}
-                  className="rounded-lg overflow-hidden"
-                  style={{ border: "1px solid #E5E7EB", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}
-                >
-                  {/* Stage header */}
-                  <div className="text-white text-center py-3 px-2" style={{ backgroundColor: s.bg }}>
-                    <span className="text-xs font-semibold opacity-80">Stage {s.num}</span>
-                    <h3 className="text-sm font-bold mt-0.5">{s.name}</h3>
+                <div key={stage.num} className="rounded-lg overflow-hidden" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.08)', border: '1px solid #eee' }}>
+                  <div className="px-5 py-3 text-white font-bold" style={{ backgroundColor: stage.bg }}>
+                    Stage {stage.num}: {stage.name}
                   </div>
+                  <div className="p-5 space-y-4 text-sm" style={{ color: '#2D2D2D' }}>
+                    <div><span className="font-semibold">Actor:</span> {card.actor}</div>
+                    <div><span className="font-semibold">What happens:</span> {card.whatHappens}</div>
+                    <div><span className="font-semibold">Channel used:</span> {card.channel}</div>
 
-                  <div className="p-3 space-y-3 bg-white">
-                    {/* Action */}
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: "#9CA3AF" }}>Action</p>
-                      <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{s.action}</p>
+                    <div className="rounded p-3" style={{ backgroundColor: '#FDEDEC' }}>
+                      <span className="font-semibold" style={{ color: '#C0392B' }}>Pain points:</span>
+                      <ul className="list-disc list-inside mt-1 space-y-0.5" style={{ color: '#C0392B' }}>
+                        {card.painPoints.map((p, j) => <li key={j}>{p}</li>)}
+                      </ul>
                     </div>
 
-                    {/* Emotion */}
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: "#9CA3AF" }}>Emotion</p>
-                      <p className="text-xs italic leading-relaxed" style={{ color: "#6B7280" }}>{s.emotion}</p>
+                    <div className="rounded p-3" style={{ backgroundColor: '#F5EEF8' }}>
+                      <span className="font-semibold" style={{ color: '#6C3483' }}>Emotional state:</span>
+                      <p className="mt-1" style={{ color: '#6C3483' }}>{card.emotional.emoji} {card.emotional.text}</p>
                     </div>
 
-                    {/* Tag */}
-                    {ts && s.tag && (
-                      <div
-                        className="rounded p-2"
-                        style={{ backgroundColor: ts.bg, border: `1px solid ${ts.border}` }}
-                      >
-                        <span className="text-[10px] font-bold uppercase" style={{ color: ts.text }}>{ts.label}</span>
-                        <p className="text-xs mt-1 leading-relaxed" style={{ color: ts.text }}>{s.tag.text}</p>
-                      </div>
-                    )}
-
-                    {s.note && (
-                      <p className="text-xs italic" style={{ color: "#9CA3AF" }}>{s.note}</p>
-                    )}
+                    <div className="rounded p-3" style={{ backgroundColor: '#EAFAF1' }}>
+                      <span className="font-semibold" style={{ color: '#1E8449' }}>Design implication:</span>
+                      <p className="mt-1" style={{ color: '#1E8449' }}>{card.designImplication}</p>
+                    </div>
                   </div>
                 </div>
               );
@@ -162,61 +211,49 @@ const CitizenJourneyMap = () => {
           </div>
         </div>
 
-        {/* Emotional Arc */}
-        <div className="rounded-lg p-6" style={{ backgroundColor: "#F9FAFB", border: "1px solid #E5E7EB" }}>
-          <h3 className="text-sm font-bold mb-3" style={{ color: "#374151" }}>Emotional Arc</h3>
-          <svg viewBox={`0 0 ${width} ${arcHeight + 20}`} className="w-full" style={{ maxHeight: "140px" }}>
-            {/* Grid lines */}
-            <line x1="30" y1={arcHeight + 10} x2={width - 30} y2={arcHeight + 10} stroke="#E5E7EB" strokeWidth="1" />
-            <line x1="30" y1="10" x2={width - 30} y2="10" stroke="#E5E7EB" strokeWidth="1" strokeDasharray="4" />
-            <line x1="30" y1={(arcHeight + 20) / 2} x2={width - 30} y2={(arcHeight + 20) / 2} stroke="#E5E7EB" strokeWidth="1" strokeDasharray="4" />
-
-            {/* Labels */}
-            <text x="5" y="15" fontSize="9" fill="#9CA3AF">High</text>
-            <text x="5" y={(arcHeight + 20) / 2 + 3} fontSize="9" fill="#9CA3AF">Mid</text>
-            <text x="5" y={arcHeight + 13} fontSize="9" fill="#9CA3AF">Low</text>
-
-            {/* Arc line */}
-            <path d={pathD} fill="none" stroke="#1D4ED8" strokeWidth="2.5" strokeLinejoin="round" />
-
-            {/* Points */}
-            {points.map((p, i) => (
-              <g key={i}>
-                <circle cx={p.x} cy={p.y} r="5" fill="#1D4ED8" />
-                <text x={p.x} y={arcHeight + 25} textAnchor="middle" fontSize="8" fill="#6B7280">
-                  {stages[i].name}
-                </text>
-              </g>
-            ))}
-          </svg>
+        {/* SECTION 4 — PAIN POINT SUMMARY TABLE */}
+        <div>
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#2D2D2D' }}>Pain Point Summary</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr>
+                  <th className="p-3 text-left text-white font-semibold" style={{ backgroundColor: '#1B6B5A', border: '1px solid #ddd', width: 40 }}>#</th>
+                  <th className="p-3 text-left text-white font-semibold" style={{ backgroundColor: '#1B6B5A', border: '1px solid #ddd' }}>Pain Point</th>
+                  <th className="p-3 text-left text-white font-semibold" style={{ backgroundColor: '#1B6B5A', border: '1px solid #ddd' }}>Design Implication</th>
+                </tr>
+              </thead>
+              <tbody>
+                {painSummary.map(([pain, impl], i) => (
+                  <tr key={i}>
+                    <td className="p-3 font-semibold" style={{ border: '1px solid #ddd', color: '#2D2D2D' }}>{i + 1}</td>
+                    <td className="p-3" style={{ backgroundColor: '#FDEDEC', border: '1px solid #ddd', color: '#2D2D2D' }}>{pain}</td>
+                    <td className="p-3" style={{ backgroundColor: '#EAFAF1', border: '1px solid #ddd', color: '#2D2D2D' }}>{impl}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* Design Implications */}
+        {/* SECTION 5 — REPRESENTATIVE QUOTES */}
         <div>
-          <h2 className="text-xl font-bold mb-4" style={{ color: "#111827" }}>Design Implications</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {designImplications.map((card) => (
-              <div
-                key={card.title}
-                className="rounded-lg p-5"
-                style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}
-              >
-                <h4 className="text-sm font-bold mb-2" style={{ color: "#1D4ED8" }}>{card.title}</h4>
-                <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>{card.text}</p>
-              </div>
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#2D2D2D' }}>Representative Quotes from the Journey</h2>
+          <div className="space-y-4">
+            {quotes.map((q, i) => (
+              <blockquote key={i} className="pl-4 py-2 italic text-sm" style={{ borderLeft: '4px solid #C05A1F', color: '#2D2D2D', marginLeft: 16 }}>
+                "{q}"
+              </blockquote>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className="text-center text-sm py-6 px-6"
-        style={{ backgroundColor: "#F5F5F5", borderTop: "1px solid #DDDDDD", color: "#666666" }}
-      >
-        <p>S1-03 — Citizen Journey Map (Report → Resolution)</p>
+      {/* FOOTER */}
+      <footer className="text-center text-sm py-6 px-6" style={{ backgroundColor: '#F5F5F5', borderTop: '1px solid #DDDDDD', color: '#666666' }}>
+        <p>S1-03 — Citizen Journey Map (Discovery → Reflection)</p>
         <p>Sprint 1 (March 23 – April 5, 2026) · Developer 1 (Eli) · Status: Complete</p>
-        <p className="mt-2 max-w-2xl mx-auto" style={{ color: "#999999" }}>
+        <p className="mt-2 max-w-2xl mx-auto" style={{ color: '#999999' }}>
           Based on insights from three citizen empathy interviews conducted for S1-01. Identifies pain points and design opportunities across the full service request lifecycle.
         </p>
       </footer>
