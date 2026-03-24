@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Priority = "High" | "Medium" | "Low";
 type FilterKey = "all" | "Sprint 1" | "Sprint 2" | "Sprint 3" | "Sprint 4" | Priority;
+type AssigneeFilterKey = "all" | string;
 
 interface Epic {
   id: string;
@@ -144,6 +145,7 @@ export default function SprintBoardPage() {
   const [view, setView] = useState<"sprint" | "epic">("sprint");
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
   const [expandedEpic, setExpandedEpic] = useState<string | null>(null);
+  const [assigneeFilter, setAssigneeFilter] = useState<AssigneeFilterKey>("all");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
