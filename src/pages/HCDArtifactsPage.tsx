@@ -526,6 +526,29 @@ export default function HCDArtifactsPage() {
           <PersonaCard data={marcusData} colorKey="marcus" />
         </div>
 
+        {/* Citizen Persona Section */}
+        <div style={{ marginTop: "48px" }}>
+          <div style={{ marginBottom: "24px" }}>
+            <h2 style={{ margin: "0 0 8px", fontSize: "24px", fontWeight: "800", color: "#111827" }}>
+              Citizen Personas
+            </h2>
+            <p style={{ margin: 0, color: "#6B7280", fontSize: "14px", lineHeight: "1.6", maxWidth: "620px" }}>
+              POV statements and How Might We questions derived from citizen empathy interviews and journey mapping (S1-01, S1-03).
+            </p>
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: "24px",
+            }}
+          >
+            <PersonaCard data={mariaData} colorKey="maria" />
+            <PersonaCard data={darnellData} colorKey="darnell" />
+            <PersonaCard data={graceData} colorKey="grace" />
+          </div>
+        </div>
+
         {/* Future Opportunities */}
         <div style={{ marginTop: "48px" }}>
           <div style={{ marginBottom: "24px" }}>
