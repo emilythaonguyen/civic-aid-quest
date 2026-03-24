@@ -204,51 +204,26 @@ const CitizenEmpathyMap = () => {
           ))}
         </div>
 
-        {/* Persona Snapshot */}
-        <div
-          className="rounded-lg p-6"
-          style={{
-            backgroundColor: "#F9FAFB",
-            border: "1px solid #E5E7EB",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h2 className="text-lg font-bold mb-4" style={{ color: "#111827" }}>
-            Persona Snapshot
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Representative Users */}
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: "#6B7280" }}>
-                Representative Users
-              </h4>
-              <ul className="text-sm space-y-1" style={{ color: "#374151" }}>
-                <li><span className="font-semibold">Maria</span> (54, retired school administrator)</li>
-                <li><span className="font-semibold">Darnell</span> (31, small business owner)</li>
-                <li><span className="font-semibold">Grace</span> (67, long-term resident, 34 years in the community)</li>
-              </ul>
-            </div>
-
-            {/* Primary Goal */}
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: "#6B7280" }}>
-                Primary Goal
-              </h4>
-              <p className="text-sm" style={{ color: "#374151" }}>
-                Submit a civic issue report and receive transparent confirmation and status updates without needing to follow up manually.
-              </p>
-            </div>
-
-            {/* Core Frustration */}
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: "#6B7280" }}>
-                Core Frustration
-              </h4>
-              <p className="text-sm" style={{ color: "#374151" }}>
-                No acknowledgment of receipt, no tracking, no closure. The system rewards persistence over fairness.
-              </p>
-            </div>
-          </div>
+        {/* Key Insights for Design */}
+        <div className="rounded-lg p-6" style={{ backgroundColor: "#F5F5F5" }}>
+          <h2 className="text-xl font-bold mb-4" style={{ color: "#2D2D2D" }}>Key Insights for Design</h2>
+          <ol className="text-sm list-decimal list-inside space-y-3" style={{ color: "#2D2D2D" }}>
+            <li>
+              <span className="font-semibold">Confirmation is the most critical missing feature</span> — Citizens do not trust the system because they receive no acknowledgment when a report is submitted — adding an instant confirmation with a reference number would eliminate the single largest source of anxiety and drop-off.
+            </li>
+            <li>
+              <span className="font-semibold">Silence during the waiting phase destroys trust</span> — The period between submission and resolution is where citizens disengage entirely; even one proactive status update (e.g., "Your request is in queue") would dramatically reduce follow-up calls and prevent duplicate submissions.
+            </li>
+            <li>
+              <span className="font-semibold">The system currently rewards persistence over fairness</span> — Citizens with personal contacts — council reps, city insiders — get results faster; the portal must be the single most reliable channel available so that all residents, regardless of connections or language, have equal access to civic services.
+            </li>
+            <li>
+              <span className="font-semibold">Transparency at resolution is as important as at submission</span> — In most cases citizens found out their issue was resolved through word of mouth or personal observation, not from the city; a close-out notification is essential to completing the trust loop and encouraging future engagement.
+            </li>
+            <li>
+              <span className="font-semibold">Simplicity determines whether residents return</span> — Citizens who had one bad experience stopped reporting entirely; the submission flow must be short, mobile-friendly, and require minimal effort — complexity is the primary barrier for lower-tech users like Maria, and reliability is the barrier for higher-tech users like Darnell.
+            </li>
+          </ol>
         </div>
       </div>
 
