@@ -330,6 +330,7 @@ function TemplateCard({ template }) {
               <CodeBlock content={template.sampleOutput} />
             </div>
           </div>
+          </div>
         )}
       </div>
     </div>
