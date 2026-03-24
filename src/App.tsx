@@ -19,6 +19,7 @@ import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
 import SubmitRequestPage from "./pages/SubmitRequestPage.tsx";
 import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
+import PublicStatusPage from "./pages/PublicStatusPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
               }
             />
             <Route path="/hcd/empathy-map-staff" element={<EmpathyMap />} />
+            <Route path="/status" element={<PublicStatusPage />} />
             <Route path="/hcd/journey-map-staff" element={<JourneyMapStaff />} />
             <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
             <Route path="/hcd/prompt-templates" element={<PromptTemplatesPage />} />
