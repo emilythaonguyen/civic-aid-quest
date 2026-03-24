@@ -225,6 +225,7 @@ export default function AnalyticsDashboardPage() {
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-md bg-muted">
                       <Clock className="h-4 w-4 text-muted-foreground" />
+                    </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Avg. Resolution</p>
                       <p className="text-2xl font-bold">
