@@ -82,9 +82,10 @@ function epicColor(epicId: string) {
   return EPIC_COLORS[epicId] ?? { bg: "#F3F4F6", text: "#374151", border: "#D1D5DB" };
 }
 
-function assigneeInfo(id: string | null) {
+function assigneeInfo(id: string | null, devMap: Map<string, Developer>) {
   if (!id) return { name: "All", color: "#6B7280" };
-  return ASSIGNEE_MAP[id] ?? { name: "Unknown", color: "#6B7280" };
+  const dev = devMap.get(id);
+  return dev ? { name: dev.name, color: dev.color } : { name: "Unknown", color: "#6B7280" };
 }
 
 function sprintLabel(id: string) {
@@ -137,6 +138,7 @@ function EpicDetail({ epic }: { epic: Epic }) {
 export default function SprintBoardPage() {
   const [stories, setStories] = useState<UserStory[]>([]);
   const [epics, setEpics] = useState<Epic[]>([]);
+  const [developers, setDevelopers] = useState<Developer[]>([]);
   const [loading, setLoading] = useState(true);
   const [sprintFilter, setSprintFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
@@ -147,12 +149,14 @@ export default function SprintBoardPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [storiesRes, epicsRes] = await Promise.all([
+    const [storiesRes, epicsRes, devsRes] = await Promise.all([
       supabase.from("user_stories").select("*").order("story_id"),
       supabase.from("epics").select("*").order("epic_id"),
+      supabase.from("developers").select("*").order("name"),
     ]);
     if (storiesRes.data) setStories(storiesRes.data as UserStory[]);
     if (epicsRes.data) setEpics(epicsRes.data as Epic[]);
+    if (devsRes.data) setDevelopers(devsRes.data as Developer[]);
     setLoading(false);
   }, []);
 
@@ -245,8 +249,8 @@ export default function SprintBoardPage() {
             {/* Assignee */}
             <select value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
               <option value="all">All Assignees</option>
-              {Object.entries(ASSIGNEE_MAP).map(([id, { name }]) => (
-                <option key={id} value={id}>{name}</option>
+              {developers.map((dev) => (
+                <option key={dev.id} value={dev.id}>{dev.name}</option>
               ))}
             </select>
 
