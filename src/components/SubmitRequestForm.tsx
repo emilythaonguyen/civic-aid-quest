@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ interface FormErrors {
 
 export default function SubmitRequestForm() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [requestType, setRequestType] = useState("");
@@ -170,6 +172,9 @@ export default function SubmitRequestForm() {
           </p>
           <Button onClick={resetForm} className="w-full">
             Submit Another Request
+          </Button>
+          <Button onClick={() => navigate("/portal")} className="w-full">
+            Return to Portal
           </Button>
         </CardContent>
       </Card>
