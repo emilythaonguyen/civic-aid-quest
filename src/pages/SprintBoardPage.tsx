@@ -176,14 +176,8 @@ export default function SprintBoardPage() {
 
   // Filter
   const filtered = stories.filter((s) => {
-    if (filter !== "all") {
-      if (filter === "High" || filter === "Medium" || filter === "Low") {
-        if (s.priority !== filter) return false;
-      } else {
-        const sprintEntry = Object.entries(SPRINT_MAP).find(([, v]) => v.label === filter);
-        if (sprintEntry && s.sprint_id !== sprintEntry[0]) return false;
-      }
-    }
+    if (sprintFilter !== "all" && s.sprint_id !== sprintFilter) return false;
+    if (priorityFilter !== "all" && s.priority !== priorityFilter) return false;
     if (assigneeFilter !== "all" && s.assignee_id !== assigneeFilter) return false;
     return true;
   });
@@ -246,24 +240,32 @@ export default function SprintBoardPage() {
               </button>
             ))}
           </div>
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {(["all", ...Object.keys(ASSIGNEE_MAP)] as AssigneeFilterKey[]).map((aId) => {
-              const info = aId === "all" ? { name: "All Team", color: "#6B7280" } : ASSIGNEE_MAP[aId];
-              const isActive = assigneeFilter === aId;
-              return (
-                <button key={aId} onClick={() => setAssigneeFilter(aId)} style={{ padding: "5px 13px", borderRadius: "20px", border: `1px solid ${isActive ? info.color : "#D1D5DB"}`, background: isActive ? info.color : "#fff", color: isActive ? "#fff" : "#6B7280", fontSize: "12px", fontWeight: "600", cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: "5px" }}>
-                  {aId !== "all" && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: isActive ? "#fff" : info.color }} />}
-                  {info.name}
-                </button>
-              );
-            })}
-          </div>
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {(["all", "High", "Medium", "Low", "Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] as FilterKey[]).map((f) => (
-              <button key={f} onClick={() => setFilter(f)} style={{ padding: "5px 13px", borderRadius: "20px", border: `1px solid ${filter === f ? "#4338CA" : "#D1D5DB"}`, background: filter === f ? "#4338CA" : "#fff", color: filter === f ? "#fff" : "#6B7280", fontSize: "12px", fontWeight: "600", cursor: "pointer", transition: "all 0.15s" }}>
-                {f === "all" ? "All" : f}
-              </button>
-            ))}
+
+          {/* Dropdown Filters */}
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
+            {/* Assignee */}
+            <select value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
+              <option value="all">All Assignees</option>
+              {Object.entries(ASSIGNEE_MAP).map(([id, { name }]) => (
+                <option key={id} value={id}>{name}</option>
+              ))}
+            </select>
+
+            {/* Priority */}
+            <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
+              <option value="all">All Priorities</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+
+            {/* Sprint */}
+            <select value={sprintFilter} onChange={(e) => setSprintFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
+              <option value="all">All Sprints</option>
+              {SPRINT_ORDER.map((sid) => (
+                <option key={sid} value={sid}>{SPRINT_MAP[sid].label} ({SPRINT_MAP[sid].dates})</option>
+              ))}
+            </select>
           </div>
         </div>
 
