@@ -33,6 +33,7 @@ interface UserStory {
   story_points: number;
   status: string;
   story_type: string;
+  completed_at: string | null;
 }
 
 // ─── Lookups ──────────────────────────────────────────────────────────────────
@@ -155,10 +156,11 @@ export default function SprintBoardPage() {
   // Toggle done status
   const toggle = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === "Done" ? "Planned" : "Done";
+    const completedAt = newStatus === "Done" ? new Date().toISOString() : null;
     setStories((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, status: newStatus } : s))
+      prev.map((s) => (s.id === id ? { ...s, status: newStatus, completed_at: completedAt } : s))
     );
-    await supabase.from("user_stories").update({ status: newStatus }).eq("id", id);
+    await supabase.from("user_stories").update({ status: newStatus, completed_at: completedAt }).eq("id", id);
   };
 
   // Stats
