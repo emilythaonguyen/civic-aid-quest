@@ -16,11 +16,6 @@ const STEPS = [
     description: "Your report is logged and assigned a unique ID.",
   },
   {
-    icon: Brain,
-    title: "AI Triage",
-    description: "Your request is automatically categorized and prioritized.",
-  },
-  {
     icon: Eye,
     title: "Track Your Status",
     description: "You will receive updates as your request moves through review.",
@@ -137,7 +132,7 @@ export default function CitizenPortalPage() {
         {/* What Happens Next */}
         <section className="space-y-4">
           <h3 className="text-lg font-semibold text-foreground text-center">What Happens Next</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
             {STEPS.map((step, i) => (
               <div key={i} className="flex flex-col items-center text-center rounded-lg border border-border bg-card p-5 space-y-2">
                 <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary font-bold text-sm">
