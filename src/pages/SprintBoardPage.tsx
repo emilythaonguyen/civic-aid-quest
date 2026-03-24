@@ -185,8 +185,9 @@ export default function SprintBoardPage() {
     return true;
   });
 
-  // Epic lookup
+  // Lookups
   const epicMap = new Map(epics.map((e) => [e.id, e]));
+  const devMap = new Map(developers.map((d) => [d.id, d]));
 
   // Group
   const groups: { key: string; label: string; subtitle?: string; stories: UserStory[] }[] =
@@ -330,7 +331,7 @@ export default function SprintBoardPage() {
                   const pc = PRIORITY_COLORS[story.priority] ?? PRIORITY_COLORS.Medium;
                   const epic = epicMap.get(story.epic_id);
                   const ec = epicColor(epic?.epic_id ?? "");
-                  const ai = assigneeInfo(story.assignee_id);
+                  const ai = assigneeInfo(story.assignee_id, devMap);
                   const isDone = story.status === "Done";
                   const isExpanded = expandedStory === story.id;
 
