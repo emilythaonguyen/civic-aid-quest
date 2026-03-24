@@ -35,6 +35,12 @@ interface UserStory {
   completed_at: string | null;
 }
 
+interface Developer {
+  id: string;
+  name: string;
+  color: string;
+}
+
 // ─── Lookups ──────────────────────────────────────────────────────────────────
 
 const SPRINT_MAP: Record<string, { label: string; short: string; dates: string }> = {
@@ -50,13 +56,6 @@ const SPRINT_ORDER = [
   "50000000-0000-0000-0000-000000000003",
   "50000000-0000-0000-0000-000000000004",
 ];
-
-const ASSIGNEE_MAP: Record<string, { name: string; color: string }> = {
-  "d1000000-0000-0000-0000-000000000001": { name: "Eli", color: "#2563EB" },
-  "d1000000-0000-0000-0000-000000000002": { name: "Emily", color: "#7C3AED" },
-  "d1000000-0000-0000-0000-000000000003": { name: "Connor", color: "#C2410C" },
-  "d1000000-0000-0000-0000-000000000004": { name: "Nicholas", color: "#059669" },
-};
 
 const PRIORITY_COLORS: Record<Priority, { bg: string; text: string; dot: string }> = {
   High:   { bg: "#FEF2F2", text: "#DC2626", dot: "#EF4444" },
@@ -83,9 +82,10 @@ function epicColor(epicId: string) {
   return EPIC_COLORS[epicId] ?? { bg: "#F3F4F6", text: "#374151", border: "#D1D5DB" };
 }
 
-function assigneeInfo(id: string | null) {
+function assigneeInfo(id: string | null, devMap: Map<string, Developer>) {
   if (!id) return { name: "All", color: "#6B7280" };
-  return ASSIGNEE_MAP[id] ?? { name: "Unknown", color: "#6B7280" };
+  const dev = devMap.get(id);
+  return dev ? { name: dev.name, color: dev.color } : { name: "Unknown", color: "#6B7280" };
 }
 
 function sprintLabel(id: string) {
@@ -138,6 +138,7 @@ function EpicDetail({ epic }: { epic: Epic }) {
 export default function SprintBoardPage() {
   const [stories, setStories] = useState<UserStory[]>([]);
   const [epics, setEpics] = useState<Epic[]>([]);
+  const [developers, setDevelopers] = useState<Developer[]>([]);
   const [loading, setLoading] = useState(true);
   const [sprintFilter, setSprintFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
@@ -148,12 +149,14 @@ export default function SprintBoardPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [storiesRes, epicsRes] = await Promise.all([
+    const [storiesRes, epicsRes, devsRes] = await Promise.all([
       supabase.from("user_stories").select("*").order("story_id"),
       supabase.from("epics").select("*").order("epic_id"),
+      supabase.from("developers").select("*").order("name"),
     ]);
     if (storiesRes.data) setStories(storiesRes.data as UserStory[]);
     if (epicsRes.data) setEpics(epicsRes.data as Epic[]);
+    if (devsRes.data) setDevelopers(devsRes.data as Developer[]);
     setLoading(false);
   }, []);
 
@@ -182,8 +185,9 @@ export default function SprintBoardPage() {
     return true;
   });
 
-  // Epic lookup
+  // Lookups
   const epicMap = new Map(epics.map((e) => [e.id, e]));
+  const devMap = new Map(developers.map((d) => [d.id, d]));
 
   // Group
   const groups: { key: string; label: string; subtitle?: string; stories: UserStory[] }[] =
@@ -246,8 +250,8 @@ export default function SprintBoardPage() {
             {/* Assignee */}
             <select value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
               <option value="all">All Assignees</option>
-              {Object.entries(ASSIGNEE_MAP).map(([id, { name }]) => (
-                <option key={id} value={id}>{name}</option>
+              {developers.map((dev) => (
+                <option key={dev.id} value={dev.id}>{dev.name}</option>
               ))}
             </select>
 
@@ -327,7 +331,7 @@ export default function SprintBoardPage() {
                   const pc = PRIORITY_COLORS[story.priority] ?? PRIORITY_COLORS.Medium;
                   const epic = epicMap.get(story.epic_id);
                   const ec = epicColor(epic?.epic_id ?? "");
-                  const ai = assigneeInfo(story.assignee_id);
+                  const ai = assigneeInfo(story.assignee_id, devMap);
                   const isDone = story.status === "Done";
                   const isExpanded = expandedStory === story.id;
 
