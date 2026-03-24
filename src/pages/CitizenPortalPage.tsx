@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ClipboardList, Brain, Eye, Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ClipboardList, Brain, Eye, Loader2, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 
 const STEPS = [
@@ -30,8 +31,10 @@ interface ServiceRequest {
   id: string;
   type: string;
   location: string;
+  description: string;
   status: string;
   created_at: string;
+  attachment_url: string | null;
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -55,6 +58,7 @@ export default function CitizenPortalPage() {
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
 
   const fetchRequests = useCallback(async () => {
     if (!user) return;
@@ -62,7 +66,7 @@ export default function CitizenPortalPage() {
     setFetchError(false);
     const { data, error } = await supabase
       .from("requests")
-      .select("id, type, location, status, created_at")
+      .select("id, type, location, description, status, created_at, attachment_url")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -180,9 +184,14 @@ export default function CitizenPortalPage() {
                       <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
                       <p className="text-xs text-muted-foreground">{req.location}</p>
                     </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {format(new Date(req.created_at), "MMM dd, yyyy")}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {format(new Date(req.created_at), "MMM dd, yyyy")}
+                      </span>
+                      <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
+                        View
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -190,6 +199,62 @@ export default function CitizenPortalPage() {
           )}
         </section>
       </main>
+
+      {/* Request Detail Modal */}
+      <Dialog open={!!selectedRequest} onOpenChange={(open) => { if (!open) setSelectedRequest(null); }}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Request Details</DialogTitle>
+          </DialogHeader>
+          {selectedRequest && (
+            <div className="space-y-4 pt-2">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Request ID</p>
+                <p className="font-mono text-sm break-all">{selectedRequest.id}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Status</p>
+                <Badge variant="outline" className={statusClass(selectedRequest.status)}>
+                  {selectedRequest.status}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Request Type</p>
+                <p className="text-sm">{formatType(selectedRequest.type)}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Location</p>
+                <p className="text-sm">{selectedRequest.location}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
+                <p className="text-sm whitespace-pre-wrap">{selectedRequest.description}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Date Submitted</p>
+                <p className="text-sm">
+                  {format(new Date(selectedRequest.created_at), "MMM dd, yyyy 'at' hh:mm a")}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Attachment</p>
+                {selectedRequest.attachment_url ? (
+                  <a
+                    href={selectedRequest.attachment_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                  >
+                    View Attached File <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No attachment provided.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
