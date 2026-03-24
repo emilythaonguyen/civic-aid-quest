@@ -16,11 +16,6 @@ const STEPS = [
     description: "Your report is logged and assigned a unique ID.",
   },
   {
-    icon: Brain,
-    title: "AI Triage",
-    description: "Your request is automatically categorized and prioritized.",
-  },
-  {
     icon: Eye,
     title: "Track Your Status",
     description: "You will receive updates as your request moves through review.",
