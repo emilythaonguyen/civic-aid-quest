@@ -37,8 +37,9 @@ interface UserStory {
 
 interface Developer {
   id: string;
-  name: string;
-  color: string;
+  alias: string;
+  full_name: string;
+  color?: string;
 }
 
 // ─── Lookups ──────────────────────────────────────────────────────────────────
@@ -82,10 +83,17 @@ function epicColor(epicId: string) {
   return EPIC_COLORS[epicId] ?? { bg: "#F3F4F6", text: "#374151", border: "#D1D5DB" };
 }
 
+const DEV_COLORS: Record<string, string> = {
+  "d1000000-0000-0000-0000-000000000001": "#2563EB",
+  "d1000000-0000-0000-0000-000000000002": "#7C3AED",
+  "d1000000-0000-0000-0000-000000000003": "#C2410C",
+  "d1000000-0000-0000-0000-000000000004": "#059669",
+};
+
 function assigneeInfo(id: string | null, devMap: Map<string, Developer>) {
   if (!id) return { name: "All", color: "#6B7280" };
   const dev = devMap.get(id);
-  return dev ? { name: dev.name, color: dev.color } : { name: "Unknown", color: "#6B7280" };
+  return dev ? { name: dev.full_name, color: DEV_COLORS[id] ?? "#6B7280" } : { name: "Unknown", color: "#6B7280" };
 }
 
 function sprintLabel(id: string) {
@@ -152,7 +160,7 @@ export default function SprintBoardPage() {
     const [storiesRes, epicsRes, devsRes] = await Promise.all([
       supabase.from("user_stories").select("*").order("story_id"),
       supabase.from("epics").select("*").order("epic_id"),
-      supabase.from("developers").select("*"),
+      supabase.from("developers").select("*").order("full_name"),
     ]);
     if (storiesRes.data) setStories(storiesRes.data as UserStory[]);
     if (epicsRes.data) setEpics(epicsRes.data as Epic[]);
@@ -251,7 +259,7 @@ export default function SprintBoardPage() {
             <select value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
               <option value="all">All Assignees</option>
               {developers.map((dev) => (
-                <option key={dev.id} value={dev.id}>{dev.name}</option>
+                <option key={dev.id} value={dev.id}>{dev.full_name}</option>
               ))}
             </select>
 
