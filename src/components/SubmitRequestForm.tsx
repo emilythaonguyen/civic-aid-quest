@@ -29,6 +29,7 @@ interface FormErrors {
 
 export default function SubmitRequestForm() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [requestType, setRequestType] = useState("");
