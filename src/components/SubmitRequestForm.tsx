@@ -104,12 +104,35 @@ export default function SubmitRequestForm() {
 
     setSubmitting(true);
 
+    let attachmentUrl: string | null = null;
+
+    if (file) {
+      const tempId = crypto.randomUUID();
+      const filePath = `${user!.id}/${tempId}/${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("request-attachments")
+        .upload(filePath, file, { upsert: false });
+
+      if (uploadError) {
+        setSubmitting(false);
+        setSubmitError("File upload failed. Please try again.");
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("request-attachments")
+        .getPublicUrl(filePath);
+
+      attachmentUrl = urlData.publicUrl;
+    }
+
     const insertPayload: Record<string, unknown> = {
       type: requestType,
       location: location.trim(),
       description: description.trim(),
       status: "Open",
       user_id: user!.id,
+      attachment_url: attachmentUrl,
     };
 
     const { data, error } = await supabase
@@ -125,37 +148,8 @@ export default function SubmitRequestForm() {
       return;
     }
 
-    const requestId = data.id;
-
-    if (file) {
-      const filePath = `${user!.id}/${requestId}/${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("request-attachments")
-        .upload(filePath, file, { upsert: false });
-
-      if (uploadError) {
-        await supabase.from("requests").delete().eq("id", requestId);
-        setSubmitting(false);
-        setSubmitError("File upload failed. Please try again.");
-        return;
-      }
-
-      const { data: urlData } = supabase.storage
-        .from("request-attachments")
-        .getPublicUrl(filePath);
-
-      const { error: updateError } = await supabase
-        .from("requests")
-        .update({ attachment_url: urlData.publicUrl })
-        .eq("id", requestId);
-
-      if (updateError) {
-        console.error("Failed to save attachment URL", updateError);
-      }
-    }
-
     setSubmitting(false);
-    setSubmittedId(requestId);
+    setSubmittedId(data.id);
   };
 
   if (submittedId) {
