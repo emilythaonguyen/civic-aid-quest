@@ -17,7 +17,7 @@ const REQUEST_TYPES = [
   { label: "Graffiti", value: "graffiti" },
   { label: "Other", value: "other" },
 ];
-const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
+const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 interface FormErrors {
@@ -58,7 +58,7 @@ export default function SubmitRequestPage() {
   }
 
   const validateFile = (f: File): string | null => {
-    if (!ACCEPTED_TYPES.includes(f.type)) return "Only PNG and JPG files are accepted.";
+    if (!ACCEPTED_TYPES.includes(f.type)) return "Only PNG, JPG, and PDF files are accepted.";
     if (f.size > MAX_FILE_SIZE) return "File is too large. Maximum size is 5MB.";
     return null;
   };
@@ -261,7 +261,7 @@ export default function SubmitRequestPage() {
             {/* Photo Attachment */}
             <div className="space-y-1.5">
               <Label>Attach a Photo (Optional)</Label>
-              <p className="text-xs text-muted-foreground">Accepted formats: PNG, JPG. Max size: 5MB.</p>
+              <p className="text-xs text-muted-foreground">Accepted formats: PNG, JPG, PDF. Max size: 5MB.</p>
 
               {!file ? (
                 <div
@@ -281,7 +281,7 @@ export default function SubmitRequestPage() {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".png,.jpg,.jpeg"
+                    accept=".png,.jpg,.jpeg,.pdf"
                     className="hidden"
                     onChange={(e) => {
                       const f = e.target.files?.[0];
