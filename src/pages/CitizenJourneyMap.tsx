@@ -101,7 +101,7 @@ const CitizenJourneyMap = () => {
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
       {/* Header */}
-      <header className="py-10 px-6 text-white text-center relative" style={{ backgroundColor: "#1D4ED8" }}>
+      <header className="py-10 px-6 text-white text-center relative" style={{ backgroundColor: "#1B6B5A" }}>
         <div className="absolute top-4 right-6 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded">
           S1-03
         </div>
