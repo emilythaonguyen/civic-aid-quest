@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,7 +16,7 @@ import CitizenJourneyMap from "./pages/CitizenJourneyMap.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
-import SubmitRequestPage from "./pages/SubmitRequestPage.tsx";
+
 import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
@@ -43,14 +43,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/submit-request"
-              element={
-                <ProtectedRoute requiredRole="citizen">
-                  <SubmitRequestPage />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/submit-request" element={<Navigate to="/portal" replace />} />
             <Route
               path="/dashboard"
               element={
