@@ -19,23 +19,44 @@ interface Questionnaire {
 }
 
 const parseQuestionnaire = (raw: unknown): Questionnaire => {
-  let parsed: unknown = raw;
+  const parsePossibleJson = (value: unknown): unknown => {
+    if (typeof value !== "string") return value;
 
-  if (typeof parsed === "string") {
+    const trimmed = value.trim();
+    const unfenced = trimmed.startsWith("```")
+      ? trimmed.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").trim()
+      : trimmed;
+
     try {
-      parsed = JSON.parse(parsed);
+      const once = JSON.parse(unfenced);
+      if (typeof once === "string") {
+        try {
+          return JSON.parse(once);
+        } catch {
+          return once;
+        }
+      }
+      return once;
     } catch {
-      parsed = null;
+      return value;
     }
+  };
+
+  let parsed: unknown = parsePossibleJson(raw);
+
+  if (parsed && typeof parsed === "object" && "questionnaire" in (parsed as Record<string, unknown>)) {
+    parsed = parsePossibleJson((parsed as Record<string, unknown>).questionnaire);
   }
 
   const asObject = parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : null;
 
   const rawQuestions = Array.isArray(asObject?.questions)
     ? asObject.questions
-    : Array.isArray(parsed)
-      ? parsed
-      : [];
+    : Array.isArray(asObject?.question_list)
+      ? asObject.question_list
+      : Array.isArray(parsed)
+        ? parsed
+        : [];
 
   const questions: SurveyQuestion[] = rawQuestions
     .map((question, index) => {
