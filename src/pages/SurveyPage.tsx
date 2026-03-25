@@ -18,6 +18,68 @@ interface Questionnaire {
   questions: SurveyQuestion[];
 }
 
+const parseQuestionnaire = (raw: unknown): Questionnaire => {
+  let parsed: unknown = raw;
+
+  if (typeof parsed === "string") {
+    try {
+      parsed = JSON.parse(parsed);
+    } catch {
+      parsed = null;
+    }
+  }
+
+  const asObject = parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : null;
+
+  const rawQuestions = Array.isArray(asObject?.questions)
+    ? asObject.questions
+    : Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  const questions: SurveyQuestion[] = rawQuestions
+    .map((question, index) => {
+      if (!question || typeof question !== "object") return null;
+      const candidate = question as Record<string, unknown>;
+
+      const id =
+        typeof candidate.id === "string"
+          ? candidate.id
+          : typeof candidate.id === "number"
+            ? String(candidate.id)
+            : `q_${index + 1}`;
+
+      const text =
+        typeof candidate.text === "string"
+          ? candidate.text
+          : typeof candidate.question === "string"
+            ? candidate.question
+            : "";
+
+      const type =
+        candidate.type === "rating_1_5" ||
+        candidate.type === "yes_no" ||
+        candidate.type === "open_text"
+          ? candidate.type
+          : null;
+
+      if (!text || !type) return null;
+
+      return { id, text, type };
+    })
+    .filter((question): question is SurveyQuestion => Boolean(question));
+
+  return {
+    survey_intro:
+      typeof asObject?.survey_intro === "string"
+        ? asObject.survey_intro
+        : typeof asObject?.intro === "string"
+          ? asObject.intro
+          : "",
+    questions,
+  };
+};
+
 export default function SurveyPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -46,63 +108,47 @@ export default function SurveyPage() {
           .eq("id", surveyId)
           .maybeSingle();
 
-        if (fetchErr) {
-          console.error("Survey fetch error:", fetchErr);
-          throw fetchErr;
-        }
-        console.log("Survey data:", JSON.stringify(data));
+        if (fetchErr) throw fetchErr;
         if (!data) throw new Error("Survey not found");
 
         if (data.submitted_at) {
           setSubmitted(true);
         } else {
-          const rawQuestionnaire = data.questionnaire as {
-            survey_intro?: unknown;
-            questions?: unknown;
-          } | null;
-
-          const normalizedQuestions: SurveyQuestion[] = Array.isArray(rawQuestionnaire?.questions)
-            ? rawQuestionnaire.questions.filter((question): question is SurveyQuestion => {
-                if (!question || typeof question !== "object") return false;
-                const candidate = question as Record<string, unknown>;
-                return (
-                  typeof candidate.id === "string" &&
-                  typeof candidate.text === "string" &&
-                  (candidate.type === "rating_1_5" ||
-                    candidate.type === "yes_no" ||
-                    candidate.type === "open_text")
-                );
-              })
-            : [];
-
-          setQuestionnaire({
-            survey_intro:
-              typeof rawQuestionnaire?.survey_intro === "string"
-                ? rawQuestionnaire.survey_intro
-                : "",
-            questions: normalizedQuestions,
-          });
+          setQuestionnaire(parseQuestionnaire(data.questionnaire));
         }
       } catch {
-        setError("Unable to load survey. The link may be invalid or expired.");
+        setError("Unable to load survey. The link may be invalid, expired, or inaccessible.");
       } finally {
         setLoading(false);
       }
     })();
   }, [surveyId]);
 
+  const setResponse = (id: string, value: string | number) => {
+    setResponses((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const allAnswered =
+    (questionnaire?.questions.length ?? 0) > 0 &&
+    (questionnaire?.questions.every((q) => {
+      const val = responses[q.id];
+      if (q.type === "rating_1_5") return typeof val === "number" && val > 0;
+      if (q.type === "yes_no") return val === "yes" || val === "no";
+      return typeof val === "string" && val.trim().length > 0;
+    }) ?? false);
+
   const handleSubmit = async () => {
-    if (!questionnaire) return;
+    if (!questionnaire || questionnaire.questions.length === 0) return;
     setSubmitting(true);
 
     const ratingQuestion = questionnaire.questions.find((q) => q.type === "rating_1_5");
-    const ratingValue = ratingQuestion ? (responses[ratingQuestion.id] as number) ?? 0 : 0;
+    const ratingValue = ratingQuestion ? Number(responses[ratingQuestion.id] ?? 0) : 0;
 
     try {
       const { error: updateErr } = await supabase
         .from("surveys")
         .update({
-          rating: ratingValue,
+          rating: Number.isFinite(ratingValue) ? ratingValue : 0,
           responses,
           submitted_at: new Date().toISOString(),
         })
@@ -117,18 +163,6 @@ export default function SurveyPage() {
     }
   };
 
-  const setResponse = (id: string, value: string | number) => {
-    setResponses((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const allAnswered =
-    questionnaire?.questions?.every((q) => {
-      const val = responses[q.id];
-      if (q.type === "rating_1_5") return typeof val === "number" && val > 0;
-      if (q.type === "yes_no") return val === "yes" || val === "no";
-      return typeof val === "string" && val.trim().length > 0;
-    }) ?? false;
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -142,7 +176,7 @@ export default function SurveyPage() {
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <Card className="max-w-md w-full text-center">
           <CardContent className="pt-10 pb-10 space-y-4">
-            <CheckCircle2 className="h-14 w-14 text-green-500 mx-auto" />
+            <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
             <h2 className="text-xl font-semibold text-foreground">Thank you!</h2>
             <p className="text-muted-foreground text-sm">
               Your feedback has been recorded. We appreciate you taking the time to respond.
@@ -196,11 +230,7 @@ export default function SurveyPage() {
   if (!questionnaire) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10">
-            <p className="text-muted-foreground">Loading survey...</p>
-          </CardContent>
-        </Card>
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -215,63 +245,69 @@ export default function SurveyPage() {
           )}
         </CardHeader>
         <CardContent className="space-y-6">
-          {questionnaire.questions.map((q) => (
-            <div key={q.id} className="space-y-2">
-              <label className="text-sm font-medium text-foreground">{q.text}</label>
+          {questionnaire.questions.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No questions are configured in this survey yet. Please contact support.
+            </p>
+          ) : (
+            questionnaire.questions.map((q) => (
+              <div key={q.id} className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{q.text}</label>
 
-              {q.type === "rating_1_5" && (
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <button
-                      key={n}
+                {q.type === "rating_1_5" && (
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setResponse(q.id, n)}
+                        onMouseEnter={() => setHoverRatings((prev) => ({ ...prev, [q.id]: n }))}
+                        onMouseLeave={() => setHoverRatings((prev) => ({ ...prev, [q.id]: 0 }))}
+                        className="p-1 transition-colors"
+                        aria-label={`Rate ${n} out of 5`}
+                      >
+                        <Star
+                          className={`h-8 w-8 ${
+                            n <= ((hoverRatings[q.id] || 0) || ((responses[q.id] as number) || 0))
+                              ? "fill-primary text-primary"
+                              : "text-muted-foreground/30"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {q.type === "yes_no" && (
+                  <div className="flex gap-2">
+                    <Button
                       type="button"
-                      onClick={() => setResponse(q.id, n)}
-                      onMouseEnter={() => setHoverRatings((prev) => ({ ...prev, [q.id]: n }))}
-                      onMouseLeave={() => setHoverRatings((prev) => ({ ...prev, [q.id]: 0 }))}
-                      className="p-1 transition-colors"
-                      aria-label={`Rate ${n} out of 5`}
+                      variant={responses[q.id] === "yes" ? "default" : "outline"}
+                      onClick={() => setResponse(q.id, "yes")}
                     >
-                      <Star
-                        className={`h-8 w-8 ${
-                          n <= ((hoverRatings[q.id] || 0) || ((responses[q.id] as number) || 0))
-                            ? "fill-amber-400 text-amber-400"
-                            : "text-muted-foreground/30"
-                        }`}
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
+                      Yes
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={responses[q.id] === "no" ? "default" : "outline"}
+                      onClick={() => setResponse(q.id, "no")}
+                    >
+                      No
+                    </Button>
+                  </div>
+                )}
 
-              {q.type === "yes_no" && (
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant={responses[q.id] === "yes" ? "default" : "outline"}
-                    onClick={() => setResponse(q.id, "yes")}
-                  >
-                    Yes
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={responses[q.id] === "no" ? "default" : "outline"}
-                    onClick={() => setResponse(q.id, "no")}
-                  >
-                    No
-                  </Button>
-                </div>
-              )}
-
-              {q.type === "open_text" && (
-                <Textarea
-                  value={(responses[q.id] as string) ?? ""}
-                  onChange={(e) => setResponse(q.id, e.target.value)}
-                  placeholder="Your response…"
-                  className="min-h-[80px] text-sm"
-                />
-              )}
-            </div>
-          ))}
+                {q.type === "open_text" && (
+                  <Textarea
+                    value={(responses[q.id] as string) ?? ""}
+                    onChange={(e) => setResponse(q.id, e.target.value)}
+                    placeholder="Your response…"
+                    className="min-h-[80px] text-sm"
+                  />
+                )}
+              </div>
+            ))
+          )}
 
           <Button className="w-full" onClick={handleSubmit} disabled={!allAnswered || submitting}>
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Survey"}
