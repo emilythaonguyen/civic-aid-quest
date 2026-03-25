@@ -84,16 +84,27 @@ export default function StaffTicketDetailPage() {
         // Fetch ticket
         const { data: tData, error: tErr } = await supabase
           .from("requests")
-          .select("id, category, status, location, description, created_at, profiles!requests_citizen_id_fkey(full_name)")
+          .select("id, type, status, location, description, created_at, user_id, submitted_by_name")
           .eq("id", id)
           .single();
 
         if (tErr) throw tErr;
 
+        // Fetch citizen name
+        let citizenName = tData.submitted_by_name ?? "Unknown";
+        if (tData.user_id) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("full_name")
+            .eq("id", tData.user_id)
+            .single();
+          if (profile?.full_name) citizenName = profile.full_name;
+        }
+
         const t: TicketDetail = {
           id: tData.id,
-          citizen_name: (tData as any).profiles?.full_name ?? "Unknown",
-          category: tData.category ?? "Other",
+          citizen_name: citizenName,
+          category: tData.type ? tData.type.charAt(0).toUpperCase() + tData.type.slice(1) : "Other",
           status: tData.status ?? "Open",
           location: tData.location ?? "",
           description: tData.description ?? "",
@@ -105,18 +116,31 @@ export default function StaffTicketDetailPage() {
         // Fetch status history
         const { data: hData, error: hErr } = await supabase
           .from("status_history")
-          .select("id, status, created_at, changed_by, profiles!status_history_changed_by_fkey(full_name)")
+          .select("id, status, created_at, changed_by")
           .eq("request_id", id)
           .order("created_at", { ascending: true });
 
         if (hErr) throw hErr;
+
+        // Fetch staff names for history
+        const changedByIds = [...new Set((hData ?? []).map((h: any) => h.changed_by).filter(Boolean))];
+        let staffNameMap: Record<string, string> = {};
+        if (changedByIds.length > 0) {
+          const { data: staffProfiles } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", changedByIds);
+          (staffProfiles ?? []).forEach((p: any) => {
+            if (p.full_name) staffNameMap[p.id] = p.full_name;
+          });
+        }
 
         setHistory(
           (hData ?? []).map((h: any) => ({
             id: h.id,
             status: h.status,
             created_at: h.created_at,
-            changed_by_name: h.profiles?.full_name ?? "Unknown",
+            changed_by_name: staffNameMap[h.changed_by] ?? "Unknown",
           }))
         );
       } catch (err) {
