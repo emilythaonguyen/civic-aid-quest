@@ -83,6 +83,7 @@ const App = () => (
             />
             <Route path="/hcd/empathy-map-staff" element={<EmpathyMap />} />
             <Route path="/status" element={<PublicStatusPage />} />
+            <Route path="/survey" element={<SurveyPage />} />
             <Route path="/hcd/journey-map-staff" element={<JourneyMapStaff />} />
             <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
             <Route path="/hcd/prompt-templates" element={<PromptTemplatesPage />} />
