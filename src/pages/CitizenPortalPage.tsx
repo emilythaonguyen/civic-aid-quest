@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ClipboardList, Brain, Eye, Loader2, ExternalLink } from "lucide-react";
+import { ClipboardList, Eye, Loader2, ExternalLink } from "lucide-react";
+import SubmitRequestForm from "@/components/SubmitRequestForm";
 import { format } from "date-fns";
 
 const STEPS = [
@@ -118,15 +119,9 @@ export default function CitizenPortalPage() {
           </p>
         </section>
 
-        {/* CTA Button */}
-        <section className="flex justify-center">
-          <Button
-            size="lg"
-            className="w-full sm:max-w-[400px] text-base font-bold"
-            onClick={() => navigate("/submit-request")}
-          >
-            Submit a Service Request
-          </Button>
+        {/* Submit Request Form */}
+        <section>
+          <SubmitRequestForm onSubmitSuccess={fetchRequests} embedded />
         </section>
 
         {/* What Happens Next */}

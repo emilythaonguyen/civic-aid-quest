@@ -27,7 +27,12 @@ interface FormErrors {
   attachment?: string;
 }
 
-export default function SubmitRequestForm() {
+interface SubmitRequestFormProps {
+  onSubmitSuccess?: () => void;
+  embedded?: boolean;
+}
+
+export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitRequestFormProps = {}) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -152,6 +157,7 @@ export default function SubmitRequestForm() {
 
     setSubmitting(false);
     setSubmittedId(data.id);
+    onSubmitSuccess?.();
   };
 
   if (submittedId) {
@@ -173,9 +179,11 @@ export default function SubmitRequestForm() {
           <Button onClick={resetForm} className="w-full">
             Submit Another Request
           </Button>
-          <Button onClick={() => navigate("/portal")} className="w-full">
-            Return to Portal
-          </Button>
+          {!embedded && (
+            <Button onClick={() => navigate("/portal")} className="w-full">
+              Return to Portal
+            </Button>
+          )}
         </CardContent>
       </Card>
     );
