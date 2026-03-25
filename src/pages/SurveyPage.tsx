@@ -10,7 +10,12 @@ import { Loader2, Star, CheckCircle2 } from "lucide-react";
 interface SurveyQuestion {
   id: string;
   text: string;
-  type?: string;
+  type: "rating_1_5" | "yes_no" | "open_text";
+}
+
+interface Questionnaire {
+  survey_intro: string;
+  questions: SurveyQuestion[];
 }
 
 export default function SurveyPage() {
@@ -19,22 +24,18 @@ export default function SurveyPage() {
   const surveyId = searchParams.get("id");
   const [manualId, setManualId] = useState("");
 
-  const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
   const [loading, setLoading] = useState(!surveyId);
   const [error, setError] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [responses, setResponses] = useState<Record<string, string>>({});
+  const [responses, setResponses] = useState<Record<string, string | number>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [hoverRatings, setHoverRatings] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    if (!surveyId) {
-      setLoading(false);
-      return;
-    }
+    if (!surveyId) { setLoading(false); return; }
 
-    const fetchSurvey = async () => {
+    (async () => {
       try {
         const { data, error: fetchErr } = await supabase
           .from("surveys")
@@ -48,29 +49,30 @@ export default function SurveyPage() {
         if (data.submitted_at) {
           setSubmitted(true);
         } else {
-          // Try to load questions from whichever column exists
-          const q = (data.questions ?? data.question_list ?? []) as SurveyQuestion[];
-          setQuestions(q);
+          const q = data.questionnaire as Questionnaire;
+          setQuestionnaire(q ?? { survey_intro: "", questions: [] });
         }
       } catch {
         setError("Unable to load survey. The link may be invalid or expired.");
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchSurvey();
+    })();
   }, [surveyId]);
 
   const handleSubmit = async () => {
-    if (rating === 0) return;
+    if (!questionnaire) return;
     setSubmitting(true);
+
+    // Find the rating_1_5 question to extract the rating value
+    const ratingQuestion = questionnaire.questions.find(q => q.type === "rating_1_5");
+    const ratingValue = ratingQuestion ? (responses[ratingQuestion.id] as number) ?? 0 : 0;
 
     try {
       const { error: updateErr } = await supabase
         .from("surveys")
         .update({
-          rating,
+          rating: ratingValue,
           responses,
           submitted_at: new Date().toISOString(),
         })
@@ -84,6 +86,18 @@ export default function SurveyPage() {
       setSubmitting(false);
     }
   };
+
+  const setResponse = (id: string, value: string | number) => {
+    setResponses(prev => ({ ...prev, [id]: value }));
+  };
+
+  // Check if all required questions are answered
+  const allAnswered = questionnaire?.questions.every(q => {
+    const val = responses[q.id];
+    if (q.type === "rating_1_5") return typeof val === "number" && val > 0;
+    if (q.type === "yes_no") return val === "yes" || val === "no";
+    return typeof val === "string" && val.trim().length > 0;
+  }) ?? false;
 
   if (loading) {
     return (
@@ -115,9 +129,7 @@ export default function SurveyPage() {
         <Card className="max-w-sm w-full">
           <CardHeader>
             <CardTitle className="text-lg">Enter Survey ID</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Paste the survey ID from your email link.
-            </p>
+            <p className="text-sm text-muted-foreground">Paste the survey ID from your email link.</p>
           </CardHeader>
           <CardContent className="space-y-3">
             <Input
@@ -126,11 +138,7 @@ export default function SurveyPage() {
               placeholder="e.g. 22506108-d1bb-4e17-a603-baed0c9a4113"
               className="text-sm"
             />
-            <Button
-              className="w-full"
-              disabled={!manualId.trim()}
-              onClick={() => navigate(`/survey?id=${manualId.trim()}`)}
-            >
+            <Button className="w-full" disabled={!manualId.trim()} onClick={() => navigate(`/survey?id=${manualId.trim()}`)}>
               Load Survey
             </Button>
           </CardContent>
@@ -156,84 +164,71 @@ export default function SurveyPage() {
       <Card className="max-w-lg mx-auto">
         <CardHeader>
           <CardTitle className="text-lg">Service Satisfaction Survey</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Please rate your experience and share any additional feedback.
-          </p>
+          {questionnaire?.survey_intro && (
+            <p className="text-sm text-muted-foreground">{questionnaire.survey_intro}</p>
+          )}
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Star rating */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              Overall satisfaction
-            </label>
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setRating(n)}
-                  onMouseEnter={() => setHoverRating(n)}
-                  onMouseLeave={() => setHoverRating(0)}
-                  className="p-1 transition-colors"
-                  aria-label={`Rate ${n} out of 5`}
-                >
-                  <Star
-                    className={`h-8 w-8 ${
-                      n <= (hoverRating || rating)
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-muted-foreground/30"
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
-            {rating === 0 && (
-              <p className="text-xs text-muted-foreground">Select a rating to continue</p>
-            )}
-          </div>
-
-          {/* Dynamic questions */}
-          {questions.map((q) => (
+          {questionnaire?.questions.map((q) => (
             <div key={q.id} className="space-y-2">
               <label className="text-sm font-medium text-foreground">{q.text}</label>
-              <Textarea
-                value={responses[q.id] ?? ""}
-                onChange={(e) =>
-                  setResponses((prev) => ({ ...prev, [q.id]: e.target.value }))
-                }
-                placeholder="Your response…"
-                className="min-h-[80px] text-sm"
-              />
+
+              {q.type === "rating_1_5" && (
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setResponse(q.id, n)}
+                      onMouseEnter={() => setHoverRatings(prev => ({ ...prev, [q.id]: n }))}
+                      onMouseLeave={() => setHoverRatings(prev => ({ ...prev, [q.id]: 0 }))}
+                      className="p-1 transition-colors"
+                      aria-label={`Rate ${n} out of 5`}
+                    >
+                      <Star
+                        className={`h-8 w-8 ${
+                          n <= ((hoverRatings[q.id] || 0) || (responses[q.id] as number || 0))
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-muted-foreground/30"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {q.type === "yes_no" && (
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={responses[q.id] === "yes" ? "default" : "outline"}
+                    onClick={() => setResponse(q.id, "yes")}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={responses[q.id] === "no" ? "default" : "outline"}
+                    onClick={() => setResponse(q.id, "no")}
+                  >
+                    No
+                  </Button>
+                </div>
+              )}
+
+              {q.type === "open_text" && (
+                <Textarea
+                  value={(responses[q.id] as string) ?? ""}
+                  onChange={(e) => setResponse(q.id, e.target.value)}
+                  placeholder="Your response…"
+                  className="min-h-[80px] text-sm"
+                />
+              )}
             </div>
           ))}
 
-          {/* Fallback open-ended if no questions */}
-          {questions.length === 0 && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Additional comments
-              </label>
-              <Textarea
-                value={responses["general"] ?? ""}
-                onChange={(e) =>
-                  setResponses((prev) => ({ ...prev, general: e.target.value }))
-                }
-                placeholder="Share any additional feedback…"
-                className="min-h-[100px] text-sm"
-              />
-            </div>
-          )}
-
-          <Button
-            className="w-full"
-            onClick={handleSubmit}
-            disabled={rating === 0 || submitting}
-          >
-            {submitting ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              "Submit Survey"
-            )}
+          <Button className="w-full" onClick={handleSubmit} disabled={!allAnswered || submitting}>
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Survey"}
           </Button>
         </CardContent>
       </Card>
