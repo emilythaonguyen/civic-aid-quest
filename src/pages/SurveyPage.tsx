@@ -17,10 +17,9 @@ export default function SurveyPage() {
   const navigate = useNavigate();
   const surveyId = searchParams.get("id");
   const [manualId, setManualId] = useState("");
-  const surveyId = searchParams.get("id");
 
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!surveyId);
   const [error, setError] = useState("");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -30,7 +29,6 @@ export default function SurveyPage() {
 
   useEffect(() => {
     if (!surveyId) {
-      setError("No survey ID provided.");
       setLoading(false);
       return;
     }
