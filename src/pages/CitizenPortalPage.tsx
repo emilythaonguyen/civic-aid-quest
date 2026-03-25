@@ -137,27 +137,30 @@ export default function CitizenPortalPage() {
             <div className="space-y-3">
               {requests.map((req) => (
                 <Card key={req.id}>
-                  <CardContent className="flex flex-col sm:flex-row sm:items-center gap-3 py-4 px-5">
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-muted-foreground">
-                          #{req.id.slice(0, 8)}
-                        </span>
-                        <Badge variant="outline" className={statusClass(req.status)}>
-                          {req.status}
-                        </Badge>
+                  <CardContent className="py-4 px-5 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-mono text-xs text-muted-foreground">
+                            #{req.id.slice(0, 8)}
+                          </span>
+                          <Badge variant="outline" className={statusClass(req.status)}>
+                            {req.status}
+                          </Badge>
+                        </div>
+                        <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
+                        <p className="text-xs text-muted-foreground">{req.location}</p>
                       </div>
-                      <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
-                      <p className="text-xs text-muted-foreground">{req.location}</p>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {format(new Date(req.created_at), "MMM dd, yyyy")}
+                        </span>
+                        <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
+                          View
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        {format(new Date(req.created_at), "MMM dd, yyyy")}
-                      </span>
-                      <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
-                        View
-                      </Button>
-                    </div>
+                    <RequestPizzaTracker status={req.status} />
                   </CardContent>
                 </Card>
               ))}
