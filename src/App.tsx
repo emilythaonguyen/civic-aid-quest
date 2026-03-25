@@ -23,6 +23,7 @@ import StaffDashboardListPage from "./pages/StaffDashboardListPage.tsx";
 import StaffTicketDetailPage from "./pages/StaffTicketDetailPage.tsx";
 import StaffWorkloadPage from "./pages/StaffWorkloadPage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
+import SurveyPage from "./pages/SurveyPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
