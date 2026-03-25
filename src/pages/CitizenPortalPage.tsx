@@ -6,23 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ClipboardList, Eye, Loader2, ExternalLink } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import { format } from "date-fns";
 
-const STEPS = [
-  {
-    icon: ClipboardList,
-    title: "Submit Your Request",
-    description: "Your report is logged and assigned a unique ID.",
-  },
-  {
-    icon: Eye,
-    title: "Track Your Status",
-    description: "You will receive updates as your request moves through review.",
-  },
-];
 
 interface ServiceRequest {
   id: string;
@@ -126,22 +114,6 @@ export default function CitizenPortalPage() {
           <SubmitRequestForm onSubmitSuccess={fetchRequests} embedded />
         </section>
 
-        {/* What Happens Next */}
-        <section className="space-y-4">
-          <h3 className="text-lg font-semibold text-foreground text-center">What Happens Next</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
-            {STEPS.map((step, i) => (
-              <div key={i} className="flex flex-col items-center text-center rounded-lg border border-border bg-card p-5 space-y-2">
-                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary font-bold text-sm">
-                  {i + 1}
-                </div>
-                <step.icon className="h-6 w-6 text-primary" />
-                <p className="font-medium text-foreground text-sm">{step.title}</p>
-                <p className="text-xs text-muted-foreground">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* My Requests */}
         <section className="space-y-4">
