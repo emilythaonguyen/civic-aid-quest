@@ -97,15 +97,29 @@ export default function StaffDashboardListPage() {
       try {
         const { data, error: fetchErr } = await supabase
           .from("requests")
-          .select("id, category, status, location, created_at, citizen_id, profiles!requests_citizen_id_fkey(full_name)")
+          .select("id, type, status, location, created_at, user_id, submitted_by_name")
           .order("created_at", { ascending: false });
 
         if (fetchErr) throw fetchErr;
 
-        const mapped: TicketRow[] = (data ?? []).map((r: any) => ({
+        // Gather unique user_ids to fetch citizen names
+        const rows = data ?? [];
+        const userIds = [...new Set(rows.map((r: any) => r.user_id).filter(Boolean))];
+        let nameMap: Record<string, string> = {};
+        if (userIds.length > 0) {
+          const { data: profiles } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", userIds);
+          (profiles ?? []).forEach((p: any) => {
+            if (p.full_name) nameMap[p.id] = p.full_name;
+          });
+        }
+
+        const mapped: TicketRow[] = rows.map((r: any) => ({
           id: r.id,
-          citizen_name: r.profiles?.full_name ?? "Unknown",
-          category: r.category ?? "Other",
+          citizen_name: nameMap[r.user_id] ?? r.submitted_by_name ?? "Unknown",
+          category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
           status: r.status ?? "Open",
           location: r.location ?? "",
           created_at: r.created_at,
