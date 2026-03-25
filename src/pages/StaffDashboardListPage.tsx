@@ -97,14 +97,23 @@ export default function StaffDashboardListPage() {
       try {
         const { data, error: fetchErr } = await supabase
           .from("requests")
-          .select("id, type, status, location, created_at, citizen_id, user_display_names!inner(full_name)")
+          .select(`
+            id,
+            type,
+            status,
+            location,
+            created_at,
+            profiles!citizen_id (
+              full_name
+            )
+          `)
           .order("created_at", { ascending: false });
 
         if (fetchErr) throw fetchErr;
 
         const mapped: TicketRow[] = (data ?? []).map((r: any) => ({
           id: r.id,
-          citizen_name: r.user_display_names?.full_name ?? "Unknown",
+          citizen_name: r.profiles?.full_name ?? "Unknown",
           category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
           status: r.status ?? "Open",
           location: r.location ?? "",
