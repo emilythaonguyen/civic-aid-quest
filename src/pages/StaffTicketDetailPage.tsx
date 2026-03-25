@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
+import TicketAssignment from "@/components/TicketAssignment";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 
@@ -316,6 +317,9 @@ export default function StaffTicketDetailPage() {
             </div>
           )}
         </div>
+
+        {/* Assignment */}
+        <TicketAssignment ticketId={ticket.id} userId={user!.id} />
 
         {/* Status history */}
         <div className="space-y-3">

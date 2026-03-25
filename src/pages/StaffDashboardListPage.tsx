@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -169,9 +169,17 @@ export default function StaffDashboardListPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
-        <h1 className="text-lg font-bold text-primary">
-          Civic Service Tracker — Staff Portal
-        </h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-bold text-primary">
+            Civic Service Tracker — Staff Portal
+          </h1>
+          <nav className="flex items-center gap-3 text-sm">
+            <span className="font-medium text-foreground">Dashboard</span>
+            <Link to="/staff/workload" className="text-muted-foreground hover:text-foreground">
+              Workload
+            </Link>
+          </nav>
+        </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">
             {staffName || user?.email}
