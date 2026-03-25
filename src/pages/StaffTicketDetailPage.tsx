@@ -13,6 +13,7 @@ import {
 import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import TicketAssignment from "@/components/TicketAssignment";
+import InternalComments from "@/components/InternalComments";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 
@@ -334,6 +335,14 @@ export default function StaffTicketDetailPage() {
           )}
         </div>
 
+        {/* AI Resolution Suggestions */}
+        <div className="border border-blue-200 bg-blue-50 rounded-lg p-4 space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
+          <p className="text-sm text-muted-foreground">
+            Resolution suggestions will appear here once the AI workflow is active.
+          </p>
+        </div>
+
         {/* Status update */}
         <div className="border rounded-lg p-4 space-y-3">
           <h3 className="text-sm font-semibold text-foreground">Update Status</h3>
@@ -413,6 +422,9 @@ export default function StaffTicketDetailPage() {
             </div>
           )}
         </div>
+
+        {/* Internal Comments */}
+        <InternalComments requestId={ticket.id} userId={user!.id} />
       </main>
     </div>
   );
