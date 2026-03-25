@@ -43,7 +43,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/submit-request" element={<Navigate to="/portal" replace />} />
+            
             <Route
               path="/dashboard"
               element={
