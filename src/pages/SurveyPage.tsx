@@ -92,7 +92,7 @@ export default function SurveyPage() {
   };
 
   // Check if all required questions are answered
-  const allAnswered = questionnaire?.questions.every(q => {
+  const allAnswered = questionnaire?.questions?.every(q => {
     const val = responses[q.id];
     if (q.type === "rating_1_5") return typeof val === "number" && val > 0;
     if (q.type === "yes_no") return val === "yes" || val === "no";
