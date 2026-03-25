@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
+import TicketAssignment from "@/components/TicketAssignment";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 
@@ -213,10 +214,18 @@ export default function StaffTicketDetailPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card px-6 py-4">
+      <header className="border-b bg-card px-6 py-4 flex items-center gap-4">
         <h1 className="text-lg font-bold text-primary">
           Civic Service Tracker — Staff Portal
         </h1>
+        <nav className="flex items-center gap-3 text-sm">
+          <Link to="/staff/dashboard" className="text-muted-foreground hover:text-foreground">
+            Dashboard
+          </Link>
+          <Link to="/staff/workload" className="text-muted-foreground hover:text-foreground">
+            Workload
+          </Link>
+        </nav>
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-8 space-y-8">
@@ -316,6 +325,9 @@ export default function StaffTicketDetailPage() {
             </div>
           )}
         </div>
+
+        {/* Assignment */}
+        <TicketAssignment ticketId={ticket.id} userId={user!.id} />
 
         {/* Status history */}
         <div className="space-y-3">

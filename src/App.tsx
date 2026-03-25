@@ -21,6 +21,7 @@ import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
 import StaffDashboardListPage from "./pages/StaffDashboardListPage.tsx";
 import StaffTicketDetailPage from "./pages/StaffTicketDetailPage.tsx";
+import StaffWorkloadPage from "./pages/StaffWorkloadPage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -58,6 +59,15 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="staff">
                   <StaffTicketDetailPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/staff/workload"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffWorkloadPage />
                 </ProtectedRoute>
               }
             />
