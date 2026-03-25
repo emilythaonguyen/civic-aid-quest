@@ -38,9 +38,9 @@ export default function SurveyPage() {
       try {
         const { data, error: fetchErr } = await supabase
           .from("surveys")
-          .select("questions, submitted_at")
+          .select("*")
           .eq("id", surveyId)
-          .single();
+          .maybeSingle();
 
         if (fetchErr) throw fetchErr;
         if (!data) throw new Error("Survey not found");
@@ -48,7 +48,8 @@ export default function SurveyPage() {
         if (data.submitted_at) {
           setSubmitted(true);
         } else {
-          const q = (data.questions as SurveyQuestion[]) ?? [];
+          // Try to load questions from whichever column exists
+          const q = (data.questions ?? data.question_list ?? []) as SurveyQuestion[];
           setQuestions(q);
         }
       } catch {
