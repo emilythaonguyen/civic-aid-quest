@@ -7,11 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, BarChart3, Clock, FileText, TrendingUp } from "lucide-react";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   PieChart,
@@ -237,110 +232,54 @@ export default function AnalyticsDashboardPage() {
               </Card>
             </div>
 
-            {/* Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Bar Chart */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Request Volume by Category</CardTitle>
-                  <CardDescription>Total submissions per request type</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {analytics.volumeByCategory.length === 0 ? (
-                    <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
-                      No data yet
-                    </div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={280}>
-                      <BarChart
+            {/* Pie Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Request Volume by Category</CardTitle>
+                <CardDescription>Proportional share and count of each request type</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {analytics.volumeByCategory.length === 0 ? (
+                  <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
+                    No data yet
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={320}>
+                    <PieChart>
+                      <Pie
                         data={analytics.volumeByCategory}
-                        margin={{ top: 8, right: 16, left: 0, bottom: 40 }}
+                        dataKey="count"
+                        nameKey="category"
+                        cx="50%"
+                        cy="45%"
+                        outerRadius={100}
+                        label={({ category, count, percent }) =>
+                          `${category}: ${count} (${(percent * 100).toFixed(0)}%)`
+                        }
+                        labelLine={true}
                       >
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis
-                          dataKey="category"
-                          tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                          angle={-30}
-                          textAnchor="end"
-                          interval={0}
-                        />
-                        <YAxis
-                          allowDecimals={false}
-                          tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                            fontSize: 12,
-                          }}
-                          labelStyle={{ color: "hsl(var(--foreground))" }}
-                        />
-                        <Bar dataKey="count" name="Requests" radius={[4, 4, 0, 0]}>
-                          {analytics.volumeByCategory.map((_, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Pie Chart */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Category Distribution</CardTitle>
-                  <CardDescription>Proportional share of request types</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {analytics.volumeByCategory.length === 0 ? (
-                    <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
-                      No data yet
-                    </div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={280}>
-                      <PieChart>
-                        <Pie
-                          data={analytics.volumeByCategory}
-                          dataKey="count"
-                          nameKey="category"
-                          cx="50%"
-                          cy="45%"
-                          outerRadius={90}
-                          label={({ category, percent }) =>
-                            `${category} (${(percent * 100).toFixed(0)}%)`
-                          }
-                          labelLine={true}
-                        >
-                          {analytics.volumeByCategory.map((_, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                            fontSize: 12,
-                          }}
-                        />
-                        <Legend
-                          wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                        {analytics.volumeByCategory.map((_, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "6px",
+                          fontSize: 12,
+                        }}
+                        formatter={(value, name) => [value, name]}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Average Resolution Time Detail */}
             <Card>
