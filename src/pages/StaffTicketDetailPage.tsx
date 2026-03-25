@@ -157,23 +157,13 @@ export default function StaffTicketDetailPage() {
     const oldStatus = ticket.status;
 
     try {
-      // Update request status
+      // Update request status — trigger handles status_history automatically
       const { error: updateErr } = await supabase
         .from("requests")
         .update({ status: newStatus })
         .eq("id", ticket.id);
 
       if (updateErr) throw updateErr;
-
-      // Insert status_history row with old_status and new_status
-      const { error: histErr } = await supabase.from("status_history").insert({
-        request_id: ticket.id,
-        old_status: oldStatus,
-        new_status: newStatus,
-        changed_by: user.id,
-      });
-
-      if (histErr) throw histErr;
 
       // Update local state
       setTicket({ ...ticket, status: newStatus });
