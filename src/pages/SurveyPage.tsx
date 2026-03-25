@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Star, CheckCircle2 } from "lucide-react";
 
@@ -14,10 +15,12 @@ interface SurveyQuestion {
 
 export default function SurveyPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const surveyId = searchParams.get("id");
+  const [manualId, setManualId] = useState("");
 
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!surveyId);
   const [error, setError] = useState("");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -27,7 +30,6 @@ export default function SurveyPage() {
 
   useEffect(() => {
     if (!surveyId) {
-      setError("No survey ID provided.");
       setLoading(false);
       return;
     }
@@ -100,6 +102,36 @@ export default function SurveyPage() {
             <p className="text-muted-foreground text-sm">
               Your feedback has been recorded. We appreciate you taking the time to respond.
             </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!surveyId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="max-w-sm w-full">
+          <CardHeader>
+            <CardTitle className="text-lg">Enter Survey ID</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Paste the survey ID from your email link.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Input
+              value={manualId}
+              onChange={(e) => setManualId(e.target.value)}
+              placeholder="e.g. 22506108-d1bb-4e17-a603-baed0c9a4113"
+              className="text-sm"
+            />
+            <Button
+              className="w-full"
+              disabled={!manualId.trim()}
+              onClick={() => navigate(`/survey?id=${manualId.trim()}`)}
+            >
+              Load Survey
+            </Button>
           </CardContent>
         </Card>
       </div>
