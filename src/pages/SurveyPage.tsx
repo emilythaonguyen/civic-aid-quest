@@ -46,7 +46,11 @@ export default function SurveyPage() {
           .eq("id", surveyId)
           .maybeSingle();
 
-        if (fetchErr) throw fetchErr;
+        if (fetchErr) {
+          console.error("Survey fetch error:", fetchErr);
+          throw fetchErr;
+        }
+        console.log("Survey data:", JSON.stringify(data));
         if (!data) throw new Error("Survey not found");
 
         if (data.submitted_at) {
