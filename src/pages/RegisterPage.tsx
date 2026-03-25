@@ -25,7 +25,7 @@ export default function RegisterPage() {
     if (password !== confirmPassword) { setError("Passwords do not match."); return; }
 
     setSubmitting(true);
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -35,6 +35,7 @@ export default function RegisterPage() {
     });
 
     if (signUpError) {
+      console.error("Signup error:", signUpError);
       setError(
         signUpError.message.includes("already registered")
           ? "An account with this email already exists."
@@ -42,6 +43,25 @@ export default function RegisterPage() {
       );
       setSubmitting(false);
       return;
+    }
+
+    console.log("Signup successful:", signUpData);
+
+    // If the trigger didn't create the profile, try manual insert as fallback
+    if (signUpData.user) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .upsert({
+          id: signUpData.user.id,
+          full_name: fullName,
+          email: email,
+          role: "citizen",
+        }, { onConflict: "id" });
+
+      if (profileError) {
+        console.error("Profile upsert error:", profileError);
+        // Don't block registration — the trigger may have already created the row
+      }
     }
 
     navigate("/portal");
