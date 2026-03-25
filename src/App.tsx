@@ -19,6 +19,8 @@ import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
 
 import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
 import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
+import StaffDashboardListPage from "./pages/StaffDashboardListPage.tsx";
+import StaffTicketDetailPage from "./pages/StaffTicketDetailPage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -43,7 +45,23 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            
+            <Route
+              path="/staff/dashboard"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffDashboardListPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/tickets/:id"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffTicketDetailPage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/dashboard"
               element={
