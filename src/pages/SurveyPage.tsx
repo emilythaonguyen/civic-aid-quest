@@ -25,7 +25,7 @@ export default function SurveyPage() {
   const [manualId, setManualId] = useState("");
 
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
-  const [loading, setLoading] = useState(!surveyId);
+  const [loading, setLoading] = useState(!!surveyId);
   const [error, setError] = useState("");
   const [responses, setResponses] = useState<Record<string, string | number>>({});
   const [submitting, setSubmitting] = useState(false);
