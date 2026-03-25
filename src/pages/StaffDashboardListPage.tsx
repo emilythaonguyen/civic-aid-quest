@@ -103,7 +103,7 @@ export default function StaffDashboardListPage() {
             status,
             location,
             created_at,
-            profiles!citizen_id (
+            profiles!user_id (
               full_name
             )
           `)
