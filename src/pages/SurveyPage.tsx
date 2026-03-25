@@ -14,6 +14,9 @@ interface SurveyQuestion {
 
 export default function SurveyPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const surveyId = searchParams.get("id");
+  const [manualId, setManualId] = useState("");
   const surveyId = searchParams.get("id");
 
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
