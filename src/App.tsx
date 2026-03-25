@@ -45,7 +45,23 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            
+            <Route
+              path="/staff/dashboard"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffDashboardListPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/tickets/:id"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffTicketDetailPage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/dashboard"
               element={
