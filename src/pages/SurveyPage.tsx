@@ -33,7 +33,10 @@ export default function SurveyPage() {
   const [hoverRatings, setHoverRatings] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    if (!surveyId) { setLoading(false); return; }
+    if (!surveyId) {
+      setLoading(false);
+      return;
+    }
 
     (async () => {
       try {
@@ -49,8 +52,32 @@ export default function SurveyPage() {
         if (data.submitted_at) {
           setSubmitted(true);
         } else {
-          const q = data.questionnaire as Questionnaire;
-          setQuestionnaire(q ?? { survey_intro: "", questions: [] });
+          const rawQuestionnaire = data.questionnaire as {
+            survey_intro?: unknown;
+            questions?: unknown;
+          } | null;
+
+          const normalizedQuestions: SurveyQuestion[] = Array.isArray(rawQuestionnaire?.questions)
+            ? rawQuestionnaire.questions.filter((question): question is SurveyQuestion => {
+                if (!question || typeof question !== "object") return false;
+                const candidate = question as Record<string, unknown>;
+                return (
+                  typeof candidate.id === "string" &&
+                  typeof candidate.text === "string" &&
+                  (candidate.type === "rating_1_5" ||
+                    candidate.type === "yes_no" ||
+                    candidate.type === "open_text")
+                );
+              })
+            : [];
+
+          setQuestionnaire({
+            survey_intro:
+              typeof rawQuestionnaire?.survey_intro === "string"
+                ? rawQuestionnaire.survey_intro
+                : "",
+            questions: normalizedQuestions,
+          });
         }
       } catch {
         setError("Unable to load survey. The link may be invalid or expired.");
@@ -64,8 +91,7 @@ export default function SurveyPage() {
     if (!questionnaire) return;
     setSubmitting(true);
 
-    // Find the rating_1_5 question to extract the rating value
-    const ratingQuestion = questionnaire.questions.find(q => q.type === "rating_1_5");
+    const ratingQuestion = questionnaire.questions.find((q) => q.type === "rating_1_5");
     const ratingValue = ratingQuestion ? (responses[ratingQuestion.id] as number) ?? 0 : 0;
 
     try {
@@ -88,16 +114,16 @@ export default function SurveyPage() {
   };
 
   const setResponse = (id: string, value: string | number) => {
-    setResponses(prev => ({ ...prev, [id]: value }));
+    setResponses((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Check if all required questions are answered
-  const allAnswered = questionnaire?.questions?.every(q => {
-    const val = responses[q.id];
-    if (q.type === "rating_1_5") return typeof val === "number" && val > 0;
-    if (q.type === "yes_no") return val === "yes" || val === "no";
-    return typeof val === "string" && val.trim().length > 0;
-  }) ?? false;
+  const allAnswered =
+    questionnaire?.questions?.every((q) => {
+      const val = responses[q.id];
+      if (q.type === "rating_1_5") return typeof val === "number" && val > 0;
+      if (q.type === "yes_no") return val === "yes" || val === "no";
+      return typeof val === "string" && val.trim().length > 0;
+    }) ?? false;
 
   if (loading) {
     return (
@@ -138,7 +164,11 @@ export default function SurveyPage() {
               placeholder="e.g. 22506108-d1bb-4e17-a603-baed0c9a4113"
               className="text-sm"
             />
-            <Button className="w-full" disabled={!manualId.trim()} onClick={() => navigate(`/survey?id=${manualId.trim()}`)}>
+            <Button
+              className="w-full"
+              disabled={!manualId.trim()}
+              onClick={() => navigate(`/survey?id=${manualId.trim()}`)}
+            >
               Load Survey
             </Button>
           </CardContent>
@@ -159,17 +189,29 @@ export default function SurveyPage() {
     );
   }
 
+  if (!questionnaire) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="max-w-md w-full text-center">
+          <CardContent className="pt-10 pb-10">
+            <p className="text-muted-foreground">Loading survey...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background py-10 px-4">
       <Card className="max-w-lg mx-auto">
         <CardHeader>
           <CardTitle className="text-lg">Service Satisfaction Survey</CardTitle>
-          {questionnaire?.survey_intro && (
+          {questionnaire.survey_intro && (
             <p className="text-sm text-muted-foreground">{questionnaire.survey_intro}</p>
           )}
         </CardHeader>
         <CardContent className="space-y-6">
-          {questionnaire?.questions.map((q) => (
+          {questionnaire.questions.map((q) => (
             <div key={q.id} className="space-y-2">
               <label className="text-sm font-medium text-foreground">{q.text}</label>
 
@@ -180,14 +222,14 @@ export default function SurveyPage() {
                       key={n}
                       type="button"
                       onClick={() => setResponse(q.id, n)}
-                      onMouseEnter={() => setHoverRatings(prev => ({ ...prev, [q.id]: n }))}
-                      onMouseLeave={() => setHoverRatings(prev => ({ ...prev, [q.id]: 0 }))}
+                      onMouseEnter={() => setHoverRatings((prev) => ({ ...prev, [q.id]: n }))}
+                      onMouseLeave={() => setHoverRatings((prev) => ({ ...prev, [q.id]: 0 }))}
                       className="p-1 transition-colors"
                       aria-label={`Rate ${n} out of 5`}
                     >
                       <Star
                         className={`h-8 w-8 ${
-                          n <= ((hoverRatings[q.id] || 0) || (responses[q.id] as number || 0))
+                          n <= ((hoverRatings[q.id] || 0) || ((responses[q.id] as number) || 0))
                             ? "fill-amber-400 text-amber-400"
                             : "text-muted-foreground/30"
                         }`}
