@@ -39,6 +39,11 @@ interface TicketDetail {
   location: string;
   description: string;
   created_at: string;
+  triage_type: string | null;
+  triage_priority: string | null;
+  triage_summary: string | null;
+  triage_confidence: string | null;
+  triage_completed_at: string | null;
 }
 
 interface HistoryEntry {
@@ -88,6 +93,7 @@ export default function StaffTicketDetailPage() {
           .from("requests")
           .select(`
             id, type, status, location, description, created_at,
+            triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
             profiles!user_id ( full_name )
           `)
           .eq("id", id)
@@ -105,6 +111,11 @@ export default function StaffTicketDetailPage() {
           location: tData.location ?? "",
           description: tData.description ?? "",
           created_at: tData.created_at,
+          triage_type: (tData as any).triage_type ?? null,
+          triage_priority: (tData as any).triage_priority ?? null,
+          triage_summary: (tData as any).triage_summary ?? null,
+          triage_confidence: (tData as any).triage_confidence ?? null,
+          triage_completed_at: (tData as any).triage_completed_at ?? null,
         };
         setTicket(t);
         setNewStatus(t.status);
@@ -282,6 +293,59 @@ export default function StaffTicketDetailPage() {
               {ticket.description || "No description provided."}
             </p>
           </div>
+        </div>
+
+        {/* AI Triage */}
+        <div className="border rounded-lg p-4 space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">AI Triage</h3>
+          {!ticket.triage_completed_at ? (
+            <p className="text-sm text-muted-foreground">
+              Triage pending — AI classification not yet complete.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Type</span>
+                <p className="mt-0.5">{ticket.triage_type || "—"}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Priority</span>
+                <p className="mt-1">
+                  {ticket.triage_priority ? (
+                    <span
+                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
+                        ticket.triage_priority === "High"
+                          ? "bg-red-100 text-red-800 border-red-200"
+                          : ticket.triage_priority === "Medium"
+                          ? "bg-amber-100 text-amber-800 border-amber-200"
+                          : "bg-green-100 text-green-800 border-green-200"
+                      }`}
+                    >
+                      {ticket.triage_priority}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Confidence</span>
+                <p className="mt-0.5">{ticket.triage_confidence || "—"}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Completed</span>
+                <p className="mt-0.5">
+                  {format(new Date(ticket.triage_completed_at), "MMM d, yyyy · h:mm a")}
+                </p>
+              </div>
+              <div className="sm:col-span-2">
+                <span className="text-muted-foreground">Summary</span>
+                <p className="mt-1 text-sm leading-relaxed whitespace-pre-wrap rounded-md border bg-muted/30 p-3">
+                  {ticket.triage_summary || "—"}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Status update */}
