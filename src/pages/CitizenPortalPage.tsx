@@ -216,6 +216,11 @@ export default function CitizenPortalPage() {
                   <p className="text-sm text-muted-foreground">No attachment provided.</p>
                 )}
               </div>
+              {/* Status History */}
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2">Status History</p>
+                <RequestStatusHistory requestId={selectedRequest.id} />
+              </div>
             </div>
           )}
         </DialogContent>
