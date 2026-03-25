@@ -23,6 +23,7 @@ import StaffDashboardListPage from "./pages/StaffDashboardListPage.tsx";
 import StaffTicketDetailPage from "./pages/StaffTicketDetailPage.tsx";
 import StaffWorkloadPage from "./pages/StaffWorkloadPage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
+import SurveyPage from "./pages/SurveyPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ const App = () => (
             />
             <Route path="/hcd/empathy-map-staff" element={<EmpathyMap />} />
             <Route path="/status" element={<PublicStatusPage />} />
+            <Route path="/survey" element={<SurveyPage />} />
             <Route path="/hcd/journey-map-staff" element={<JourneyMapStaff />} />
             <Route path="/hcd/artifacts" element={<HCDArtefactsPage />} />
             <Route path="/hcd/prompt-templates" element={<PromptTemplatesPage />} />
