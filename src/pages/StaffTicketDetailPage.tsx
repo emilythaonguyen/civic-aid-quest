@@ -42,7 +42,8 @@ interface TicketDetail {
 
 interface HistoryEntry {
   id: string;
-  status: string;
+  old_status: string;
+  new_status: string;
   created_at: string;
   changed_by_name: string;
 }
@@ -110,7 +111,7 @@ export default function StaffTicketDetailPage() {
         // Fetch status history
         const { data: hData, error: hErr } = await supabase
           .from("status_history")
-          .select("id, status, created_at, changed_by")
+          .select("id, old_status, new_status, created_at, changed_by")
           .eq("request_id", id)
           .order("created_at", { ascending: true });
 
@@ -132,7 +133,8 @@ export default function StaffTicketDetailPage() {
         setHistory(
           (hData ?? []).map((h: any) => ({
             id: h.id,
-            status: h.status,
+            old_status: h.old_status ?? "",
+            new_status: h.new_status ?? "",
             created_at: h.created_at,
             changed_by_name: staffNameMap[h.changed_by] ?? "Unknown",
           }))
@@ -152,6 +154,8 @@ export default function StaffTicketDetailPage() {
     setSaving(true);
     setSaveMsg(null);
 
+    const oldStatus = ticket.status;
+
     try {
       // Update request status
       const { error: updateErr } = await supabase
@@ -161,10 +165,11 @@ export default function StaffTicketDetailPage() {
 
       if (updateErr) throw updateErr;
 
-      // Insert status_history row
+      // Insert status_history row with old_status and new_status
       const { error: histErr } = await supabase.from("status_history").insert({
         request_id: ticket.id,
-        status: newStatus,
+        old_status: oldStatus,
+        new_status: newStatus,
         changed_by: user.id,
       });
 
@@ -176,7 +181,8 @@ export default function StaffTicketDetailPage() {
         ...prev,
         {
           id: crypto.randomUUID(),
-          status: newStatus,
+          old_status: oldStatus,
+          new_status: newStatus,
           created_at: new Date().toISOString(),
           changed_by_name: "You",
         },
@@ -331,15 +337,21 @@ export default function StaffTicketDetailPage() {
               {history.map((h) => (
                 <div
                   key={h.id}
-                  className="flex items-center gap-3 text-sm border-l-2 border-border pl-3 py-1"
+                  className="flex flex-wrap items-center gap-2 text-sm border-l-2 border-border pl-3 py-1"
                 >
                   <span
-                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${statusColor(h.status)}`}
+                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${statusColor(h.old_status)}`}
                   >
-                    {h.status}
+                    {h.old_status}
+                  </span>
+                  <span className="text-muted-foreground">→</span>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${statusColor(h.new_status)}`}
+                  >
+                    {h.new_status}
                   </span>
                   <span className="text-muted-foreground">
-                    {format(new Date(h.created_at), "MMM d, yyyy · h:mm a")}
+                    — {format(new Date(h.created_at), "MMM d, yyyy · h:mm a")}
                   </span>
                   <span className="text-muted-foreground">
                     — Changed by: {h.changed_by_name}
