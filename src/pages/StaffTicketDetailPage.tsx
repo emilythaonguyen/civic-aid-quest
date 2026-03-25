@@ -84,22 +84,16 @@ export default function StaffTicketDetailPage() {
         // Fetch ticket
         const { data: tData, error: tErr } = await supabase
           .from("requests")
-          .select("id, type, status, location, description, created_at, user_id, submitted_by_name")
+          .select(`
+            id, type, status, location, description, created_at,
+            profiles!user_id ( full_name )
+          `)
           .eq("id", id)
           .single();
 
         if (tErr) throw tErr;
 
-        // Fetch citizen name
-        let citizenName = tData.submitted_by_name ?? "Unknown";
-        if (tData.user_id) {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("full_name")
-            .eq("id", tData.user_id)
-            .single();
-          if (profile?.full_name) citizenName = profile.full_name;
-        }
+        const citizenName = (tData as any).profiles?.full_name ?? "Unknown";
 
         const t: TicketDetail = {
           id: tData.id,
