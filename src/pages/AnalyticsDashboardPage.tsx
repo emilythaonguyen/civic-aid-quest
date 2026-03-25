@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, BarChart3, Clock, FileText, TrendingUp } from "lucide-react";
+import RoleSwitcher from "@/components/RoleSwitcher";
 import {
   Tooltip,
   ResponsiveContainer,
@@ -135,6 +136,7 @@ export default function AnalyticsDashboardPage() {
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
+          <RoleSwitcher />
           <Button variant="outline" size="sm" onClick={handleSignOut}>
             Sign Out
           </Button>

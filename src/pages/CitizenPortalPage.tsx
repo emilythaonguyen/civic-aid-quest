@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ClipboardList, Eye, Loader2, ExternalLink } from "lucide-react";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
+import RoleSwitcher from "@/components/RoleSwitcher";
 import { format } from "date-fns";
 
 const STEPS = [
@@ -106,6 +107,7 @@ export default function CitizenPortalPage() {
         <h1 className="text-xl font-bold text-primary">Citizen Connect</h1>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
+          <RoleSwitcher />
           <Button variant="outline" size="sm" onClick={handleSignOut}>Sign Out</Button>
         </div>
       </header>
