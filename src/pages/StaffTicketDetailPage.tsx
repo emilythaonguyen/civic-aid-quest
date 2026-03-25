@@ -303,11 +303,7 @@ export default function StaffTicketDetailPage() {
               Triage pending — AI classification not yet complete.
             </p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
-              <div>
-                <span className="text-muted-foreground">Type</span>
-                <p className="mt-0.5">{ticket.triage_type || "—"}</p>
-              </div>
+            <div className="space-y-3 text-sm">
               <div>
                 <span className="text-muted-foreground">Priority</span>
                 <p className="mt-1">
@@ -329,18 +325,8 @@ export default function StaffTicketDetailPage() {
                 </p>
               </div>
               <div>
-                <span className="text-muted-foreground">Confidence</span>
-                <p className="mt-0.5">{ticket.triage_confidence || "—"}</p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Completed</span>
-                <p className="mt-0.5">
-                  {format(new Date(ticket.triage_completed_at), "MMM d, yyyy · h:mm a")}
-                </p>
-              </div>
-              <div className="sm:col-span-2">
                 <span className="text-muted-foreground">Summary</span>
-                <p className="mt-1 text-sm leading-relaxed whitespace-pre-wrap rounded-md border bg-muted/30 p-3">
+                <p className="mt-1 leading-relaxed whitespace-pre-wrap rounded-md border bg-muted/30 p-3">
                   {ticket.triage_summary || "—"}
                 </p>
               </div>
