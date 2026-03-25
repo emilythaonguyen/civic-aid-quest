@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, ExternalLink } from "lucide-react";
+import RequestStatusHistory from "@/components/RequestStatusHistory";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import { format } from "date-fns";
