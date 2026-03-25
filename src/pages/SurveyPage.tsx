@@ -290,7 +290,7 @@ export default function SurveyPage() {
                         <Star
                           className={`h-8 w-8 ${
                             n <= ((hoverRatings[q.id] || 0) || ((responses[q.id] as number) || 0))
-                              ? "fill-primary text-primary"
+                              ? "fill-yellow-400 text-yellow-400"
                               : "text-muted-foreground/30"
                           }`}
                         />
