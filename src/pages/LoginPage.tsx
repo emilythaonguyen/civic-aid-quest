@@ -94,6 +94,10 @@ export default function LoginPage() {
           </p>
         </CardFooter>
       </Card>
+
+      <Button variant="ghost" className="mt-4" onClick={() => navigate("/")}>
+        Return to Home
+      </Button>
     </div>
   );
 }
