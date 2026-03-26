@@ -39,6 +39,7 @@ function getWeekRange() {
 }
 
 export default function PublicStatusPage() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<CategoryStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
