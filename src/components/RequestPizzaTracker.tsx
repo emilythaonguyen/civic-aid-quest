@@ -19,12 +19,25 @@ export default function RequestPizzaTracker({ status }: RequestPizzaTrackerProps
   return (
     <div className="w-full py-4">
       <div className="flex items-start justify-between relative">
-        {/* Connector line behind the icons */}
-        <div className="absolute top-5 left-0 right-0 h-0.5 bg-muted z-0 mx-8" />
-        <div
-          className="absolute top-5 left-0 h-0.5 bg-primary z-0 mx-8 transition-all duration-500"
-          style={{ width: `calc(${(activeIndex / (STEPS.length - 1)) * 100}% - 4rem)` }}
-        />
+        {/* Connector lines between icons */}
+        {STEPS.map((_, i) => {
+          if (i === STEPS.length - 1) return null;
+          const segmentCompleted = i < activeIndex;
+          const stepWidth = 100 / STEPS.length;
+          return (
+            <div
+              key={`line-${i}`}
+              className="absolute top-5 h-0.5 z-0"
+              style={{
+                left: `calc(${(i + 0.5) * stepWidth}% + 20px)`,
+                width: `calc(${stepWidth}% - 40px)`,
+              }}
+            >
+              <div className="w-full h-full bg-muted" />
+              {segmentCompleted && <div className="absolute inset-0 bg-primary transition-all duration-500" />}
+            </div>
+          );
+        })}
 
         {STEPS.map((step, i) => {
           const isCompleted = i < activeIndex;
