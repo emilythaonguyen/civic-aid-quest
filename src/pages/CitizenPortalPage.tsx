@@ -115,7 +115,12 @@ export default function CitizenPortalPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-primary">Citizen Connect</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-bold text-primary">Citizen Connect</h1>
+          <Button className="bg-white text-black border border-input hover:bg-gray-100" size="sm" onClick={() => navigate("/status")}>
+            Public Status
+          </Button>
+        </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
           <RoleSwitcher />
