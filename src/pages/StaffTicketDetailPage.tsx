@@ -191,7 +191,7 @@ export default function StaffTicketDetailPage() {
     setSuggestions([]);
 
     try {
-      const raw = (ticket as any).suggestions;
+      const raw = ticket.suggestions;
       if (!raw) {
         setSuggestionsFallback(true);
         setSuggestionsLoading(false);
