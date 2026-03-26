@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Star, CheckCircle2 } from "lucide-react";
+import { Loader2, Star, CheckCircle2, ArrowLeft, LogOut } from "lucide-react";
 
 interface SurveyQuestion {
   id: string;
@@ -101,9 +101,26 @@ const parseQuestionnaire = (raw: unknown): Questionnaire => {
 };
 
 export default function SurveyPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const requestId = searchParams.get("request_id");
   const directSurveyId = searchParams.get("id");
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
+  const SurveyHeader = () => (
+    <header className="border-b bg-card px-6 py-3 flex items-center justify-between">
+      <Button variant="ghost" size="sm" onClick={() => navigate("/portal")}>
+        <ArrowLeft className="h-4 w-4 mr-1" /> Back to Portal
+      </Button>
+      <Button variant="outline" size="sm" onClick={handleSignOut}>
+        <LogOut className="h-4 w-4 mr-1" /> Sign Out
+      </Button>
+    </header>
+  );
 
   const [surveyId, setSurveyId] = useState<string | null>(directSurveyId);
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
