@@ -21,43 +21,6 @@ const STATUS_OPTIONS = ["All", "Open", "In Review", "Resolved", "Escalated"] as 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 const PRIORITY_OPTIONS = ["All", "High", "Medium", "Low"] as const;
 
-function priorityColor(priority: string | null) {
-  switch (priority) {
-    case "High":
-      return "bg-red-100 text-red-800 border-red-200";
-    case "Medium":
-      return "bg-amber-100 text-amber-800 border-amber-200";
-    case "Low":
-      return "bg-green-100 text-green-800 border-green-200";
-    default:
-      return "bg-gray-100 text-gray-500 border-gray-200";
-  }
-}
-
-function statusColor(status: string) {
-  switch (status) {
-    case "Open":
-      return "bg-blue-100 text-blue-800 border-blue-200";
-    case "In Review":
-      return "bg-amber-100 text-amber-800 border-amber-200";
-    case "Resolved":
-      return "bg-green-100 text-green-800 border-green-200";
-    case "Escalated":
-      return "bg-red-100 text-red-800 border-red-200";
-    default:
-      return "bg-muted text-muted-foreground";
-  }
-}
-
-interface TicketRow {
-  id: string;
-  citizen_name: string;
-  category: string;
-  status: string;
-  priority: string | null;
-  location: string;
-  created_at: string;
-}
 
 export default function StaffDashboardListPage() {
   const { user, signOut, role, loading: authLoading } = useAuth();
