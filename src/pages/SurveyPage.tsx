@@ -104,11 +104,12 @@ const parseQuestionnaire = (raw: unknown): Questionnaire => {
 export default function SurveyPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const surveyId = searchParams.get("id");
-  const [manualId, setManualId] = useState("");
+  const requestId = searchParams.get("request_id");
+  const directSurveyId = searchParams.get("id");
 
+  const [surveyId, setSurveyId] = useState<string | null>(directSurveyId);
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
-  const [loading, setLoading] = useState(!!surveyId);
+  const [loading, setLoading] = useState(!!(requestId || directSurveyId));
   const [error, setError] = useState("");
   const [responses, setResponses] = useState<Record<string, string | number>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -116,17 +117,32 @@ export default function SurveyPage() {
   const [hoverRatings, setHoverRatings] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    if (!surveyId) {
+    if (!requestId && !directSurveyId) {
       setLoading(false);
       return;
     }
 
     (async () => {
       try {
+        let resolvedId = directSurveyId;
+
+        if (!resolvedId && requestId) {
+          const { data: surveyRow, error: lookupErr } = await supabase
+            .from("surveys")
+            .select("id")
+            .eq("request_id", requestId)
+            .maybeSingle();
+
+          if (lookupErr) throw lookupErr;
+          if (!surveyRow) throw new Error("No survey found for this request");
+          resolvedId = surveyRow.id;
+          setSurveyId(resolvedId);
+        }
+
         const { data, error: fetchErr } = await supabase
           .from("surveys")
           .select("*")
-          .eq("id", surveyId)
+          .eq("id", resolvedId!)
           .maybeSingle();
 
         if (fetchErr) throw fetchErr;
@@ -143,7 +159,7 @@ export default function SurveyPage() {
         setLoading(false);
       }
     })();
-  }, [surveyId]);
+  }, [requestId, directSurveyId]);
 
   const setResponse = (id: string, value: string | number) => {
     setResponses((prev) => ({ ...prev, [id]: value }));
