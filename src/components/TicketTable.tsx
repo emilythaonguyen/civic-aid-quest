@@ -63,6 +63,7 @@ export default function TicketTable({ title, tickets }: TicketTableProps) {
     );
   }, [tickets]);
 
+  return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <h2 className="text-sm font-semibold text-foreground">{title}</h2>
@@ -86,7 +87,7 @@ export default function TicketTable({ title, tickets }: TicketTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tickets.map((t) => (
+              {sorted.map((t) => (
                 <TableRow
                   key={t.id}
                   className="cursor-pointer"
