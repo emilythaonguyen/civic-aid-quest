@@ -380,6 +380,7 @@ export default function SurveyResultsPage() {
           );
         })}
       </div>
+      </div>
     </div>
   );
 }
