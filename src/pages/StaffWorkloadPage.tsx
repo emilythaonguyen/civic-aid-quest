@@ -100,6 +100,9 @@ export default function StaffWorkloadPage() {
             <Button size="sm" variant="outline" asChild>
               <Link to="/survey-results">Survey Results</Link>
             </Button>
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/analytics">Analytics</Link>
+            </Button>
           </nav>
         </div>
         <div className="flex items-center gap-4">
