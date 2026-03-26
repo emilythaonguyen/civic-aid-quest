@@ -18,7 +18,6 @@ import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, LogOut, X } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
-const PRIORITY_OPTIONS = ["All", "High", "Medium", "Low"] as const;
 
 
 export default function StaffDashboardListPage() {
@@ -32,7 +31,7 @@ export default function StaffDashboardListPage() {
   // Filters
   
   const [categoryFilter, setCategoryFilter] = useState("All");
-  const [priorityFilter, setPriorityFilter] = useState("All");
+  
   const [locationFilter, setLocationFilter] = useState("");
 
   // Access control
@@ -108,7 +107,6 @@ export default function StaffDashboardListPage() {
     return tickets.filter((t) => {
       
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
-      if (priorityFilter !== "All" && (t.priority ?? "") !== priorityFilter) return false;
       if (
         locationFilter &&
         !t.location.toLowerCase().includes(locationFilter.toLowerCase())
@@ -116,16 +114,15 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, categoryFilter, priorityFilter, locationFilter]);
+  }, [tickets, categoryFilter, locationFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
-    setPriorityFilter("All");
     setLocationFilter("");
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || priorityFilter !== "All" || locationFilter !== "";
+    categoryFilter !== "All" || locationFilter !== "";
 
   const handleSignOut = async () => {
     await signOut();
@@ -194,21 +191,6 @@ export default function StaffDashboardListPage() {
             </Select>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-muted-foreground">Priority</label>
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-[150px] h-9 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {PRIORITY_OPTIONS.map((p) => (
-                  <SelectItem key={p} value={p}>
-                    {p}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
