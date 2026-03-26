@@ -147,14 +147,14 @@ export default function CitizenPortalPage() {
                           <Badge variant="outline" className={statusClass(req.status)}>
                             {req.status}
                           </Badge>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">
+                            {format(new Date(req.created_at), "MMM dd, yyyy")}
+                          </span>
                         </div>
                         <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
                         <p className="text-xs text-muted-foreground">{req.location}</p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">
-                          {format(new Date(req.created_at), "MMM dd, yyyy")}
-                        </span>
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
                           View
                         </Button>
