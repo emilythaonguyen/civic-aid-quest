@@ -218,7 +218,7 @@ export default function StaffTicketDetailPage() {
       setSuggestionsLoading(false);
     }
   }, [ticket]);
-  }, [ticket?.id]);
+  
 
   const handleSaveStatus = async () => {
     if (!ticket || !user || newStatus === ticket.status) return;
