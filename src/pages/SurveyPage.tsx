@@ -125,7 +125,7 @@ export default function SurveyPage() {
       try {
         let resolvedId = directSurveyId;
 
-        if (!resolvedId && requestId) {
+         if (!resolvedId && requestId) {
           const { data: surveyRow, error: lookupErr } = await supabase
             .from("surveys")
             .select("id")
@@ -133,12 +133,31 @@ export default function SurveyPage() {
             .maybeSingle();
 
           if (lookupErr) throw lookupErr;
+
           if (!surveyRow) {
-            setNoSurvey(true);
-            setLoading(false);
-            return;
+            // Auto-create a default survey for this resolved request
+            const defaultQuestionnaire = {
+              survey_intro: "Thank you for using our service. Please take a moment to share your experience.",
+              questions: [
+                { id: "q_1", text: "How would you rate the overall quality of service you received?", type: "rating_1_5" },
+                { id: "q_2", text: "Was your issue resolved in a timely manner?", type: "yes_no" },
+                { id: "q_3", text: "How would you rate the communication you received throughout the process?", type: "rating_1_5" },
+                { id: "q_4", text: "Would you recommend this service to others?", type: "yes_no" },
+                { id: "q_5", text: "Please share any additional feedback or suggestions for improvement.", type: "open_text" },
+              ],
+            };
+
+            const { data: newSurvey, error: createErr } = await supabase
+              .from("surveys")
+              .insert({ request_id: requestId, questionnaire: defaultQuestionnaire })
+              .select("id")
+              .single();
+
+            if (createErr) throw createErr;
+            resolvedId = newSurvey.id;
+          } else {
+            resolvedId = surveyRow.id;
           }
-          resolvedId = surveyRow.id;
           setSurveyId(resolvedId);
         }
 
