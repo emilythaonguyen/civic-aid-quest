@@ -83,9 +83,16 @@ const statusColors: Record<string, string> = {
 };
 
 export default function SurveyResultsPage() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [results, setResults] = useState<SurveyResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login");
+  };
 
   useEffect(() => {
     (async () => {
@@ -177,16 +184,8 @@ export default function SurveyResultsPage() {
     );
   }
 
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/login");
-  };
 
   return (
-    <div className="min-h-screen bg-background">
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h1 className="text-lg font-bold text-primary">
