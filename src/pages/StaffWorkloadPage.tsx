@@ -158,7 +158,7 @@ export default function StaffWorkloadPage() {
                   <TableRow key={r.staff_id}>
                     <TableCell className="font-medium">
                       <Link
-                        to={`/staff/${r.staff_id}/tickets`}
+                        to={`/staff/tickets/${r.staff_id}`}
                         className="text-primary hover:underline"
                       >
                         {r.full_name}
