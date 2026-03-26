@@ -46,6 +46,7 @@ export default function CitizenPortalPage() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
+  const [completedSurveys, setCompletedSurveys] = useState<Set<string>>(new Set());
 
   const fetchRequests = useCallback(async () => {
     if (!user) return;
@@ -62,6 +63,17 @@ export default function CitizenPortalPage() {
       setFetchError(true);
     } else {
       setRequests(data ?? []);
+
+      // Fetch completed surveys for these requests
+      if (data && data.length > 0) {
+        const ids = data.map((r) => r.id);
+        const { data: surveys } = await supabase
+          .from("surveys")
+          .select("request_id")
+          .in("request_id", ids)
+          .not("submitted_at", "is", null);
+        setCompletedSurveys(new Set((surveys ?? []).map((s) => s.request_id)));
+      }
     }
     setLoading(false);
   }, [user]);
