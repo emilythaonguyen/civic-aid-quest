@@ -224,28 +224,12 @@ export default function SurveyPage() {
     );
   }
 
-  if (!surveyId) {
+  if (!surveyId && !requestId) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-sm w-full">
-          <CardHeader>
-            <CardTitle className="text-lg">Enter Survey ID</CardTitle>
-            <p className="text-sm text-muted-foreground">Paste the survey ID from your email link.</p>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Input
-              value={manualId}
-              onChange={(e) => setManualId(e.target.value)}
-              placeholder="e.g. 22506108-d1bb-4e17-a603-baed0c9a4113"
-              className="text-sm"
-            />
-            <Button
-              className="w-full"
-              disabled={!manualId.trim()}
-              onClick={() => navigate(`/survey?id=${manualId.trim()}`)}
-            >
-              Load Survey
-            </Button>
+        <Card className="max-w-md w-full text-center">
+          <CardContent className="pt-10 pb-10">
+            <p className="text-muted-foreground">No survey linked. Please access this page from your request portal.</p>
           </CardContent>
         </Card>
       </div>
