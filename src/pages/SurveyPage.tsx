@@ -108,7 +108,7 @@ export default function SurveyPage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    navigate("/login");
+    navigate("/citizen-login");
   };
 
   const SurveyHeader = () => (

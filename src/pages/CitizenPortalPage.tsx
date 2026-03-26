@@ -108,7 +108,7 @@ export default function CitizenPortalPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/citizen-login");
   };
 
   return (
