@@ -18,7 +18,7 @@ import { Loader2, ArrowLeft, X, LogOut } from "lucide-react";
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
 export default function StaffTicketQueuePage() {
-  const { user, role, loading: authLoading } = useAuth();
+  const { user, role, signOut, loading: authLoading } = useAuth();
   const { staffId } = useParams<{ staffId: string }>();
   const navigate = useNavigate();
 
