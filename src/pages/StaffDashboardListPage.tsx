@@ -13,16 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import TicketTable from "@/components/TicketTable";
+import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, LogOut, X } from "lucide-react";
-import { format } from "date-fns";
 
 const STATUS_OPTIONS = ["All", "Open", "In Review", "Resolved", "Escalated"] as const;
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
