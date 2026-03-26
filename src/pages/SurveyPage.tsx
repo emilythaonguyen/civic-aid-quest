@@ -109,6 +109,7 @@ export default function SurveyPage() {
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
   const [loading, setLoading] = useState(!!(requestId || directSurveyId));
   const [error, setError] = useState("");
+  const [noSurvey, setNoSurvey] = useState(false);
   const [responses, setResponses] = useState<Record<string, string | number>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -132,7 +133,11 @@ export default function SurveyPage() {
             .maybeSingle();
 
           if (lookupErr) throw lookupErr;
-          if (!surveyRow) throw new Error("No survey found for this request");
+          if (!surveyRow) {
+            setNoSurvey(true);
+            setLoading(false);
+            return;
+          }
           resolvedId = surveyRow.id;
           setSurveyId(resolvedId);
         }
