@@ -13,6 +13,12 @@ const Index = () => {
       >
         Citizen Login
       </Button>
+      <Button
+        className="bg-black text-white hover:bg-black/90"
+        onClick={() => navigate("/staff-login")}
+      >
+        Staff Login
+      </Button>
     </div>
   );
 };
