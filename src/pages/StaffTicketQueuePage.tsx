@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
-import { Loader2, ArrowLeft, X } from "lucide-react";
+import { Loader2, ArrowLeft, X, LogOut } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
