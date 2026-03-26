@@ -259,6 +259,10 @@ export default function AnalyticsDashboardPage() {
                           `${category}: ${count} (${(percent * 100).toFixed(0)}%)`
                         }
                         labelLine={true}
+                        isAnimationActive={true}
+                        activeIndex={-1}
+                        activeShape={null}
+                        style={{ cursor: 'default', outline: 'none' }}
                       >
                         {analytics.volumeByCategory.map((_, index) => (
                           <Cell
