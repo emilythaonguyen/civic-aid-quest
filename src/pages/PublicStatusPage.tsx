@@ -121,7 +121,7 @@ export default function PublicStatusPage() {
             </Button>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
+            <span className="text-sm text-muted-foreground">{user?.user_metadata?.full_name || user?.email}</span>
             <RoleSwitcher />
             <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/citizen-login"); }}>Sign Out</Button>
           </div>
