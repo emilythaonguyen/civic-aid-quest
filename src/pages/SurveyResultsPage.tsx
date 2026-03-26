@@ -402,7 +402,7 @@ export default function SurveyResultsPage() {
                         </div>
                         <div className="pt-1">
                           <Link
-                            to={`/staff/tickets/${result.request.id}`}
+                            to={`/staff/ticket/${result.request.id}`}
                             className="text-xs text-primary hover:underline"
                           >
                             View ticket →
