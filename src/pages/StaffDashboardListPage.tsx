@@ -210,8 +210,8 @@ export default function StaffDashboardListPage() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground">
-            {staffName || user?.email}
+          <span className="text-sm text-muted-foreground min-w-[60px]">
+            {staffName || "\u00A0"}
           </span>
           <RoleSwitcher />
           <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
