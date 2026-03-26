@@ -60,9 +60,10 @@ export default function StaffTicketQueuePage() {
       try {
         // Get request IDs assigned to this staff member
         const { data: assignments, error: aErr } = await supabase
-          .from("ticket_assignments")
+          .from("assignments")
           .select("request_id")
-          .eq("staff_id", staffId);
+          .eq("assigned_to", staffId)
+          .is("unassigned_at", null);
         if (aErr) throw aErr;
 
         const requestIds = (assignments ?? []).map((a: any) => a.request_id);

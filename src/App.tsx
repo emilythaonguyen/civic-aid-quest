@@ -75,7 +75,7 @@ const App = () => (
               }
             />
             <Route
-              path="/staff/:staffId/tickets"
+              path="/staff/tickets/:staffId"
               element={
                 <ProtectedRoute requiredRole="staff">
                   <StaffTicketQueuePage />
