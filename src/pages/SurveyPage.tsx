@@ -408,6 +408,7 @@ export default function SurveyPage() {
           </Button>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
