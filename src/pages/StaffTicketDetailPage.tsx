@@ -185,10 +185,18 @@ export default function StaffTicketDetailPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.fallback) {
+        const entry = Array.isArray(data) ? data[0] : data;
+        if (entry?.fallback) {
           setSuggestionsFallback(true);
         } else {
-          setSuggestions(data.suggestions?.steps ?? []);
+          let raw = entry?.suggestions ?? entry;
+          if (typeof raw === "string") {
+            const cleaned = raw.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").trim();
+            try { raw = JSON.parse(cleaned); } catch { /* keep as-is */ }
+          }
+          const steps = Array.isArray(raw?.steps) ? raw.steps : raw?.suggestions?.steps ?? [];
+          setSuggestions(steps);
+          if (steps.length === 0) setSuggestionsFallback(true);
         }
       })
       .catch(() => {
