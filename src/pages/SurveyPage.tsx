@@ -227,6 +227,7 @@ export default function SurveyPage() {
 
   if (submitted) {
     return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <Card className="max-w-md w-full text-center">
           <CardContent className="pt-10 pb-10 space-y-4">
             <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
