@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -55,7 +56,13 @@ interface TicketTableProps {
 export default function TicketTable({ title, tickets }: TicketTableProps) {
   const navigate = useNavigate();
 
-  return (
+  const sorted = useMemo(() => {
+    const order: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
+    return [...tickets].sort(
+      (a, b) => (order[a.priority ?? ""] ?? 3) - (order[b.priority ?? ""] ?? 3)
+    );
+  }, [tickets]);
+
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <h2 className="text-sm font-semibold text-foreground">{title}</h2>
