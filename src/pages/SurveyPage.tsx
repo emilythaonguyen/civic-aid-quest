@@ -231,9 +231,9 @@ export default function SurveyPage() {
         <Card className="max-w-md w-full text-center">
           <CardContent className="pt-10 pb-10 space-y-4">
             <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
-            <h2 className="text-xl font-semibold text-foreground">Thank you!</h2>
+            <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
             <p className="text-muted-foreground text-sm">
-              Your feedback has been recorded. We appreciate you taking the time to respond.
+              Survey has already been completed. Thank you for your input!
             </p>
           </CardContent>
         </Card>
