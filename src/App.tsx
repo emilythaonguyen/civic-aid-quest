@@ -81,7 +81,7 @@ const App = () => (
                   <StaffTicketQueuePage />
                 </ProtectedRoute>
               }
-
+            />
             <Route
               path="/analytics"
               element={
