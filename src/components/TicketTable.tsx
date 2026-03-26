@@ -91,7 +91,7 @@ export default function TicketTable({ title, tickets }: TicketTableProps) {
                 <TableRow
                   key={t.id}
                   className="cursor-pointer"
-                  onClick={() => navigate(`/staff/tickets/${t.id}`)}
+                  onClick={() => navigate(`/staff/ticket/${t.id}`)}
                 >
                   <TableCell className="font-mono text-xs">
                     {t.id.substring(0, 8)}
