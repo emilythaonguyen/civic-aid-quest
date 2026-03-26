@@ -247,19 +247,6 @@ export default function StoryFormDialog({ open, onOpenChange, story, sprints, ep
               </Select>
             </div>
           </div>
-
-          <div className="space-y-1.5">
-            <Label>Story Type</Label>
-            <Select value={form.story_type} onValueChange={(v) => set("story_type", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="feature">Feature</SelectItem>
-                <SelectItem value="chore">Chore</SelectItem>
-                <SelectItem value="bug">Bug</SelectItem>
-                <SelectItem value="spike">Spike</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
