@@ -179,7 +179,7 @@ export default function CitizenPortalPage() {
                               disabled={surveyDisabled}
                               onClick={() => !surveyDisabled && navigate(`/survey?request_id=${req.id}`)}
                             >
-                              {completedSurveys.has(req.id) ? "Survey Done" : "Survey"}
+                              Survey
                             </Button>
                           );
                         })()}
