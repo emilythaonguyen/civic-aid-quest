@@ -46,6 +46,7 @@ export default function CitizenPortalPage() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
+  const [completedSurveys, setCompletedSurveys] = useState<Set<string>>(new Set());
 
   const fetchRequests = useCallback(async () => {
     if (!user) return;
@@ -62,6 +63,17 @@ export default function CitizenPortalPage() {
       setFetchError(true);
     } else {
       setRequests(data ?? []);
+
+      // Fetch completed surveys for these requests
+      if (data && data.length > 0) {
+        const ids = data.map((r) => r.id);
+        const { data: surveys } = await supabase
+          .from("surveys")
+          .select("request_id")
+          .in("request_id", ids)
+          .not("submitted_at", "is", null);
+        setCompletedSurveys(new Set((surveys ?? []).map((s) => s.request_id)));
+      }
     }
     setLoading(false);
   }, [user]);
@@ -158,9 +170,19 @@ export default function CitizenPortalPage() {
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
                           View
                         </Button>
-                        <Button variant="outline" size="sm" asChild>
-                          <a href={`/survey?request_id=${req.id}`}>Survey</a>
-                        </Button>
+                        {(() => {
+                          const surveyDisabled = req.status !== "Resolved" || completedSurveys.has(req.id);
+                          return (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={surveyDisabled}
+                              onClick={() => !surveyDisabled && navigate(`/survey?request_id=${req.id}`)}
+                            >
+                              {completedSurveys.has(req.id) ? "Survey Done" : "Survey"}
+                            </Button>
+                          );
+                        })()}
                       </div>
                     </div>
                     <RequestPizzaTracker status={req.status} />
