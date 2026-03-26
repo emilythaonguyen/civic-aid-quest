@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, BarChart3, Clock, FileText, TrendingUp, ClipboardList } from "lucide-react";
+import { Loader2, BarChart3, Clock, FileText, TrendingUp, LogOut } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import {
   Tooltip,
@@ -130,15 +130,31 @@ export default function AnalyticsDashboardPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-primary">Civic Tracker</h1>
-          <Badge variant="outline" className="text-xs">Staff</Badge>
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-bold text-primary">
+            Civic Service Tracker — Staff Portal
+          </h1>
+          <nav className="flex items-center gap-2">
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/staff/dashboard">Dashboard</Link>
+            </Button>
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/staff/workload">Workload</Link>
+            </Button>
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/survey-results">Survey Results</Link>
+            </Button>
+            <Button size="sm" variant="default" disabled>
+              Analytics
+            </Button>
+          </nav>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
           <RoleSwitcher />
-          <Button variant="outline" size="sm" onClick={handleSignOut}>
-            Sign Out
+          <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
+            <LogOut className="h-3.5 w-3.5" />
+            Logout
           </Button>
         </div>
       </header>
@@ -154,17 +170,6 @@ export default function AnalyticsDashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/staff/dashboard">
-                Staff Dashboard
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/survey-results">
-                <ClipboardList className="h-4 w-4 mr-1" />
-                Survey Results
-              </Link>
-            </Button>
             <Badge variant="secondary" className="text-xs">S2-05 · F7</Badge>
             <Button variant="outline" size="sm" onClick={fetchAnalytics} disabled={loading}>
               {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Refresh"}
