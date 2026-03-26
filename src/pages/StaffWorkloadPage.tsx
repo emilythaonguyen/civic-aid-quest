@@ -90,11 +90,13 @@ export default function StaffWorkloadPage() {
           <h1 className="text-lg font-bold text-primary">
             Civic Service Tracker — Staff Portal
           </h1>
-          <nav className="flex items-center gap-3 text-sm">
-            <Link to="/staff/dashboard" className="text-muted-foreground hover:text-foreground">
-              Dashboard
-            </Link>
-            <span className="font-medium text-foreground">Workload</span>
+          <nav className="flex items-center gap-2">
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/staff/dashboard">Dashboard</Link>
+            </Button>
+            <Button size="sm" variant="default" disabled>
+              Workload
+            </Button>
           </nav>
         </div>
         <div className="flex items-center gap-4">
