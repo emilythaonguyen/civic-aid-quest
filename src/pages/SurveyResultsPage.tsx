@@ -88,6 +88,13 @@ export default function SurveyResultsPage() {
   const [results, setResults] = useState<SurveyResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [staffName, setStaffName] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("full_name").eq("id", user.id).single()
+      .then(({ data }) => { if (data?.full_name) setStaffName(data.full_name); });
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -208,7 +215,7 @@ export default function SurveyResultsPage() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground">{user?.email}</span>
+          <span className="text-sm text-muted-foreground">{staffName || user?.email}</span>
           <RoleSwitcher />
           <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
             <LogOut className="h-3.5 w-3.5" />
