@@ -101,7 +101,7 @@ export default function SurveyResultsPage() {
 
         // Fetch associated requests
         const requestIds = surveys.map((s) => s.request_id).filter(Boolean) as string[];
-        let requestMap: Record<string, { id: string; type: string; status: string; location: string; created_at: string; user_id: string | null }> = {};
+        let requestMap: Record<string, { id: string; type: string; status: string; location: string; created_at: string; user_id: string | null; citizen_name: string | null }> = {};
 
         if (requestIds.length > 0) {
           const { data: requests } = await supabase
