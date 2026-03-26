@@ -74,7 +74,7 @@ const App = () => (
             />
 
             <Route
-              path="/dashboard"
+              path="/analytics"
               element={
                 <ProtectedRoute requiredRole="staff">
                   <AnalyticsDashboardPage />

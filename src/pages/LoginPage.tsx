@@ -42,7 +42,7 @@ export default function LoginPage() {
         .eq("id", user.id)
         .single();
 
-      navigate(profile?.role === "staff" ? "/dashboard" : "/portal");
+      navigate(profile?.role === "staff" ? "/analytics" : "/portal");
     } else {
       navigate("/portal");
     }
