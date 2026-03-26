@@ -210,9 +210,22 @@ export default function SurveyPage() {
       </div>
     );
   }
-
-  if (submitted) {
+  if (noSurvey) {
     return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="max-w-md w-full text-center">
+          <CardContent className="pt-10 pb-10 space-y-2">
+            <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
+            <p className="text-sm text-muted-foreground">
+              A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <Card className="max-w-md w-full text-center">
           <CardContent className="pt-10 pb-10 space-y-4">
