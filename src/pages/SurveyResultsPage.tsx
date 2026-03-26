@@ -122,8 +122,19 @@ export default function SurveyResultsPage() {
                 profileMap = Object.fromEntries(profiles.map((p) => [p.id, p.full_name ?? "Unknown"]));
               }
             }
-            requestMap = Object.fromEntries(
-              requests.map((r) => [r.id, { ...r, citizen_name: r.user_id ? (profileMap[r.user_id] ?? null) : null }])
+          requestMap = Object.fromEntries(
+              requests.map((r) => [
+                r.id,
+                {
+                  id: r.id,
+                  type: r.type,
+                  status: r.status,
+                  location: r.location,
+                  created_at: r.created_at,
+                  user_id: r.user_id,
+                  citizen_name: r.user_id ? (profileMap[r.user_id] ?? null) : null,
+                },
+              ])
             );
           }
         }
