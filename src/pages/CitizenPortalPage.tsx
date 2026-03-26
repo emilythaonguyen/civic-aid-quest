@@ -159,7 +159,7 @@ export default function CitizenPortalPage() {
                           View
                         </Button>
                         <Button variant="outline" size="sm" asChild>
-                          <a href="/survey">Survey</a>
+                          <a href={`/survey?request_id=${req.id}`}>Survey</a>
                         </Button>
                       </div>
                     </div>
