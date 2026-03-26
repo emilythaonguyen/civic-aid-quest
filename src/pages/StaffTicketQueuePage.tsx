@@ -32,7 +32,7 @@ export default function StaffTicketQueuePage() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate("/login", { replace: true });
+      navigate("/staff-login", { replace: true });
       return;
     }
     if (role === "citizen") {
@@ -143,7 +143,7 @@ export default function StaffTicketQueuePage() {
             Back to Workload
           </Link>
         </Button>
-        <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/login"); }} className="gap-1.5">
+        <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/staff-login"); }} className="gap-1.5">
           <LogOut className="h-3.5 w-3.5" />
           Logout
         </Button>

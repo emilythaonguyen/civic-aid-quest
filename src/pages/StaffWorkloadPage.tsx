@@ -41,7 +41,7 @@ export default function StaffWorkloadPage() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate("/login", { replace: true });
+      navigate("/staff-login", { replace: true });
       return;
     }
     if (role === "citizen") {
@@ -80,7 +80,7 @@ export default function StaffWorkloadPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/staff-login");
   };
 
   if (authLoading) {

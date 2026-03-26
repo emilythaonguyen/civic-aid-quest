@@ -99,7 +99,7 @@ export default function SurveyResultsPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/staff-login");
   };
 
   useEffect(() => {
