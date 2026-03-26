@@ -23,14 +23,14 @@ export default function RequestPizzaTracker({ status }: RequestPizzaTrackerProps
         {STEPS.map((_, i) => {
           if (i === STEPS.length - 1) return null;
           const segmentCompleted = i < activeIndex;
+          const stepWidth = 100 / STEPS.length;
           return (
             <div
               key={`line-${i}`}
               className="absolute top-5 h-0.5 z-0"
               style={{
-                left: `calc(${(i + 0.5) / STEPS.length * 100}% + 20px)`,
-                right: `calc(${(STEPS.length - 1 - i - 0.5) / STEPS.length * 100}% + 20px)`,
-                width: `calc(${100 / STEPS.length}% - 40px)`,
+                left: `calc(${(i + 0.5) * stepWidth}% + 20px)`,
+                width: `calc(${stepWidth}% - 40px)`,
               }}
             >
               <div className="w-full h-full bg-muted" />
