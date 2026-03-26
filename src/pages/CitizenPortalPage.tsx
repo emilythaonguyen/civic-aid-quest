@@ -170,9 +170,19 @@ export default function CitizenPortalPage() {
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
                           View
                         </Button>
-                        <Button variant="outline" size="sm" asChild>
-                          <a href={`/survey?request_id=${req.id}`}>Survey</a>
-                        </Button>
+                        {(() => {
+                          const surveyDisabled = req.status !== "Resolved" || completedSurveys.has(req.id);
+                          return (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={surveyDisabled}
+                              onClick={() => !surveyDisabled && navigate(`/survey?request_id=${req.id}`)}
+                            >
+                              {completedSurveys.has(req.id) ? "Survey Done" : "Survey"}
+                            </Button>
+                          );
+                        })()}
                       </div>
                     </div>
                     <RequestPizzaTracker status={req.status} />
