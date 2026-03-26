@@ -241,38 +241,47 @@ export default function SurveyPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center py-32">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
       </div>
     );
   }
   if (noSurvey) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10 space-y-2">
-            <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
-            <p className="text-sm text-muted-foreground">
-              A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
-            </p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10 space-y-2">
+              <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
+              <p className="text-sm text-muted-foreground">
+                A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10 space-y-4">
-            <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
-            <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
-            <p className="text-muted-foreground text-sm">
-              Survey has already been completed. Thank you for your input!
-            </p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10 space-y-4">
+              <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
+              <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
+              <p className="text-muted-foreground text-sm">
+                Survey has already been completed. Thank you for your input!
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
