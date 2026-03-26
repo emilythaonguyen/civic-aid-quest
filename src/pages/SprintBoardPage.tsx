@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import StoryFormDialog from "@/components/StoryFormDialog";
+import EpicFormDialog from "@/components/EpicFormDialog";
+import SprintFormDialog from "@/components/SprintFormDialog";
+import { Plus, Pencil } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -42,21 +46,24 @@ interface Developer {
   color?: string;
 }
 
-// ─── Lookups ──────────────────────────────────────────────────────────────────
+interface SprintData {
+  id: string;
+  label: string;
+  short: string;
+  dates: string;
+  sort_order: number;
+}
 
-const SPRINT_MAP: Record<string, { label: string; short: string; dates: string }> = {
-  "50000000-0000-0000-0000-000000000001": { label: "Sprint 1", short: "S1", dates: "Mar 23 – Apr 5" },
-  "50000000-0000-0000-0000-000000000002": { label: "Sprint 2", short: "S2", dates: "Apr 6 – Apr 19" },
-  "50000000-0000-0000-0000-000000000003": { label: "Sprint 3", short: "S3", dates: "Apr 20 – May 3" },
-  "50000000-0000-0000-0000-000000000004": { label: "Sprint 4", short: "S4", dates: "May 4 – May 17" },
-};
+// ─── Default sprints ─────────────────────────────────────────────────────────
 
-const SPRINT_ORDER = [
-  "50000000-0000-0000-0000-000000000001",
-  "50000000-0000-0000-0000-000000000002",
-  "50000000-0000-0000-0000-000000000003",
-  "50000000-0000-0000-0000-000000000004",
+const DEFAULT_SPRINTS: SprintData[] = [
+  { id: "50000000-0000-0000-0000-000000000001", label: "Sprint 1", short: "S1", dates: "Mar 23 – Apr 5", sort_order: 1 },
+  { id: "50000000-0000-0000-0000-000000000002", label: "Sprint 2", short: "S2", dates: "Apr 6 – Apr 19", sort_order: 2 },
+  { id: "50000000-0000-0000-0000-000000000003", label: "Sprint 3", short: "S3", dates: "Apr 20 – May 3", sort_order: 3 },
+  { id: "50000000-0000-0000-0000-000000000004", label: "Sprint 4", short: "S4", dates: "May 4 – May 17", sort_order: 4 },
 ];
+
+// ─── Lookups ──────────────────────────────────────────────────────────────────
 
 const PRIORITY_COLORS: Record<Priority, { bg: string; text: string; dot: string }> = {
   High:   { bg: "#FEF2F2", text: "#DC2626", dot: "#EF4444" },
@@ -96,10 +103,6 @@ function assigneeInfo(id: string | null, devMap: Map<string, Developer>) {
   return dev ? { name: dev.full_name, color: DEV_COLORS[id] ?? "#6B7280" } : { name: "Unknown", color: "#6B7280" };
 }
 
-function sprintLabel(id: string) {
-  return SPRINT_MAP[id]?.label ?? "Unknown";
-}
-
 // ─── Detail Panel ─────────────────────────────────────────────────────────────
 
 function DetailSection({ label, content }: { label: string; content: string | null }) {
@@ -112,7 +115,7 @@ function DetailSection({ label, content }: { label: string; content: string | nu
   );
 }
 
-function StoryDetail({ story, epic }: { story: UserStory; epic?: Epic }) {
+function StoryDetail({ story }: { story: UserStory }) {
   return (
     <div style={{ padding: "20px 24px", background: "#F9FAFB", borderTop: "1px solid #E5E7EB" }}>
       <DetailSection label="Title" content={story.title} />
@@ -147,6 +150,7 @@ export default function SprintBoardPage() {
   const [stories, setStories] = useState<UserStory[]>([]);
   const [epics, setEpics] = useState<Epic[]>([]);
   const [developers, setDevelopers] = useState<Developer[]>([]);
+  const [sprints, setSprints] = useState<SprintData[]>(DEFAULT_SPRINTS);
   const [loading, setLoading] = useState(true);
   const [sprintFilter, setSprintFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
@@ -154,6 +158,14 @@ export default function SprintBoardPage() {
   const [view, setView] = useState<"sprint" | "epic">("sprint");
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
   const [expandedEpic, setExpandedEpic] = useState<string | null>(null);
+
+  // Dialog state
+  const [storyDialogOpen, setStoryDialogOpen] = useState(false);
+  const [editingStory, setEditingStory] = useState<UserStory | null>(null);
+  const [epicDialogOpen, setEpicDialogOpen] = useState(false);
+  const [editingEpic, setEditingEpic] = useState<Epic | null>(null);
+  const [sprintDialogOpen, setSprintDialogOpen] = useState(false);
+  const [editingSprint, setEditingSprint] = useState<SprintData | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -180,6 +192,22 @@ export default function SprintBoardPage() {
     await supabase.from("user_stories").update({ status: newStatus, completed_at: completedAt }).eq("id", id);
   };
 
+  // Sprint CRUD (local state - no DB table)
+  const handleSprintSaved = (sprint: SprintData) => {
+    setSprints((prev) => {
+      const existing = prev.findIndex((s) => s.id === sprint.id);
+      if (existing >= 0) {
+        const updated = [...prev];
+        updated[existing] = sprint;
+        return updated.sort((a, b) => a.sort_order - b.sort_order);
+      }
+      return [...prev, sprint].sort((a, b) => a.sort_order - b.sort_order);
+    });
+  };
+
+  // Build sprint map from state
+  const sprintMap = new Map(sprints.map((s) => [s.id, s]));
+
   // Stats
   const total = stories.length;
   const done = stories.filter((s) => s.status === "Done").length;
@@ -200,17 +228,25 @@ export default function SprintBoardPage() {
   // Group
   const groups: { key: string; label: string; subtitle?: string; stories: UserStory[] }[] =
     view === "sprint"
-      ? SPRINT_ORDER.map((sid) => ({
-          key: sid,
-          label: SPRINT_MAP[sid].label,
-          subtitle: SPRINT_MAP[sid].dates,
-          stories: filtered.filter((s) => s.sprint_id === sid),
+      ? sprints.map((s) => ({
+          key: s.id,
+          label: s.label,
+          subtitle: s.dates,
+          stories: filtered.filter((st) => st.sprint_id === s.id),
         }))
       : epics.map((e) => ({
           key: e.id,
           label: `${e.epic_id}: ${e.title}`,
-          stories: filtered.filter((s) => s.epic_id === e.id),
+          stories: filtered.filter((st) => st.epic_id === e.id),
         }));
+
+  // Helpers for opening dialogs
+  const openAddStory = () => { setEditingStory(null); setStoryDialogOpen(true); };
+  const openEditStory = (story: UserStory) => { setEditingStory(story); setStoryDialogOpen(true); };
+  const openAddEpic = () => { setEditingEpic(null); setEpicDialogOpen(true); };
+  const openEditEpic = (epic: Epic) => { setEditingEpic(epic); setEpicDialogOpen(true); };
+  const openAddSprint = () => { setEditingSprint(null); setSprintDialogOpen(true); };
+  const openEditSprint = (sprint: SprintData) => { setEditingSprint(sprint); setSprintDialogOpen(true); };
 
   return (
     <div style={{ minHeight: "100vh", background: "#F9FAFB", fontFamily: "'Segoe UI', system-ui, sans-serif", padding: "40px 24px 64px" }}>
@@ -225,7 +261,7 @@ export default function SprintBoardPage() {
             User Story Backlog
           </h1>
           <p style={{ margin: 0, color: "#6B7280", fontSize: "15px", maxWidth: "640px", lineHeight: 1.6 }}>
-            All user stories from the Capstone Development Roadmap across 4 sprints (Mar 23 – May 17, 2026). Click any story or epic header to expand details.
+            All user stories from the Capstone Development Roadmap. Click any story or epic header to expand details.
           </p>
         </div>
 
@@ -255,7 +291,6 @@ export default function SprintBoardPage() {
 
           {/* Dropdown Filters */}
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
-            {/* Assignee */}
             <select value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
               <option value="all">All Assignees</option>
               {developers.map((dev) => (
@@ -263,7 +298,6 @@ export default function SprintBoardPage() {
               ))}
             </select>
 
-            {/* Priority */}
             <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
               <option value="all">All Priorities</option>
               <option value="High">High</option>
@@ -271,13 +305,25 @@ export default function SprintBoardPage() {
               <option value="Low">Low</option>
             </select>
 
-            {/* Sprint */}
             <select value={sprintFilter} onChange={(e) => setSprintFilter(e.target.value)} style={{ padding: "7px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", fontSize: "13px", fontWeight: "500", color: "#374151", cursor: "pointer", outline: "none" }}>
               <option value="all">All Sprints</option>
-              {SPRINT_ORDER.map((sid) => (
-                <option key={sid} value={sid}>{SPRINT_MAP[sid].label} ({SPRINT_MAP[sid].dates})</option>
+              {sprints.map((s) => (
+                <option key={s.id} value={s.id}>{s.label} ({s.dates})</option>
               ))}
             </select>
+          </div>
+
+          {/* Add buttons */}
+          <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
+            <button onClick={openAddStory} style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "7px 14px", borderRadius: "8px", border: "1px solid #4338CA", background: "#4338CA", color: "#fff", fontSize: "13px", fontWeight: "600", cursor: "pointer" }}>
+              <Plus size={14} /> Story
+            </button>
+            <button onClick={openAddEpic} style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "7px 14px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", color: "#374151", fontSize: "13px", fontWeight: "600", cursor: "pointer" }}>
+              <Plus size={14} /> Epic
+            </button>
+            <button onClick={openAddSprint} style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "7px 14px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", color: "#374151", fontSize: "13px", fontWeight: "600", cursor: "pointer" }}>
+              <Plus size={14} /> Sprint
+            </button>
           </div>
         </div>
 
@@ -301,22 +347,35 @@ export default function SprintBoardPage() {
           const groupDone = groupStories.filter((s) => s.status === "Done").length;
           const isEpicView = view === "epic";
           const epicForGroup = isEpicView ? epicMap.get(key) : undefined;
+          const sprintForGroup = !isEpicView ? sprintMap.get(key) : undefined;
           const isEpicExpanded = expandedEpic === key;
 
           return (
             <div key={key} style={{ marginBottom: "32px" }}>
               {/* Group header */}
               <div
-                onClick={() => isEpicView && setExpandedEpic(isEpicExpanded ? null : key)}
                 style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px", paddingBottom: "10px", borderBottom: "2px solid #E5E7EB", cursor: isEpicView ? "pointer" : "default" }}
               >
                 {isEpicView && (
-                  <span style={{ fontSize: "14px", color: "#9CA3AF", transition: "transform 0.15s", transform: isEpicExpanded ? "rotate(90deg)" : "rotate(0deg)" }}>▶</span>
+                  <span onClick={() => setExpandedEpic(isEpicExpanded ? null : key)} style={{ fontSize: "14px", color: "#9CA3AF", transition: "transform 0.15s", transform: isEpicExpanded ? "rotate(90deg)" : "rotate(0deg)", cursor: "pointer" }}>▶</span>
                 )}
-                <h2 style={{ margin: 0, fontSize: "17px", fontWeight: "700", color: "#111827" }}>{label}</h2>
+                <h2 onClick={() => isEpicView && setExpandedEpic(isEpicExpanded ? null : key)} style={{ margin: 0, fontSize: "17px", fontWeight: "700", color: "#111827", cursor: isEpicView ? "pointer" : "default" }}>{label}</h2>
                 {subtitle && (
                   <span style={{ fontSize: "12px", color: "#9CA3AF", fontWeight: "500" }}>{subtitle}</span>
                 )}
+
+                {/* Edit button for group */}
+                {isEpicView && epicForGroup && (
+                  <button onClick={(e) => { e.stopPropagation(); openEditEpic(epicForGroup); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", padding: "2px" }} title="Edit epic">
+                    <Pencil size={14} />
+                  </button>
+                )}
+                {!isEpicView && sprintForGroup && (
+                  <button onClick={() => openEditSprint(sprintForGroup)} style={{ background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", padding: "2px" }} title="Edit sprint">
+                    <Pencil size={14} />
+                  </button>
+                )}
+
                 <span style={{ marginLeft: "auto", fontSize: "12px", fontWeight: "600", color: groupDone === groupStories.length && groupStories.length > 0 ? "#16A34A" : "#6B7280", background: groupDone === groupStories.length && groupStories.length > 0 ? "#F0FDF4" : "#F3F4F6", padding: "3px 10px", borderRadius: "20px" }}>
                   {groupDone} / {groupStories.length} done
                 </span>
@@ -329,8 +388,8 @@ export default function SprintBoardPage() {
 
               {/* Table */}
               <div style={{ background: "#fff", borderRadius: "12px", border: "1px solid #E5E7EB", overflow: "hidden", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 110px 80px 90px 90px 180px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", padding: "0 16px" }}>
-                  {["", "User Story", "Assignee", "Priority", "Sprint", "Pts", "Epic"].map((h, i) => (
+                <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 110px 80px 90px 90px 180px 40px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", padding: "0 16px" }}>
+                  {["", "User Story", "Assignee", "Priority", "Sprint", "Pts", "Epic", ""].map((h, i) => (
                     <div key={i} style={{ padding: "10px 8px", fontSize: "11px", fontWeight: "700", color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.07em" }}>{h}</div>
                   ))}
                 </div>
@@ -342,11 +401,12 @@ export default function SprintBoardPage() {
                   const ai = assigneeInfo(story.assignee_id, devMap);
                   const isDone = story.status === "Done";
                   const isExpanded = expandedStory === story.id;
+                  const sp = sprintMap.get(story.sprint_id);
 
                   return (
                     <div key={story.id}>
                       <div
-                        style={{ display: "grid", gridTemplateColumns: "40px 1fr 110px 80px 90px 90px 180px", padding: "0 16px", borderBottom: idx < groupStories.length - 1 || isExpanded ? "1px solid #F3F4F6" : "none", background: isDone ? "#FAFFFE" : "#fff", cursor: "pointer", transition: "background 0.1s" }}
+                        style={{ display: "grid", gridTemplateColumns: "40px 1fr 110px 80px 90px 90px 180px 40px", padding: "0 16px", borderBottom: idx < groupStories.length - 1 || isExpanded ? "1px solid #F3F4F6" : "none", background: isDone ? "#FAFFFE" : "#fff", cursor: "pointer", transition: "background 0.1s" }}
                         onMouseEnter={(e) => { if (!isDone) (e.currentTarget as HTMLDivElement).style.background = "#F9FAFB"; }}
                         onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = isDone ? "#FAFFFE" : "#fff"; }}
                       >
@@ -388,7 +448,7 @@ export default function SprintBoardPage() {
 
                         {/* Sprint */}
                         <div style={{ padding: "14px 8px", display: "flex", alignItems: "center" }}>
-                          <span style={{ fontSize: "12px", color: "#6B7280", fontWeight: "500" }}>{SPRINT_MAP[story.sprint_id]?.short ?? "?"}</span>
+                          <span style={{ fontSize: "12px", color: "#6B7280", fontWeight: "500" }}>{sp?.short ?? "?"}</span>
                         </div>
 
                         {/* Points */}
@@ -404,10 +464,17 @@ export default function SprintBoardPage() {
                             {epic?.title ?? "Unknown"}
                           </div>
                         </div>
+
+                        {/* Edit button */}
+                        <div style={{ padding: "14px 8px", display: "flex", alignItems: "center" }}>
+                          <button onClick={(e) => { e.stopPropagation(); openEditStory(story); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", padding: "4px" }} title="Edit story">
+                            <Pencil size={14} />
+                          </button>
+                        </div>
                       </div>
 
                       {/* Expanded detail */}
-                      {isExpanded && <StoryDetail story={story} epic={epic} />}
+                      {isExpanded && <StoryDetail story={story} />}
                     </div>
                   );
                 })}
@@ -420,6 +487,30 @@ export default function SprintBoardPage() {
           Sprint Board · Civic Service Request Tracker · Axle Pathway Capstone · {total} User Stories · Supabase-backed
         </p>
       </div>
+
+      {/* Dialogs */}
+      <StoryFormDialog
+        open={storyDialogOpen}
+        onOpenChange={setStoryDialogOpen}
+        story={editingStory}
+        sprints={sprints}
+        epics={epics}
+        developers={developers}
+        onSaved={fetchData}
+      />
+      <EpicFormDialog
+        open={epicDialogOpen}
+        onOpenChange={setEpicDialogOpen}
+        epic={editingEpic}
+        sprints={sprints}
+        onSaved={fetchData}
+      />
+      <SprintFormDialog
+        open={sprintDialogOpen}
+        onOpenChange={setSprintDialogOpen}
+        sprint={editingSprint}
+        onSaved={handleSprintSaved}
+      />
     </div>
   );
 }
