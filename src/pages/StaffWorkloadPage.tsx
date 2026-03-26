@@ -93,7 +93,7 @@ export default function StaffWorkloadPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
+      <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <h1 className="text-lg font-bold text-primary">
             Civic Service Tracker — Staff Portal
