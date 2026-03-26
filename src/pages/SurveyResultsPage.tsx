@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Star, ArrowLeft, ClipboardList, User, MapPin, Tag, Calendar } from "lucide-react";
+import { Loader2, Star, LogOut, ClipboardList, User, MapPin, Tag, Calendar } from "lucide-react";
+import RoleSwitcher from "@/components/RoleSwitcher";
 import { format } from "date-fns";
 
 interface SurveyQuestion {
@@ -174,20 +177,48 @@ export default function SurveyResultsPage() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background px-6 py-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-2">
-          <Link
-            to="/analytics"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Analytics
-          </Link>
-        </div>
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login");
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-bold text-primary">
+            Civic Service Tracker — Staff Portal
+          </h1>
+          <nav className="flex items-center gap-2">
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/staff/dashboard">Dashboard</Link>
+            </Button>
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/staff/workload">Workload</Link>
+            </Button>
+            <Button size="sm" variant="default" disabled>
+              Survey Results
+            </Button>
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/analytics">Analytics</Link>
+            </Button>
+          </nav>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-muted-foreground">{user?.email}</span>
+          <RoleSwitcher />
+          <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
+            <LogOut className="h-3.5 w-3.5" />
+            Logout
+          </Button>
+        </div>
+      </header>
+
+      <div className="px-6 py-8">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">

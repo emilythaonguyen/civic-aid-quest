@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Loader2, LogOut, ArrowLeft } from "lucide-react";
+import RoleSwitcher from "@/components/RoleSwitcher";
 
 interface WorkloadRow {
   staff_id: string;
@@ -107,6 +108,7 @@ export default function StaffWorkloadPage() {
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
+          <RoleSwitcher />
           <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
             <LogOut className="h-3.5 w-3.5" />
             Logout
