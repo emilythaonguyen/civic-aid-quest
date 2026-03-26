@@ -42,7 +42,14 @@ export default function LoginPage() {
         .eq("id", user.id)
         .single();
 
-      navigate(profile?.role === "staff" ? "/analytics" : "/portal");
+      if (profile?.role !== "citizen") {
+        await supabase.auth.signOut();
+        setError("This login is for citizens only. Please use the Staff Login page.");
+        setSubmitting(false);
+        return;
+      }
+
+      navigate("/portal");
     } else {
       navigate("/portal");
     }
