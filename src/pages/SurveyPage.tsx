@@ -288,38 +288,49 @@ export default function SurveyPage() {
 
   if (!surveyId && !requestId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10">
-            <p className="text-muted-foreground">No survey linked. Please access this page from your request portal.</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10">
+              <p className="text-muted-foreground">No survey linked. Please access this page from your request portal.</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10">
-            <p className="text-destructive">{error}</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10">
+              <p className="text-destructive">{error}</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (!questionnaire) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-10 px-4">
+    <div className="min-h-screen bg-background">
+      <SurveyHeader />
+      <div className="py-10 px-4">
       <Card className="max-w-lg mx-auto">
         <CardHeader>
           <CardTitle className="text-lg">Service Satisfaction Survey</CardTitle>
