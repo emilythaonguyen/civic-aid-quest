@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Star, CheckCircle2 } from "lucide-react";
+import { Loader2, Star, CheckCircle2, ArrowLeft, LogOut } from "lucide-react";
 
 interface SurveyQuestion {
   id: string;
@@ -101,9 +101,26 @@ const parseQuestionnaire = (raw: unknown): Questionnaire => {
 };
 
 export default function SurveyPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const requestId = searchParams.get("request_id");
   const directSurveyId = searchParams.get("id");
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
+  const SurveyHeader = () => (
+    <header className="border-b bg-card px-6 py-3 flex items-center justify-between">
+      <Button variant="ghost" size="sm" onClick={() => navigate("/portal")}>
+        <ArrowLeft className="h-4 w-4 mr-1" /> Back to Portal
+      </Button>
+      <Button variant="outline" size="sm" onClick={handleSignOut}>
+        <LogOut className="h-4 w-4 mr-1" /> Sign Out
+      </Button>
+    </header>
+  );
 
   const [surveyId, setSurveyId] = useState<string | null>(directSurveyId);
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
@@ -224,76 +241,96 @@ export default function SurveyPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center py-32">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
       </div>
     );
   }
   if (noSurvey) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10 space-y-2">
-            <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
-            <p className="text-sm text-muted-foreground">
-              A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
-            </p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10 space-y-2">
+              <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
+              <p className="text-sm text-muted-foreground">
+                A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10 space-y-4">
-            <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
-            <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
-            <p className="text-muted-foreground text-sm">
-              Survey has already been completed. Thank you for your input!
-            </p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10 space-y-4">
+              <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
+              <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
+              <p className="text-muted-foreground text-sm">
+                Survey has already been completed. Thank you for your input!
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (!surveyId && !requestId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10">
-            <p className="text-muted-foreground">No survey linked. Please access this page from your request portal.</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10">
+              <p className="text-muted-foreground">No survey linked. Please access this page from your request portal.</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Card className="max-w-md w-full text-center">
-          <CardContent className="pt-10 pb-10">
-            <p className="text-destructive">{error}</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Card className="max-w-md w-full text-center">
+            <CardContent className="pt-10 pb-10">
+              <p className="text-destructive">{error}</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (!questionnaire) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background">
+        <SurveyHeader />
+        <div className="flex items-center justify-center px-4 py-32">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-10 px-4">
+    <div className="min-h-screen bg-background">
+      <SurveyHeader />
+      <div className="py-10 px-4">
       <Card className="max-w-lg mx-auto">
         <CardHeader>
           <CardTitle className="text-lg">Service Satisfaction Survey</CardTitle>
@@ -371,6 +408,7 @@ export default function SurveyPage() {
           </Button>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
