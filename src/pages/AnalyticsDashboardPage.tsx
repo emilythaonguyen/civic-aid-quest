@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, BarChart3, Clock, FileText, TrendingUp, LogOut } from "lucide-react";
+import { Loader2, BarChart3, Clock, FileText, TrendingUp, LogOut, Search, AlertTriangle } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import {
   Tooltip,
@@ -25,6 +25,8 @@ interface AnalyticsData {
   volumeByCategory: CategoryCount[];
   avgResolutionHours: number | null;
   totalOpen: number;
+  totalInReview: number;
+  totalEscalated: number;
   totalClosed: number;
   totalRequests: number;
 }
@@ -94,9 +96,9 @@ export default function AnalyticsDashboardPage() {
         );
       }
 
-      const totalOpen = rows.filter(
-        (r) => r.status === "Open" || r.status === "In Progress"
-      ).length;
+      const totalOpen = rows.filter((r) => r.status === "Open").length;
+      const totalInReview = rows.filter((r) => r.status === "In Review" || r.status === "In Progress").length;
+      const totalEscalated = rows.filter((r) => r.status === "Escalated").length;
       const totalClosed = rows.filter(
         (r) => r.status === "Closed" || r.status === "Resolved"
       ).length;
@@ -105,6 +107,8 @@ export default function AnalyticsDashboardPage() {
         volumeByCategory,
         avgResolutionHours,
         totalOpen,
+        totalInReview,
+        totalEscalated,
         totalClosed,
         totalRequests: rows.length,
       });
@@ -197,7 +201,7 @@ export default function AnalyticsDashboardPage() {
         ) : analytics ? (
           <>
             {/* KPI Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
@@ -221,6 +225,34 @@ export default function AnalyticsDashboardPage() {
                     <div>
                       <p className="text-xs text-muted-foreground">Open</p>
                       <p className="text-2xl font-bold">{analytics.totalOpen}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-md bg-amber-100">
+                      <Search className="h-4 w-4 text-amber-700" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">In Review</p>
+                      <p className="text-2xl font-bold">{analytics.totalInReview}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-md bg-destructive/10">
+                      <AlertTriangle className="h-4 w-4 text-destructive" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Escalated</p>
+                      <p className="text-2xl font-bold">{analytics.totalEscalated}</p>
                     </div>
                   </div>
                 </CardContent>
