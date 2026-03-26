@@ -74,6 +74,13 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/staff/:staffId/tickets"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffTicketQueuePage />
+                </ProtectedRoute>
+              }
 
             <Route
               path="/analytics"
