@@ -191,14 +191,13 @@ export default function StaffTicketDetailPage() {
     setSuggestions([]);
 
     try {
-      const raw = ticket.suggestions;
-      if (!raw) {
+      let parsed: any = ticket.suggestions;
+      if (!parsed) {
         setSuggestionsFallback(true);
         setSuggestionsLoading(false);
         return;
       }
 
-      let parsed = raw;
       if (typeof parsed === "string") {
         const cleaned = parsed.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").trim();
         try { parsed = JSON.parse(cleaned); } catch { /* keep as-is */ }
