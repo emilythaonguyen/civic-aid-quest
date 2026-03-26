@@ -186,6 +186,7 @@ export default function SurveyResultsPage() {
 
 
   return (
+    <div className="min-h-screen bg-background">
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h1 className="text-lg font-bold text-primary">
