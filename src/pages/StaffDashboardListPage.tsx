@@ -200,6 +200,9 @@ export default function StaffDashboardListPage() {
             <Button size="sm" variant="outline" asChild>
               <Link to="/staff/workload">Workload</Link>
             </Button>
+            <Button size="sm" variant="outline" asChild>
+              <Link to="/survey-results">Survey Results</Link>
+            </Button>
           </nav>
         </div>
         <div className="flex items-center gap-4">
