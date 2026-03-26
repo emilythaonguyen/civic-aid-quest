@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck } from "lucide-react";
@@ -37,6 +39,7 @@ function getWeekRange() {
 }
 
 export default function PublicStatusPage() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<CategoryStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -110,6 +113,9 @@ export default function PublicStatusPage() {
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold text-primary">Civic Tracker</h1>
             <Badge variant="outline" className="text-xs">Public</Badge>
+            <Button className="bg-white text-black border border-input hover:bg-gray-100" size="sm" onClick={() => navigate("/portal")}>
+              Return to Portal
+            </Button>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5" />
