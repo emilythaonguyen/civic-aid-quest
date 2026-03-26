@@ -47,6 +47,7 @@ interface TicketDetail {
   triage_summary: string | null;
   triage_confidence: string | null;
   triage_completed_at: string | null;
+  suggestions: unknown;
 }
 
 interface HistoryEntry {
@@ -113,6 +114,7 @@ export default function StaffTicketDetailPage() {
           .select(`
             id, type, status, location, description, created_at,
             triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
+            suggestions,
             profiles!user_id ( full_name )
           `)
           .eq("id", id)
@@ -135,6 +137,7 @@ export default function StaffTicketDetailPage() {
           triage_summary: (tData as any).triage_summary ?? null,
           triage_confidence: (tData as any).triage_confidence ?? null,
           triage_completed_at: (tData as any).triage_completed_at ?? null,
+          suggestions: (tData as any).suggestions ?? null,
         };
         setTicket(t);
         setNewStatus(t.status);
@@ -180,45 +183,43 @@ export default function StaffTicketDetailPage() {
     fetchData();
   }, [user, role, id]);
 
-  // Fetch AI resolution suggestions
+  // Parse AI resolution suggestions from the suggestions column
   useEffect(() => {
     if (!ticket) return;
     setSuggestionsLoading(true);
     setSuggestionsFallback(false);
     setSuggestions([]);
 
-    fetch("https://axlerator.app.n8n.cloud/webhook/resolution-suggestions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: ticket.id,
-        type: ticket.category,
-        description: ticket.description,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const entry = Array.isArray(data) ? data[0] : data;
-        if (entry?.fallback) {
-          setSuggestionsFallback(true);
-        } else {
-          let raw = entry?.suggestions ?? entry;
-          if (typeof raw === "string") {
-            const cleaned = raw.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").trim();
-            try { raw = JSON.parse(cleaned); } catch { /* keep as-is */ }
-          }
-          const steps = Array.isArray(raw?.steps) ? raw.steps : raw?.suggestions?.steps ?? [];
-          setSuggestions(steps);
-          if (steps.length === 0) setSuggestionsFallback(true);
-        }
-      })
-      .catch(() => {
+    try {
+      let parsed: any = ticket.suggestions;
+      if (!parsed) {
         setSuggestionsFallback(true);
-      })
-      .finally(() => {
         setSuggestionsLoading(false);
-      });
-  }, [ticket?.id]);
+        return;
+      }
+
+      if (typeof parsed === "string") {
+        const cleaned = parsed.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").trim();
+        try { parsed = JSON.parse(cleaned); } catch { /* keep as-is */ }
+      }
+
+      const steps = Array.isArray(parsed?.steps)
+        ? parsed.steps
+        : Array.isArray(parsed?.suggestions?.steps)
+          ? parsed.suggestions.steps
+          : Array.isArray(parsed)
+            ? parsed
+            : [];
+
+      setSuggestions(steps);
+      if (steps.length === 0) setSuggestionsFallback(true);
+    } catch {
+      setSuggestionsFallback(true);
+    } finally {
+      setSuggestionsLoading(false);
+    }
+  }, [ticket]);
+  
 
   const handleSaveStatus = async () => {
     if (!ticket || !user || newStatus === ticket.status) return;
