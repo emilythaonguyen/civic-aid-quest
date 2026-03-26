@@ -230,13 +230,13 @@ export default function StaffTicketDetailPage() {
         <h1 className="text-lg font-bold text-primary">
           Civic Service Tracker — Staff Portal
         </h1>
-        <nav className="flex items-center gap-3 text-sm">
-          <Link to="/staff/dashboard" className="text-muted-foreground hover:text-foreground">
-            Dashboard
-          </Link>
-          <Link to="/staff/workload" className="text-muted-foreground hover:text-foreground">
-            Workload
-          </Link>
+        <nav className="flex items-center gap-2">
+          <Button size="sm" variant="outline" asChild>
+            <Link to="/staff/dashboard">Dashboard</Link>
+          </Button>
+          <Button size="sm" variant="outline" asChild>
+            <Link to="/staff/workload">Workload</Link>
+          </Button>
         </nav>
       </header>
 
