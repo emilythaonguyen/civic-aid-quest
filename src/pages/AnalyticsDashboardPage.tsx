@@ -155,6 +155,11 @@ export default function AnalyticsDashboardPage() {
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
+              <Link to="/staff/dashboard">
+                Staff Dashboard
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
               <Link to="/survey-results">
                 <ClipboardList className="h-4 w-4 mr-1" />
                 Survey Results
