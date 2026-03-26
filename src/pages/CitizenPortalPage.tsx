@@ -47,6 +47,7 @@ export default function CitizenPortalPage() {
   const [fetchError, setFetchError] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
   const [completedSurveys, setCompletedSurveys] = useState<Set<string>>(new Set());
+  const [surveyIdMap, setSurveyIdMap] = useState<Record<string, string>>({});
 
   const fetchRequests = useCallback(async () => {
     if (!user) return;
@@ -64,15 +65,23 @@ export default function CitizenPortalPage() {
     } else {
       setRequests(data ?? []);
 
-      // Fetch completed surveys for these requests
+      // Fetch all surveys for these requests (id, request_id, submitted_at)
       if (data && data.length > 0) {
         const ids = data.map((r) => r.id);
         const { data: surveys } = await supabase
           .from("surveys")
-          .select("request_id")
-          .in("request_id", ids)
-          .not("submitted_at", "is", null);
-        setCompletedSurveys(new Set((surveys ?? []).map((s) => s.request_id)));
+          .select("id, request_id, submitted_at")
+          .in("request_id", ids);
+
+        const idMap: Record<string, string> = {};
+        const completed = new Set<string>();
+        for (const s of surveys ?? []) {
+          // Store first survey id found per request
+          if (!idMap[s.request_id]) idMap[s.request_id] = s.id;
+          if (s.submitted_at) completed.add(s.request_id);
+        }
+        setSurveyIdMap(idMap);
+        setCompletedSurveys(completed);
       }
     }
     setLoading(false);
@@ -171,13 +180,14 @@ export default function CitizenPortalPage() {
                           View
                         </Button>
                         {(() => {
-                          const surveyDisabled = req.status !== "Resolved" || completedSurveys.has(req.id);
+                          const surveyId = surveyIdMap[req.id];
+                          const surveyDisabled = req.status !== "Resolved" || !surveyId || completedSurveys.has(req.id);
                           return (
                             <Button
                               variant="outline"
                               size="sm"
                               disabled={surveyDisabled}
-                              onClick={() => !surveyDisabled && navigate(`/survey?request_id=${req.id}`)}
+                              onClick={() => !surveyDisabled && navigate(`/survey?id=${surveyId}`)}
                             >
                               Survey
                             </Button>
