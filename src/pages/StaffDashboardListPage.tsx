@@ -253,7 +253,7 @@ export default function StaffDashboardListPage() {
           </div>
         )}
 
-        {/* Table */}
+        {/* Tables by status */}
         {loading ? (
           <div className="flex items-center justify-center py-24">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -263,53 +263,11 @@ export default function StaffDashboardListPage() {
             No tickets match your current filters.
           </div>
         ) : (
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[110px]">Ticket ID</TableHead>
-                  <TableHead>Citizen Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Priority</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead className="w-[130px]">Submitted</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((t) => (
-                  <TableRow
-                    key={t.id}
-                    className="cursor-pointer"
-                    onClick={() => navigate(`/staff/tickets/${t.id}`)}
-                  >
-                    <TableCell className="font-mono text-xs">
-                      {t.id.substring(0, 8)}
-                    </TableCell>
-                    <TableCell>{t.citizen_name}</TableCell>
-                    <TableCell>{t.category}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${statusColor(t.status)}`}
-                      >
-                        {t.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${priorityColor(t.priority)}`}
-                      >
-                        {t.priority ?? "Pending"}
-                      </span>
-                    </TableCell>
-                    <TableCell>{t.location}</TableCell>
-                    <TableCell className="text-sm">
-                      {format(new Date(t.created_at), "MMM d, yyyy")}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="space-y-6">
+            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} />
+            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} />
+            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} />
+            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} />
           </div>
         )}
       </main>
