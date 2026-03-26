@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, BarChart3, Clock, FileText, TrendingUp } from "lucide-react";
+import { Loader2, BarChart3, Clock, FileText, TrendingUp, ClipboardList } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import {
   Tooltip,
@@ -154,6 +154,12 @@ export default function AnalyticsDashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/survey-results">
+                <ClipboardList className="h-4 w-4 mr-1" />
+                Survey Results
+              </Link>
+            </Button>
             <Badge variant="secondary" className="text-xs">S2-05 · F7</Badge>
             <Button variant="outline" size="sm" onClick={fetchAnalytics} disabled={loading}>
               {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Refresh"}
