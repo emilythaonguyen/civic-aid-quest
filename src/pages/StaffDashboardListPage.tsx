@@ -18,7 +18,6 @@ import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, LogOut, X } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
-const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 const PRIORITY_OPTIONS = ["All", "High", "Medium", "Low"] as const;
 
 
