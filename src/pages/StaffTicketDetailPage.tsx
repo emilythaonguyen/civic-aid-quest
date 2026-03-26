@@ -72,7 +72,7 @@ export default function StaffTicketDetailPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/staff-login");
   };
 
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
@@ -92,7 +92,7 @@ export default function StaffTicketDetailPage() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate("/login", { replace: true });
+      navigate("/staff-login", { replace: true });
       return;
     }
     if (role === "citizen") {

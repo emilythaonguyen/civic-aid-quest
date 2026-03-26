@@ -38,7 +38,7 @@ export default function StaffDashboardListPage() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate("/login", { replace: true });
+      navigate("/staff-login", { replace: true });
       return;
     }
     if (role === "citizen") {
@@ -126,7 +126,7 @@ export default function StaffDashboardListPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/staff-login");
   };
 
   if (authLoading || (!user && !authLoading)) {

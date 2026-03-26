@@ -126,7 +126,7 @@ export default function AnalyticsDashboardPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/staff-login");
   };
 
   const formatResolutionTime = (hours: number | null) => {
