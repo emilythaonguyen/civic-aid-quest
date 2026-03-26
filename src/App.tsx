@@ -15,6 +15,7 @@ import CitizenEmpathyMap from "./pages/CitizenEmpathyMap.tsx";
 import CitizenJourneyMap from "./pages/CitizenJourneyMap.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import StaffLoginPage from "./pages/StaffLoginPage.tsx";
 import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
 
 import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/citizen-login" element={<LoginPage />} />
+            <Route path="/staff-login" element={<StaffLoginPage />} />
             <Route
               path="/portal"
               element={
