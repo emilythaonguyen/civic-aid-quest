@@ -109,6 +109,7 @@ export default function SurveyPage() {
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
   const [loading, setLoading] = useState(!!(requestId || directSurveyId));
   const [error, setError] = useState("");
+  const [noSurvey, setNoSurvey] = useState(false);
   const [responses, setResponses] = useState<Record<string, string | number>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -132,7 +133,11 @@ export default function SurveyPage() {
             .maybeSingle();
 
           if (lookupErr) throw lookupErr;
-          if (!surveyRow) throw new Error("No survey found for this request");
+          if (!surveyRow) {
+            setNoSurvey(true);
+            setLoading(false);
+            return;
+          }
           resolvedId = surveyRow.id;
           setSurveyId(resolvedId);
         }
@@ -202,6 +207,20 @@ export default function SurveyPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+  if (noSurvey) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="max-w-md w-full text-center">
+          <CardContent className="pt-10 pb-10 space-y-2">
+            <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
+            <p className="text-sm text-muted-foreground">
+              A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
