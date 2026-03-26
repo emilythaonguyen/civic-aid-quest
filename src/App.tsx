@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -6,28 +7,30 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
-import EmpathyMap from "./pages/EmpathyMap.tsx";
-import JourneyMapStaff from "./pages/JourneyMapStaff.tsx";
-import HCDArtefactsPage from "./pages/HCDArtifactsPage.tsx";
-import PromptTemplatesPage from "./pages/PromptTemplatesPage.tsx";
-import SprintBoardPage from "./pages/SprintBoardPage.tsx";
-import CitizenEmpathyMap from "./pages/CitizenEmpathyMap.tsx";
-import CitizenJourneyMap from "./pages/CitizenJourneyMap.tsx";
-import RegisterPage from "./pages/RegisterPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import StaffLoginPage from "./pages/StaffLoginPage.tsx";
-import CitizenPortalPage from "./pages/CitizenPortalPage.tsx";
-
-import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage.tsx";
-import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
-import StaffDashboardListPage from "./pages/StaffDashboardListPage.tsx";
-import StaffTicketDetailPage from "./pages/StaffTicketDetailPage.tsx";
-import StaffWorkloadPage from "./pages/StaffWorkloadPage.tsx";
-import StaffTicketQueuePage from "./pages/StaffTicketQueuePage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
 import SurveyPage from "./pages/SurveyPage.tsx";
-import SurveyResultsPage from "./pages/SurveyResultsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
+
+// Lazy-load internal/protected pages so their content (including persona data)
+// is code-split and never served on public-facing routes.
+const EmpathyMap = lazy(() => import("./pages/EmpathyMap.tsx"));
+const JourneyMapStaff = lazy(() => import("./pages/JourneyMapStaff.tsx"));
+const HCDArtefactsPage = lazy(() => import("./pages/HCDArtifactsPage.tsx"));
+const PromptTemplatesPage = lazy(() => import("./pages/PromptTemplatesPage.tsx"));
+const SprintBoardPage = lazy(() => import("./pages/SprintBoardPage.tsx"));
+const CitizenEmpathyMap = lazy(() => import("./pages/CitizenEmpathyMap.tsx"));
+const CitizenJourneyMap = lazy(() => import("./pages/CitizenJourneyMap.tsx"));
+const CitizenPortalPage = lazy(() => import("./pages/CitizenPortalPage.tsx"));
+const AnalyticsDashboardPage = lazy(() => import("./pages/AnalyticsDashboardPage.tsx"));
+const StaffDashboardPage = lazy(() => import("./pages/StaffDashboardPage.tsx"));
+const StaffDashboardListPage = lazy(() => import("./pages/StaffDashboardListPage.tsx"));
+const StaffTicketDetailPage = lazy(() => import("./pages/StaffTicketDetailPage.tsx"));
+const StaffWorkloadPage = lazy(() => import("./pages/StaffWorkloadPage.tsx"));
+const StaffTicketQueuePage = lazy(() => import("./pages/StaffTicketQueuePage.tsx"));
+const SurveyResultsPage = lazy(() => import("./pages/SurveyResultsPage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -38,6 +41,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading…</div>}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -112,6 +116,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
