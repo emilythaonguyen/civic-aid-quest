@@ -116,7 +116,6 @@ export default function StoryFormDialog({ open, onOpenChange, story, sprints, ep
         epic_id: form.epic_id,
         story_points: form.story_points,
         status: form.status,
-        story_type: form.story_type,
       };
 
       if (isEdit) {
