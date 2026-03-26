@@ -257,134 +257,212 @@ export default function SurveyResultsPage() {
           </Card>
         )}
 
+        {/* Aggregate Stats */}
+        {!error && results.length > 0 && (() => {
+          const allQuestions = results.map(r => parseQuestions(r.questionnaire));
+          const allResponses = results.map(r => r.responses ?? {});
+
+          // Q1: avg rating (first rating_1_5 question)
+          let ratingSum = 0, ratingCount = 0;
+          // Q2: % yes for first yes_no question
+          let q2Yes = 0, q2Total = 0;
+          // Q3: count of open_text responses
+          let q3Count = 0;
+          // Q4: % yes for second yes_no question
+          let q4Yes = 0, q4Total = 0;
+          let yesNoIndex = 0;
+
+          results.forEach((_, i) => {
+            const qs = allQuestions[i];
+            const resp = allResponses[i];
+            let localYesNo = 0;
+            qs.forEach(q => {
+              const answer = resp[q.id];
+              if (q.type === "rating_1_5" && typeof answer === "number") {
+                ratingSum += answer;
+                ratingCount++;
+              } else if (q.type === "yes_no") {
+                if (localYesNo === 0) {
+                  q2Total++;
+                  if (answer === "yes") q2Yes++;
+                } else {
+                  q4Total++;
+                  if (answer === "yes") q4Yes++;
+                }
+                localYesNo++;
+              } else if (q.type === "open_text" && answer != null && String(answer).trim() !== "") {
+                q3Count++;
+              }
+            });
+          });
+
+          const avgRating = ratingCount > 0 ? (ratingSum / ratingCount).toFixed(1) : "N/A";
+          const q2Pct = q2Total > 0 ? Math.round((q2Yes / q2Total) * 100) : 0;
+          const q4Pct = q4Total > 0 ? Math.round((q4Yes / q4Total) * 100) : 0;
+
+          return (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="pt-5 pb-4 text-center">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Overall Experience</p>
+                  <p className="text-2xl font-bold text-foreground">{avgRating} / 5 ⭐</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-5 pb-4 text-center">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Resolved to Satisfaction</p>
+                  <p className="text-2xl font-bold text-foreground">{q2Pct}% Yes</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-5 pb-4 text-center">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Improvement Suggestions</p>
+                  <p className="text-2xl font-bold text-foreground">{q3Count} {q3Count === 1 ? "response" : "responses"}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-5 pb-4 text-center">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Would Recommend</p>
+                  <p className="text-2xl font-bold text-foreground">{q4Pct}% Yes</p>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        })()}
+
         {results.map((result) => {
           const questions = parseQuestions(result.questionnaire);
           const responses = result.responses ?? {};
 
           return (
-            <Card key={result.id} className="overflow-hidden">
-              {/* Top bar: citizen + time */}
-              <CardHeader className="pb-3 border-b border-border">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <span className="font-semibold text-foreground">
-                      {result.request?.citizen_name ?? "Unknown Citizen"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5" />
-                    Submitted {format(new Date(result.submitted_at), "MMM d, yyyy 'at' h:mm a")}
-                  </div>
-                </div>
-
-                {/* Overall star rating */}
-                {result.rating != null && result.rating > 0 && (
-                  <div className="flex items-center gap-1 mt-1">
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <Star
-                        key={n}
-                        className={`h-4 w-4 ${
-                          n <= result.rating! ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-xs text-muted-foreground ml-1">{result.rating}/5</span>
-                  </div>
-                )}
-              </CardHeader>
-
-              <CardContent className="pt-4 space-y-5">
-                {/* Ticket info */}
-                {result.request && (
-                  <div className="rounded-lg bg-muted/50 p-4 space-y-2 text-sm">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                      Service Request
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 gap-x-4">
+            <Collapsible key={result.id} asChild>
+              <Card className="overflow-hidden">
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="pb-3 border-b border-border cursor-pointer group">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="capitalize text-foreground">{result.request.type}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                            statusColors[result.request.status] ?? "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {result.request.status}
+                        <User className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <span className="font-semibold text-foreground">
+                          {result.request?.citizen_name ?? "Unknown Citizen"}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 sm:col-span-2">
-                        <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                        <span className="text-foreground truncate">{result.request.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2 sm:col-span-2 text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5 shrink-0" />
-                        Submitted {format(new Date(result.request.created_at), "MMM d, yyyy")}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {format(new Date(result.submitted_at), "MMM d, yyyy")}
+                        </div>
+                        {result.rating != null && result.rating > 0 && (
+                          <div className="flex items-center gap-0.5">
+                            {[1, 2, 3, 4, 5].map((n) => (
+                              <Star
+                                key={n}
+                                className={`h-3.5 w-3.5 ${
+                                  n <= result.rating! ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                        <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
                       </div>
                     </div>
-                    <div className="pt-1">
-                      <Link
-                        to={`/staff/tickets/${result.request.id}`}
-                        className="text-xs text-primary hover:underline"
-                      >
-                        View ticket →
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                  </CardHeader>
+                </CollapsibleTrigger>
 
-                {/* Q&A */}
-                {questions.length > 0 ? (
-                  <div className="space-y-4">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                      Survey Responses
-                    </p>
-                    {questions.map((q, idx) => {
-                      const answer = responses[q.id];
-                      return (
-                        <div key={q.id} className="space-y-1">
-                          <p className="text-sm font-medium text-foreground">
-                            {idx + 1}. {q.text}
-                          </p>
-                          <div className="pl-4">
-                            {q.type === "rating_1_5" && typeof answer === "number" && (
-                              <div className="flex items-center gap-1">
-                                {[1, 2, 3, 4, 5].map((n) => (
-                                  <Star
-                                    key={n}
-                                    className={`h-5 w-5 ${
-                                      n <= answer ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"
-                                    }`}
-                                  />
-                                ))}
-                                <span className="text-sm text-muted-foreground ml-1">{answer}/5</span>
-                              </div>
-                            )}
-                            {q.type === "yes_no" && (
-                              <Badge variant={answer === "yes" ? "default" : "secondary"} className="capitalize">
-                                {String(answer)}
-                              </Badge>
-                            )}
-                            {q.type === "open_text" && (
-                              <p className="text-sm text-foreground bg-muted/40 rounded px-3 py-2 italic">
-                                "{String(answer)}"
-                              </p>
-                            )}
-                            {answer == null && (
-                              <span className="text-sm text-muted-foreground italic">No response</span>
-                            )}
+                <CollapsibleContent>
+                  <CardContent className="pt-4 space-y-5">
+                    {/* Ticket info */}
+                    {result.request && (
+                      <div className="rounded-lg bg-muted/50 p-4 space-y-2 text-sm">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                          Service Request
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 gap-x-4">
+                          <div className="flex items-center gap-2">
+                            <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                            <span className="capitalize text-foreground">{result.request.type}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                statusColors[result.request.status] ?? "bg-muted text-muted-foreground"
+                              }`}
+                            >
+                              {result.request.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 sm:col-span-2">
+                            <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            <span className="text-foreground truncate">{result.request.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 sm:col-span-2 text-muted-foreground">
+                            <Calendar className="h-3.5 w-3.5 shrink-0" />
+                            Submitted {format(new Date(result.request.created_at), "MMM d, yyyy")}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">No question details available.</p>
-                )}
-              </CardContent>
-            </Card>
+                        <div className="pt-1">
+                          <Link
+                            to={`/staff/tickets/${result.request.id}`}
+                            className="text-xs text-primary hover:underline"
+                          >
+                            View ticket →
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Q&A */}
+                    {questions.length > 0 ? (
+                      <div className="space-y-4">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          Survey Responses
+                        </p>
+                        {questions.map((q, idx) => {
+                          const answer = responses[q.id];
+                          return (
+                            <div key={q.id} className="space-y-1">
+                              <p className="text-sm font-medium text-foreground">
+                                {idx + 1}. {q.text}
+                              </p>
+                              <div className="pl-4">
+                                {q.type === "rating_1_5" && typeof answer === "number" && (
+                                  <div className="flex items-center gap-1">
+                                    {[1, 2, 3, 4, 5].map((n) => (
+                                      <Star
+                                        key={n}
+                                        className={`h-5 w-5 ${
+                                          n <= answer ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"
+                                        }`}
+                                      />
+                                    ))}
+                                    <span className="text-sm text-muted-foreground ml-1">{answer}/5</span>
+                                  </div>
+                                )}
+                                {q.type === "yes_no" && (
+                                  <Badge variant={answer === "yes" ? "default" : "secondary"} className="capitalize">
+                                    {String(answer)}
+                                  </Badge>
+                                )}
+                                {q.type === "open_text" && (
+                                  <p className="text-sm text-foreground bg-muted/40 rounded px-3 py-2 italic">
+                                    "{String(answer)}"
+                                  </p>
+                                )}
+                                {answer == null && (
+                                  <span className="text-sm text-muted-foreground italic">No response</span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">No question details available.</p>
+                    )}
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
           );
         })}
       </div>
