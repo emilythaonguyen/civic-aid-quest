@@ -95,7 +95,7 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
 
-      <Button variant="ghost" className="mt-4" onClick={() => navigate("/")}>
+      <Button className="mt-4 bg-black text-white hover:bg-black/90" onClick={() => navigate("/")}>
         Return to Home
       </Button>
     </div>
