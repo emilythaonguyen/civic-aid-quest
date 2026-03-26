@@ -316,13 +316,23 @@ export default function StaffTicketDetailPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-8 space-y-8">
-        {/* Back link */}
-        <Link
-          to="/staff/dashboard"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
-        </Link>
+        {/* Back links */}
+        <div className="flex items-center gap-4">
+          <Link
+            to="/staff/dashboard"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          </Link>
+          {user && (
+            <Link
+              to={`/staff/tickets/${user.id}`}
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back to My Tickets
+            </Link>
+          )}
+        </div>
 
         {/* Detail section */}
         <div className="space-y-4">
