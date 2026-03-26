@@ -102,7 +102,6 @@ const parseQuestionnaire = (raw: unknown): Questionnaire => {
 
 export default function SurveyPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const requestId = searchParams.get("request_id");
   const directSurveyId = searchParams.get("id");
 
