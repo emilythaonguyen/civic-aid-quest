@@ -292,33 +292,6 @@ export default function AnalyticsDashboardPage() {
                 )}
               </CardContent>
             </Card>
-
-            {/* Average Resolution Time Detail */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Average Resolution Time</CardTitle>
-                <CardDescription>
-                  Calculated across all closed / resolved tickets
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-xl bg-muted border border-border">
-                    <Clock className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-4xl font-bold text-foreground">
-                      {formatResolutionTime(analytics.avgResolutionHours)}
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {analytics.totalClosed > 0
-                        ? `Based on ${analytics.totalClosed} closed ticket${analytics.totalClosed !== 1 ? "s" : ""}`
-                        : "No closed tickets yet — resolve tickets to see this metric"}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </>
         ) : null}
       </main>
