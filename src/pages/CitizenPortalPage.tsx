@@ -158,6 +158,9 @@ export default function CitizenPortalPage() {
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
                           View
                         </Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <a href="/survey">Survey</a>
+                        </Button>
                       </div>
                     </div>
                     <RequestPizzaTracker status={req.status} />
