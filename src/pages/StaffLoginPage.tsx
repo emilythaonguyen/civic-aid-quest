@@ -41,9 +41,16 @@ export default function StaffLoginPage() {
         .eq("id", user.id)
         .single();
 
-      navigate(profile?.role === "staff" ? "/analytics" : "/portal");
+      if (profile?.role !== "staff") {
+        await supabase.auth.signOut();
+        setError("This login is for staff only. Please use the Citizen Login page.");
+        setSubmitting(false);
+        return;
+      }
+
+      navigate("/analytics");
     } else {
-      navigate("/portal");
+      navigate("/analytics");
     }
   };
 
