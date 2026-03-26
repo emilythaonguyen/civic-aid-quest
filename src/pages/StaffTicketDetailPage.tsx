@@ -47,6 +47,7 @@ interface TicketDetail {
   triage_summary: string | null;
   triage_confidence: string | null;
   triage_completed_at: string | null;
+  suggestions: unknown;
 }
 
 interface HistoryEntry {
@@ -136,6 +137,7 @@ export default function StaffTicketDetailPage() {
           triage_summary: (tData as any).triage_summary ?? null,
           triage_confidence: (tData as any).triage_confidence ?? null,
           triage_completed_at: (tData as any).triage_completed_at ?? null,
+          suggestions: (tData as any).suggestions ?? null,
         };
         setTicket(t);
         setNewStatus(t.status);
