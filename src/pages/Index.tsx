@@ -9,7 +9,7 @@ const Index = () => {
       <h1 className="text-4xl font-bold text-foreground">Civic Aid App</h1>
       <Button
         className="bg-black text-white hover:bg-black/90"
-        onClick={() => navigate("/login")}
+        onClick={() => navigate("/citizen-login")}
       >
         Citizen Login
       </Button>
