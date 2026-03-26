@@ -158,6 +158,7 @@ export default function SprintBoardPage() {
   const [view, setView] = useState<"sprint" | "epic">("sprint");
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
   const [expandedEpic, setExpandedEpic] = useState<string | null>(null);
+  const [fabOpen, setFabOpen] = useState(false);
 
   // Dialog state
   const [storyDialogOpen, setStoryDialogOpen] = useState(false);
@@ -313,18 +314,6 @@ export default function SprintBoardPage() {
             </select>
           </div>
 
-          {/* Add buttons */}
-          <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
-            <button onClick={openAddStory} style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "7px 14px", borderRadius: "8px", border: "1px solid #4338CA", background: "#4338CA", color: "#fff", fontSize: "13px", fontWeight: "600", cursor: "pointer" }}>
-              <Plus size={14} /> Story
-            </button>
-            <button onClick={openAddEpic} style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "7px 14px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", color: "#374151", fontSize: "13px", fontWeight: "600", cursor: "pointer" }}>
-              <Plus size={14} /> Epic
-            </button>
-            <button onClick={openAddSprint} style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "7px 14px", borderRadius: "8px", border: "1px solid #D1D5DB", background: "#fff", color: "#374151", fontSize: "13px", fontWeight: "600", cursor: "pointer" }}>
-              <Plus size={14} /> Sprint
-            </button>
-          </div>
         </div>
 
         {/* Loading */}
@@ -486,6 +475,43 @@ export default function SprintBoardPage() {
         <p style={{ textAlign: "center", color: "#9CA3AF", fontSize: "13px", marginTop: "40px" }}>
           Sprint Board · Civic Service Request Tracker · Axle Pathway Capstone · {total} User Stories · Supabase-backed
         </p>
+      </div>
+
+      {/* FAB */}
+      <div style={{ position: "fixed", bottom: "32px", right: "32px", zIndex: 50 }}>
+        {fabOpen && (
+          <>
+            <div style={{ position: "fixed", inset: 0 }} onClick={() => setFabOpen(false)} />
+            <div style={{ position: "absolute", bottom: "64px", right: 0, background: "#fff", borderRadius: "12px", border: "1px solid #E5E7EB", boxShadow: "0 8px 30px rgba(0,0,0,0.12)", padding: "6px", minWidth: "160px", display: "flex", flexDirection: "column", gap: "2px" }}>
+              {[
+                { label: "User Story", action: openAddStory },
+                { label: "Epic", action: openAddEpic },
+                { label: "Sprint", action: openAddSprint },
+              ].map((item) => (
+                <button key={item.label} onClick={() => { item.action(); setFabOpen(false); }} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 14px", borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer", fontSize: "14px", fontWeight: "500", color: "#374151", width: "100%", textAlign: "left" }} onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "#F3F4F6"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}>
+                  <Plus size={16} style={{ color: "#4338CA" }} />
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+        <button
+          onClick={() => setFabOpen((o) => !o)}
+          style={{
+            width: "52px", height: "52px", borderRadius: "50%", border: "none",
+            background: "#4338CA", color: "#fff", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 4px 16px rgba(67, 56, 202, 0.4)",
+            opacity: fabOpen ? 1 : 0.35,
+            transition: "opacity 0.2s, transform 0.2s",
+            transform: fabOpen ? "rotate(45deg)" : "rotate(0deg)",
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = "1"; }}
+          onMouseLeave={(e) => { if (!fabOpen) (e.currentTarget as HTMLButtonElement).style.opacity = "0.35"; }}
+        >
+          <Plus size={24} />
+        </button>
       </div>
 
       {/* Dialogs */}
