@@ -237,6 +237,9 @@ export default function StaffTicketDetailPage() {
           <Button size="sm" variant="outline" asChild>
             <Link to="/staff/workload">Workload</Link>
           </Button>
+          <Button size="sm" variant="outline" asChild>
+            <Link to="/survey-results">Survey Results</Link>
+          </Button>
         </nav>
       </header>
 
