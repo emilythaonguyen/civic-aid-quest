@@ -120,9 +120,10 @@ export default function PublicStatusPage() {
               Return to Portal
             </Button>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            No personal information is shown on this page
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">{user?.email}</span>
+            <RoleSwitcher />
+            <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/citizen-login"); }}>Sign Out</Button>
           </div>
         </div>
       </header>
