@@ -156,7 +156,14 @@ export default function StaffWorkloadPage() {
               <TableBody>
                 {rows.map((r) => (
                   <TableRow key={r.staff_id}>
-                    <TableCell className="font-medium">{r.full_name}</TableCell>
+                    <TableCell className="font-medium">
+                      <Link
+                        to={`/staff/${r.staff_id}/tickets`}
+                        className="text-primary hover:underline"
+                      >
+                        {r.full_name}
+                      </Link>
+                    </TableCell>
                     <TableCell className="text-center">{r.active_assignments}</TableCell>
                     <TableCell className="text-center">{r.open_count}</TableCell>
                     <TableCell className="text-center">{r.in_review_count}</TableCell>

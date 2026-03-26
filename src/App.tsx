@@ -22,6 +22,7 @@ import StaffDashboardPage from "./pages/StaffDashboardPage.tsx";
 import StaffDashboardListPage from "./pages/StaffDashboardListPage.tsx";
 import StaffTicketDetailPage from "./pages/StaffTicketDetailPage.tsx";
 import StaffWorkloadPage from "./pages/StaffWorkloadPage.tsx";
+import StaffTicketQueuePage from "./pages/StaffTicketQueuePage.tsx";
 import PublicStatusPage from "./pages/PublicStatusPage.tsx";
 import SurveyPage from "./pages/SurveyPage.tsx";
 import SurveyResultsPage from "./pages/SurveyResultsPage.tsx";
@@ -73,7 +74,14 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="/staff/:staffId/tickets"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <StaffTicketQueuePage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/analytics"
               element={
