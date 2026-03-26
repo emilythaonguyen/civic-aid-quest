@@ -17,7 +17,6 @@ import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, LogOut, X } from "lucide-react";
 
-const STATUS_OPTIONS = ["All", "Open", "In Review", "Resolved", "Escalated"] as const;
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 const PRIORITY_OPTIONS = ["All", "High", "Medium", "Low"] as const;
 
@@ -31,7 +30,7 @@ export default function StaffDashboardListPage() {
   const [error, setError] = useState("");
 
   // Filters
-  const [statusFilter, setStatusFilter] = useState("All");
+  
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
@@ -107,7 +106,7 @@ export default function StaffDashboardListPage() {
 
   const filtered = useMemo(() => {
     return tickets.filter((t) => {
-      if (statusFilter !== "All" && t.status !== statusFilter) return false;
+      
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
       if (priorityFilter !== "All" && (t.priority ?? "") !== priorityFilter) return false;
       if (
@@ -117,17 +116,16 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, statusFilter, categoryFilter, priorityFilter, locationFilter]);
+  }, [tickets, categoryFilter, priorityFilter, locationFilter]);
 
   const clearFilters = () => {
-    setStatusFilter("All");
     setCategoryFilter("All");
     setPriorityFilter("All");
     setLocationFilter("");
   };
 
   const hasActiveFilters =
-    statusFilter !== "All" || categoryFilter !== "All" || priorityFilter !== "All" || locationFilter !== "";
+    categoryFilter !== "All" || priorityFilter !== "All" || locationFilter !== "";
 
   const handleSignOut = async () => {
     await signOut();
@@ -180,22 +178,6 @@ export default function StaffDashboardListPage() {
       <main className="px-6 py-6 space-y-4">
         {/* Filter bar */}
         <div className="flex flex-wrap items-end gap-3">
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-muted-foreground">Status</label>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px] h-9 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {STATUS_OPTIONS.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {s}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Category</label>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
