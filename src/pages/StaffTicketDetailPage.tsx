@@ -14,6 +14,7 @@ import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import TicketAssignment from "@/components/TicketAssignment";
 import InternalComments from "@/components/InternalComments";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 
@@ -68,6 +69,10 @@ export default function StaffTicketDetailPage() {
   const [newStatus, setNewStatus] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const [suggestions, setSuggestions] = useState<{ action: string; detail: string }[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true);
+  const [suggestionsFallback, setSuggestionsFallback] = useState(false);
 
   // Access control
   useEffect(() => {
@@ -161,6 +166,38 @@ export default function StaffTicketDetailPage() {
     };
     fetchData();
   }, [user, role, id]);
+
+  // Fetch AI resolution suggestions
+  useEffect(() => {
+    if (!ticket) return;
+    setSuggestionsLoading(true);
+    setSuggestionsFallback(false);
+    setSuggestions([]);
+
+    fetch("https://axlerator.app.n8n.cloud/webhook/resolution-suggestions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: ticket.id,
+        type: ticket.category,
+        description: ticket.description,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.fallback) {
+          setSuggestionsFallback(true);
+        } else {
+          setSuggestions(data.suggestions?.steps ?? []);
+        }
+      })
+      .catch(() => {
+        setSuggestionsFallback(true);
+      })
+      .finally(() => {
+        setSuggestionsLoading(false);
+      });
+  }, [ticket?.id]);
 
   const handleSaveStatus = async () => {
     if (!ticket || !user || newStatus === ticket.status) return;
@@ -341,9 +378,28 @@ export default function StaffTicketDetailPage() {
         {/* AI Resolution Suggestions */}
         <div className="border border-blue-200 bg-blue-50 rounded-lg p-4 space-y-3">
           <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
-          <p className="text-sm text-muted-foreground">
-            Resolution suggestions will appear here once the AI workflow is active.
-          </p>
+          {suggestionsLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          ) : suggestionsFallback ? (
+            <p className="text-sm text-muted-foreground">
+              Resolution suggestions are temporarily unavailable.
+            </p>
+          ) : suggestions.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No suggestions available.</p>
+          ) : (
+            <ol className="list-decimal list-inside space-y-2 text-sm">
+              {suggestions.map((step, i) => (
+                <li key={i}>
+                  <span className="font-semibold">{step.action}</span>
+                  <p className="ml-5 text-muted-foreground">{step.detail}</p>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
 
         {/* Status update */}
