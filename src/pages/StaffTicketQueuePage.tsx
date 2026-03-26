@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/select";
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
-import { Loader2, ArrowLeft, X } from "lucide-react";
+import { Loader2, ArrowLeft, X, LogOut } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
 export default function StaffTicketQueuePage() {
-  const { user, role, loading: authLoading } = useAuth();
+  const { user, role, signOut, loading: authLoading } = useAuth();
   const { staffId } = useParams<{ staffId: string }>();
   const navigate = useNavigate();
 
@@ -136,12 +136,16 @@ export default function StaffTicketQueuePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card px-6 py-4 flex items-center gap-4">
+      <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-4">
         <Button variant="ghost" size="sm" asChild className="gap-1.5">
           <Link to="/staff/workload">
             <ArrowLeft className="h-4 w-4" />
             Back to Workload
           </Link>
+        </Button>
+        <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/login"); }} className="gap-1.5">
+          <LogOut className="h-3.5 w-3.5" />
+          Logout
         </Button>
       </header>
 
