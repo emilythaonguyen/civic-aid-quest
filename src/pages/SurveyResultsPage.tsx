@@ -345,7 +345,7 @@ export default function SurveyResultsPage() {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <Brain className="h-5 w-5 text-primary" />
-                    AI Sentiment Analysis
+                    Sentiment Analysis
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="py-6 text-center">
@@ -367,8 +367,8 @@ export default function SurveyResultsPage() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-primary" />
-                  AI Sentiment Analysis
+                    <Brain className="h-5 w-5 text-primary" />
+                    Sentiment Analysis
                 </CardTitle>
                 <p className="text-xs text-muted-foreground">Based on {withSentiment.length} analyzed {withSentiment.length === 1 ? "response" : "responses"}</p>
               </CardHeader>
