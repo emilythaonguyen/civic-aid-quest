@@ -22,6 +22,9 @@ interface SurveyResult {
   rating: number | null;
   responses: Record<string, string | number> | null;
   questionnaire: unknown;
+  sentiment_score: number | null;
+  sentiment_label: string | null;
+  confidence: string | null;
   request: {
     id: string;
     type: string;
