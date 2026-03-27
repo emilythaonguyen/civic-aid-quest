@@ -94,6 +94,7 @@ export default function SurveyResultsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [staffName, setStaffName] = useState("");
+  const [runningBackfill, setRunningBackfill] = useState(false);
 
   useEffect(() => {
     if (!user) return;
