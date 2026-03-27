@@ -107,90 +107,109 @@ export default function SurveyResultsPage() {
     navigate("/staff-login");
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data: surveys, error: err } = await supabase
-          .from("surveys")
-          .select("id, submitted_at, rating, responses, questionnaire, request_id, sentiment_score, sentiment_label, confidence")
-          .not("submitted_at", "is", null)
-          .order("submitted_at", { ascending: false });
+  const fetchResults = useCallback(async () => {
+    try {
+      const { data: surveys, error: err } = await supabase
+        .from("surveys")
+        .select("id, submitted_at, rating, responses, questionnaire, request_id, sentiment_score, sentiment_label, confidence")
+        .not("submitted_at", "is", null)
+        .order("submitted_at", { ascending: false });
 
-        if (err) throw err;
-        if (!surveys || surveys.length === 0) {
-          setResults([]);
-          return;
-        }
-
-        // Fetch associated requests
-        const requestIds = surveys.map((s) => s.request_id).filter(Boolean) as string[];
-        let requestMap: Record<string, { id: string; type: string; status: string; location: string; created_at: string; user_id: string | null; citizen_name: string | null }> = {};
-
-        if (requestIds.length > 0) {
-          const { data: requests } = await supabase
-            .from("requests")
-            .select("id, type, status, location, created_at, user_id")
-            .in("id", requestIds);
-
-          if (requests) {
-            // Fetch citizen names
-            const userIds = requests.map((r) => r.user_id).filter(Boolean) as string[];
-            let profileMap: Record<string, string> = {};
-            if (userIds.length > 0) {
-              const { data: profiles } = await supabase
-                .from("profiles")
-                .select("id, full_name")
-                .in("id", userIds);
-              if (profiles) {
-                profileMap = Object.fromEntries(profiles.map((p) => [p.id, p.full_name ?? "Unknown"]));
-              }
-            }
-          requestMap = Object.fromEntries(
-              requests.map((r) => [
-                r.id,
-                {
-                  id: r.id,
-                  type: r.type,
-                  status: r.status,
-                  location: r.location,
-                  created_at: r.created_at,
-                  user_id: r.user_id,
-                  citizen_name: r.user_id ? (profileMap[r.user_id] ?? null) : null,
-                },
-              ])
-            );
-          }
-        }
-
-        const mapped: SurveyResult[] = surveys.map((s) => ({
-          id: s.id,
-          submitted_at: s.submitted_at!,
-          rating: s.rating ?? null,
-          responses: s.responses as Record<string, string | number> | null,
-          questionnaire: s.questionnaire,
-          sentiment_score: (s as any).sentiment_score ?? null,
-          sentiment_label: (s as any).sentiment_label ?? null,
-          confidence: (s as any).confidence ?? null,
-          request: s.request_id && requestMap[s.request_id]
-            ? {
-                id: requestMap[s.request_id].id,
-                type: requestMap[s.request_id].type,
-                status: requestMap[s.request_id].status,
-                location: requestMap[s.request_id].location,
-                created_at: requestMap[s.request_id].created_at,
-                citizen_name: requestMap[s.request_id].citizen_name ?? null,
-              }
-            : null,
-        }));
-
-        setResults(mapped);
-      } catch {
-        setError("Failed to load survey results.");
-      } finally {
-        setLoading(false);
+      if (err) throw err;
+      if (!surveys || surveys.length === 0) {
+        setResults([]);
+        return;
       }
-    })();
+
+      // Fetch associated requests
+      const requestIds = surveys.map((s) => s.request_id).filter(Boolean) as string[];
+      let requestMap: Record<string, { id: string; type: string; status: string; location: string; created_at: string; user_id: string | null; citizen_name: string | null }> = {};
+
+      if (requestIds.length > 0) {
+        const { data: requests } = await supabase
+          .from("requests")
+          .select("id, type, status, location, created_at, user_id")
+          .in("id", requestIds);
+
+        if (requests) {
+          const userIds = requests.map((r) => r.user_id).filter(Boolean) as string[];
+          let profileMap: Record<string, string> = {};
+          if (userIds.length > 0) {
+            const { data: profiles } = await supabase
+              .from("profiles")
+              .select("id, full_name")
+              .in("id", userIds);
+            if (profiles) {
+              profileMap = Object.fromEntries(profiles.map((p) => [p.id, p.full_name ?? "Unknown"]));
+            }
+          }
+          requestMap = Object.fromEntries(
+            requests.map((r) => [
+              r.id,
+              {
+                id: r.id,
+                type: r.type,
+                status: r.status,
+                location: r.location,
+                created_at: r.created_at,
+                user_id: r.user_id,
+                citizen_name: r.user_id ? (profileMap[r.user_id] ?? null) : null,
+              },
+            ])
+          );
+        }
+      }
+
+      const mapped: SurveyResult[] = surveys.map((s) => ({
+        id: s.id,
+        submitted_at: s.submitted_at!,
+        rating: s.rating ?? null,
+        responses: s.responses as Record<string, string | number> | null,
+        questionnaire: s.questionnaire,
+        sentiment_score: (s as any).sentiment_score ?? null,
+        sentiment_label: (s as any).sentiment_label ?? null,
+        confidence: (s as any).confidence ?? null,
+        request: s.request_id && requestMap[s.request_id]
+          ? {
+              id: requestMap[s.request_id].id,
+              type: requestMap[s.request_id].type,
+              status: requestMap[s.request_id].status,
+              location: requestMap[s.request_id].location,
+              created_at: requestMap[s.request_id].created_at,
+              citizen_name: requestMap[s.request_id].citizen_name ?? null,
+            }
+          : null,
+      }));
+
+      setResults(mapped);
+    } catch {
+      setError("Failed to load survey results.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchResults();
+  }, [fetchResults]);
+
+  const handleRunBackfill = async () => {
+    setRunningBackfill(true);
+    try {
+      const { data, error: fnErr } = await supabase.functions.invoke("backfill-sentiment");
+      if (fnErr) throw fnErr;
+      const processed = data?.processed ?? 0;
+      const successes = data?.results?.filter((r: any) => r.success).length ?? 0;
+      toast.success(`Analyzed ${successes} of ${processed} surveys`);
+      // Refresh data
+      await fetchResults();
+    } catch (e) {
+      console.error("Backfill error:", e);
+      toast.error("Failed to run sentiment analysis. Please try again.");
+    } finally {
+      setRunningBackfill(false);
+    }
+  };
 
   if (loading) {
     return (
