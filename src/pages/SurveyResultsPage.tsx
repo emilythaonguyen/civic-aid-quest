@@ -413,6 +413,7 @@ export default function SurveyResultsPage() {
           );
         })()}
 
+        {results.map((result) => {
           const questions = parseQuestions(result.questionnaire);
           const responses = result.responses ?? {};
 
