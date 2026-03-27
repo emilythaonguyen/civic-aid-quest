@@ -393,9 +393,17 @@ export default function SurveyResultsPage() {
           return (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-primary" />
-                    Sentiment Analysis
+                <CardTitle className="text-base flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Brain className="h-5 w-5 text-primary" />
+                      Sentiment Analysis
+                    </span>
+                    {results.some(r => r.sentiment_label == null) && (
+                      <Button size="sm" variant="outline" onClick={handleRunBackfill} disabled={runningBackfill}>
+                        {runningBackfill ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
+                        {runningBackfill ? "Analyzing…" : "Analyze Remaining"}
+                      </Button>
+                    )}
                 </CardTitle>
                 <p className="text-xs text-muted-foreground">Based on {withSentiment.length} analyzed {withSentiment.length === 1 ? "response" : "responses"}</p>
               </CardHeader>
