@@ -356,9 +356,9 @@ export default function SurveyResultsPage() {
           }
 
           const avgScore = Math.round(withSentiment.reduce((sum, r) => sum + (r.sentiment_score ?? 0), 0) / withSentiment.length);
-          const positive = withSentiment.filter(r => r.sentiment_label === "positive").length;
-          const neutral = withSentiment.filter(r => r.sentiment_label === "neutral").length;
-          const negative = withSentiment.filter(r => r.sentiment_label === "negative").length;
+          const positive = withSentiment.filter(r => r.sentiment_label?.toLowerCase() === "positive").length;
+          const neutral = withSentiment.filter(r => r.sentiment_label?.toLowerCase() === "neutral").length;
+          const negative = withSentiment.filter(r => r.sentiment_label?.toLowerCase() === "negative").length;
           const positivePct = Math.round((positive / withSentiment.length) * 100);
           const neutralPct = Math.round((neutral / withSentiment.length) * 100);
           const negativePct = Math.round((negative / withSentiment.length) * 100);
