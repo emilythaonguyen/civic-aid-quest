@@ -424,9 +424,9 @@ export default function SurveyResultsPage() {
                   <CardHeader className="pb-3 border-b border-border cursor-pointer group">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <span className="font-semibold text-foreground">
-                          {result.request?.citizen_name ?? "Unknown Citizen"}
+                        <Tag className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <span className="font-semibold text-foreground capitalize">
+                          {result.request?.type ?? "Service Request"}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
