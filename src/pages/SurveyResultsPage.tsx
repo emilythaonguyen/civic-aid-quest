@@ -336,7 +336,83 @@ export default function SurveyResultsPage() {
           );
         })()}
 
-        {results.map((result) => {
+        {/* Sentiment Analysis Stats */}
+        {!error && results.length > 0 && (() => {
+          const withSentiment = results.filter(r => r.sentiment_score != null && r.sentiment_label != null);
+          if (withSentiment.length === 0) {
+            return (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-primary" />
+                    AI Sentiment Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="py-6 text-center">
+                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Results will appear here once the AI workflow processes survey responses.</p>
+                </CardContent>
+              </Card>
+            );
+          }
+
+          const avgScore = Math.round(withSentiment.reduce((sum, r) => sum + (r.sentiment_score ?? 0), 0) / withSentiment.length);
+          const positive = withSentiment.filter(r => r.sentiment_label === "positive").length;
+          const neutral = withSentiment.filter(r => r.sentiment_label === "neutral").length;
+          const negative = withSentiment.filter(r => r.sentiment_label === "negative").length;
+          const positivePct = Math.round((positive / withSentiment.length) * 100);
+          const neutralPct = Math.round((neutral / withSentiment.length) * 100);
+          const negativePct = Math.round((negative / withSentiment.length) * 100);
+
+          return (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Brain className="h-5 w-5 text-primary" />
+                  AI Sentiment Analysis
+                </CardTitle>
+                <p className="text-xs text-muted-foreground">Based on {withSentiment.length} analyzed {withSentiment.length === 1 ? "response" : "responses"}</p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="rounded-lg bg-muted/50 p-4 text-center">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Avg Score</p>
+                    <p className="text-2xl font-bold text-foreground">{avgScore}</p>
+                    <p className="text-xs text-muted-foreground">out of 100</p>
+                  </div>
+                  <div className="rounded-lg bg-green-50 dark:bg-green-950/30 p-4 text-center">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Positive</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">{positivePct}%</p>
+                    <p className="text-xs text-muted-foreground">{positive} {positive === 1 ? "response" : "responses"}</p>
+                  </div>
+                  <div className="rounded-lg bg-yellow-50 dark:bg-yellow-950/30 p-4 text-center">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Neutral</p>
+                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{neutralPct}%</p>
+                    <p className="text-xs text-muted-foreground">{neutral} {neutral === 1 ? "response" : "responses"}</p>
+                  </div>
+                  <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-4 text-center">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Negative</p>
+                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">{negativePct}%</p>
+                    <p className="text-xs text-muted-foreground">{negative} {negative === 1 ? "response" : "responses"}</p>
+                  </div>
+                </div>
+                {/* Distribution bar */}
+                <div className="mt-4">
+                  <div className="flex h-3 rounded-full overflow-hidden">
+                    {positivePct > 0 && <div className="bg-green-500" style={{ width: `${positivePct}%` }} />}
+                    {neutralPct > 0 && <div className="bg-yellow-500" style={{ width: `${neutralPct}%` }} />}
+                    {negativePct > 0 && <div className="bg-red-500" style={{ width: `${negativePct}%` }} />}
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <span>Positive</span>
+                    <span>Neutral</span>
+                    <span>Negative</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })()}
+
           const questions = parseQuestions(result.questionnaire);
           const responses = result.responses ?? {};
 
