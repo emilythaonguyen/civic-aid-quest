@@ -370,7 +370,7 @@ export default function SurveyResultsPage() {
                     <Brain className="h-5 w-5 text-primary" />
                     Sentiment Analysis
                 </CardTitle>
-                <p className="text-xs text-muted-foreground">Based on {withSentiment.length} analyzed {withSentiment.length === 1 ? "response" : "responses"}</p>
+                
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
