@@ -377,7 +377,7 @@ export default function SurveyResultsPage() {
                   <div className="rounded-lg bg-muted/50 p-4 text-center">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Avg Score</p>
                     <p className="text-2xl font-bold text-foreground">{avgScore}</p>
-                    <p className="text-xs text-muted-foreground">out of 100</p>
+                    <p className="text-xs text-muted-foreground">out of 10</p>
                   </div>
                   <div className="rounded-lg bg-green-50 dark:bg-green-950/30 p-4 text-center">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Positive</p>
