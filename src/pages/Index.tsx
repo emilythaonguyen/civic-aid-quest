@@ -7,7 +7,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background">
       <h1 className="text-4xl font-bold text-foreground">Civic Aid App</h1>
-      <p className="text-lg text-muted-foreground">Axle County</p>
+      <p className="text-lg font-bold text-foreground">Axle County</p>
       <Button
         className="bg-black text-white hover:bg-black/90"
         onClick={() => navigate("/citizen-login")}
