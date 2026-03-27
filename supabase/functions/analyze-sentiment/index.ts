@@ -110,11 +110,31 @@ Consider ratings, yes/no answers, and open text tone together.`;
 
     const aiData = await aiResponse.json();
     const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall?.function?.arguments) {
-      throw new Error("No tool call in AI response");
+    
+    let sentiment: { sentiment_score: number; sentiment_label: string; confidence: string };
+    
+    if (toolCall?.function?.arguments) {
+      sentiment = JSON.parse(toolCall.function.arguments);
+    } else {
+      // Fallback: try to extract JSON from message content
+      const content = aiData.choices?.[0]?.message?.content ?? "";
+      const match = content.match(/\{[\s\S]*\}/);
+      if (match) {
+        const parsed = JSON.parse(match[0]);
+        if (parsed.sentiment_label && parsed.sentiment_score !== undefined) {
+          sentiment = {
+            sentiment_score: parsed.sentiment_score,
+            sentiment_label: parsed.sentiment_label,
+            confidence: parsed.confidence ?? "medium",
+          };
+        } else {
+          throw new Error("AI response JSON missing required fields");
+        }
+      } else {
+        console.error("AI response had no tool call or parseable JSON:", JSON.stringify(aiData).slice(0, 500));
+        throw new Error("No tool call or parseable content in AI response");
+      }
     }
-
-    const sentiment = JSON.parse(toolCall.function.arguments);
 
     // Update the survey row with sentiment data
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
