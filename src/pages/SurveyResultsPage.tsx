@@ -396,18 +396,6 @@ export default function SurveyResultsPage() {
                   </div>
                 </div>
                 {/* Distribution bar */}
-                <div className="mt-4">
-                  <div className="flex h-3 rounded-full overflow-hidden">
-                    {positivePct > 0 && <div className="bg-green-500" style={{ width: `${positivePct}%` }} />}
-                    {neutralPct > 0 && <div className="bg-yellow-500" style={{ width: `${neutralPct}%` }} />}
-                    {negativePct > 0 && <div className="bg-red-500" style={{ width: `${negativePct}%` }} />}
-                  </div>
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>Positive</span>
-                    <span>Neutral</span>
-                    <span>Negative</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           );
