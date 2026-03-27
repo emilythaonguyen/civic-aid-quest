@@ -530,6 +530,41 @@ export default function SurveyResultsPage() {
                     ) : (
                       <p className="text-sm text-muted-foreground italic">No question details available.</p>
                     )}
+
+                    {/* Individual Sentiment Analysis */}
+                    {result.sentiment_label != null && result.sentiment_score != null && (
+                      <div className="rounded-lg bg-muted/50 p-4 space-y-2">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                          <Brain className="h-3.5 w-3.5 text-primary" />
+                          Sentiment Analysis
+                        </p>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Label</p>
+                            <Badge
+                              variant="secondary"
+                              className={
+                                result.sentiment_label.toLowerCase() === "positive"
+                                  ? "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-400"
+                                  : result.sentiment_label.toLowerCase() === "negative"
+                                    ? "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400"
+                                    : "bg-yellow-100 text-yellow-800 dark:bg-yellow-950/40 dark:text-yellow-400"
+                              }
+                            >
+                              {result.sentiment_label}
+                            </Badge>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Score</p>
+                            <p className="text-lg font-bold text-foreground">{result.sentiment_score}<span className="text-xs font-normal text-muted-foreground"> / 100</span></p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Confidence</p>
+                            <p className="text-lg font-bold text-foreground capitalize">{result.confidence ?? "N/A"}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </CollapsibleContent>
               </Card>
