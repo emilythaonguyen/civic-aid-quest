@@ -232,21 +232,6 @@ export default function SurveyPage() {
 
       if (updateErr) throw updateErr;
       setSubmitted(true);
-
-      // Fire-and-forget sentiment analysis via edge function (non-critical)
-      supabase.functions.invoke("analyze-sentiment", {
-        body: {
-          survey_id: surveyId,
-          responses,
-          questions: questionnaire.questions.map((q) => ({
-            id: q.id,
-            text: q.text,
-            type: q.type,
-          })),
-        },
-      }).catch(() => {
-        // Edge function may not be deployed - sentiment will be analyzed separately
-      });
     } catch {
       setError("Failed to submit survey. Please try again.");
     } finally {

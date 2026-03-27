@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,10 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Loader2, Star, LogOut, ClipboardList, User, MapPin, Tag, Calendar, ChevronDown, Brain, RefreshCw } from "lucide-react";
+import { Loader2, Star, LogOut, ClipboardList, User, MapPin, Tag, Calendar, ChevronDown, Brain } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import { format } from "date-fns";
-import { toast } from "sonner";
 
 interface SurveyQuestion {
   id: string;
@@ -94,7 +93,6 @@ export default function SurveyResultsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [staffName, setStaffName] = useState("");
-  const [runningBackfill, setRunningBackfill] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -107,135 +105,90 @@ export default function SurveyResultsPage() {
     navigate("/staff-login");
   };
 
-  const fetchResults = useCallback(async () => {
-    try {
-      const { data: surveys, error: err } = await supabase
-        .from("surveys")
-        .select("id, submitted_at, rating, responses, questionnaire, request_id, sentiment_score, sentiment_label, confidence")
-        .not("submitted_at", "is", null)
-        .order("submitted_at", { ascending: false });
-
-      if (err) throw err;
-      if (!surveys || surveys.length === 0) {
-        setResults([]);
-        return;
-      }
-
-      // Fetch associated requests
-      const requestIds = surveys.map((s) => s.request_id).filter(Boolean) as string[];
-      let requestMap: Record<string, { id: string; type: string; status: string; location: string; created_at: string; user_id: string | null; citizen_name: string | null }> = {};
-
-      if (requestIds.length > 0) {
-        const { data: requests } = await supabase
-          .from("requests")
-          .select("id, type, status, location, created_at, user_id")
-          .in("id", requestIds);
-
-        if (requests) {
-          const userIds = requests.map((r) => r.user_id).filter(Boolean) as string[];
-          let profileMap: Record<string, string> = {};
-          if (userIds.length > 0) {
-            const { data: profiles } = await supabase
-              .from("profiles")
-              .select("id, full_name")
-              .in("id", userIds);
-            if (profiles) {
-              profileMap = Object.fromEntries(profiles.map((p) => [p.id, p.full_name ?? "Unknown"]));
-            }
-          }
-          requestMap = Object.fromEntries(
-            requests.map((r) => [
-              r.id,
-              {
-                id: r.id,
-                type: r.type,
-                status: r.status,
-                location: r.location,
-                created_at: r.created_at,
-                user_id: r.user_id,
-                citizen_name: r.user_id ? (profileMap[r.user_id] ?? null) : null,
-              },
-            ])
-          );
-        }
-      }
-
-      const mapped: SurveyResult[] = surveys.map((s) => ({
-        id: s.id,
-        submitted_at: s.submitted_at!,
-        rating: s.rating ?? null,
-        responses: s.responses as Record<string, string | number> | null,
-        questionnaire: s.questionnaire,
-        sentiment_score: (s as any).sentiment_score ?? null,
-        sentiment_label: (s as any).sentiment_label ?? null,
-        confidence: (s as any).confidence ?? null,
-        request: s.request_id && requestMap[s.request_id]
-          ? {
-              id: requestMap[s.request_id].id,
-              type: requestMap[s.request_id].type,
-              status: requestMap[s.request_id].status,
-              location: requestMap[s.request_id].location,
-              created_at: requestMap[s.request_id].created_at,
-              citizen_name: requestMap[s.request_id].citizen_name ?? null,
-            }
-          : null,
-      }));
-
-      setResults(mapped);
-    } catch {
-      setError("Failed to load survey results.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    fetchResults();
-  }, [fetchResults]);
+    (async () => {
+      try {
+        const { data: surveys, error: err } = await supabase
+          .from("surveys")
+          .select("id, submitted_at, rating, responses, questionnaire, request_id, sentiment_score, sentiment_label, confidence")
+          .not("submitted_at", "is", null)
+          .order("submitted_at", { ascending: false });
 
-  const handleRunBackfill = async () => {
-    setRunningBackfill(true);
-    try {
-      // Try edge function first
-      const { data, error: fnErr } = await supabase.functions.invoke("backfill-sentiment");
-      if (fnErr) throw fnErr;
-      const processed = data?.processed ?? 0;
-      const successes = data?.results?.filter((r: any) => r.success).length ?? 0;
-      toast.success(`Analyzed ${successes} of ${processed} surveys`);
-      await fetchResults();
-    } catch {
-      // Edge function may not be deployed - try individual analysis
-      const unanalyzed = results.filter(r => r.sentiment_label == null);
-      if (unanalyzed.length === 0) {
-        toast.info("All surveys already have sentiment analysis.");
-        await fetchResults();
-      } else {
-        let success = 0;
-        for (const survey of unanalyzed) {
-          try {
-            const { error: fnErr2 } = await supabase.functions.invoke("analyze-sentiment", {
-              body: {
-                survey_id: survey.id,
-                responses: survey.responses,
-                questions: parseQuestions(survey.questionnaire).map(q => ({ id: q.id, text: q.text, type: q.type })),
-              },
-            });
-            if (!fnErr2) success++;
-          } catch {
-            // continue to next
+        if (err) throw err;
+        if (!surveys || surveys.length === 0) {
+          setResults([]);
+          return;
+        }
+
+        // Fetch associated requests
+        const requestIds = surveys.map((s) => s.request_id).filter(Boolean) as string[];
+        let requestMap: Record<string, { id: string; type: string; status: string; location: string; created_at: string; user_id: string | null; citizen_name: string | null }> = {};
+
+        if (requestIds.length > 0) {
+          const { data: requests } = await supabase
+            .from("requests")
+            .select("id, type, status, location, created_at, user_id")
+            .in("id", requestIds);
+
+          if (requests) {
+            // Fetch citizen names
+            const userIds = requests.map((r) => r.user_id).filter(Boolean) as string[];
+            let profileMap: Record<string, string> = {};
+            if (userIds.length > 0) {
+              const { data: profiles } = await supabase
+                .from("profiles")
+                .select("id, full_name")
+                .in("id", userIds);
+              if (profiles) {
+                profileMap = Object.fromEntries(profiles.map((p) => [p.id, p.full_name ?? "Unknown"]));
+              }
+            }
+          requestMap = Object.fromEntries(
+              requests.map((r) => [
+                r.id,
+                {
+                  id: r.id,
+                  type: r.type,
+                  status: r.status,
+                  location: r.location,
+                  created_at: r.created_at,
+                  user_id: r.user_id,
+                  citizen_name: r.user_id ? (profileMap[r.user_id] ?? null) : null,
+                },
+              ])
+            );
           }
         }
-        if (success > 0) {
-          toast.success(`Analyzed ${success} of ${unanalyzed.length} surveys`);
-          await fetchResults();
-        } else {
-          toast.error("Sentiment analysis edge functions are not deployed. Please deploy them to your Supabase project or contact your admin.");
-        }
+
+        const mapped: SurveyResult[] = surveys.map((s) => ({
+          id: s.id,
+          submitted_at: s.submitted_at!,
+          rating: s.rating ?? null,
+          responses: s.responses as Record<string, string | number> | null,
+          questionnaire: s.questionnaire,
+          sentiment_score: (s as any).sentiment_score ?? null,
+          sentiment_label: (s as any).sentiment_label ?? null,
+          confidence: (s as any).confidence ?? null,
+          request: s.request_id && requestMap[s.request_id]
+            ? {
+                id: requestMap[s.request_id].id,
+                type: requestMap[s.request_id].type,
+                status: requestMap[s.request_id].status,
+                location: requestMap[s.request_id].location,
+                created_at: requestMap[s.request_id].created_at,
+                citizen_name: requestMap[s.request_id].citizen_name ?? null,
+              }
+            : null,
+        }));
+
+        setResults(mapped);
+      } catch {
+        setError("Failed to load survey results.");
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setRunningBackfill(false);
-    }
-  };
+    })();
+  }, []);
 
   if (loading) {
     return (
@@ -390,19 +343,13 @@ export default function SurveyResultsPage() {
             return (
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center justify-between">
-                    <span className="flex items-center gap-2">
-                      <Brain className="h-5 w-5 text-primary" />
-                      Sentiment Analysis
-                    </span>
-                    <Button size="sm" variant="outline" onClick={handleRunBackfill} disabled={runningBackfill}>
-                      {runningBackfill ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
-                      {runningBackfill ? "Analyzing…" : "Run Analysis"}
-                    </Button>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-primary" />
+                    Sentiment Analysis
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="py-6 text-center">
-                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Click "Run Analysis" to process existing surveys.</p>
+                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Results will appear here once the AI workflow processes survey responses.</p>
                 </CardContent>
               </Card>
             );
@@ -419,17 +366,9 @@ export default function SurveyResultsPage() {
           return (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center justify-between">
-                    <span className="flex items-center gap-2">
-                      <Brain className="h-5 w-5 text-primary" />
-                      Sentiment Analysis
-                    </span>
-                    {results.some(r => r.sentiment_label == null) && (
-                      <Button size="sm" variant="outline" onClick={handleRunBackfill} disabled={runningBackfill}>
-                        {runningBackfill ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
-                        {runningBackfill ? "Analyzing…" : "Analyze Remaining"}
-                      </Button>
-                    )}
+                <CardTitle className="text-base flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-primary" />
+                    Sentiment Analysis
                 </CardTitle>
                 <p className="text-xs text-muted-foreground">Based on {withSentiment.length} analyzed {withSentiment.length === 1 ? "response" : "responses"}</p>
               </CardHeader>
