@@ -556,7 +556,7 @@ export default function SurveyResultsPage() {
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Score</p>
-                            <p className="text-lg font-bold text-foreground">{result.sentiment_score}<span className="text-xs font-normal text-muted-foreground"> / 100</span></p>
+                            <p className="text-lg font-bold text-foreground">{result.sentiment_score}<span className="text-xs font-normal text-muted-foreground"> / 10</span></p>
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Confidence</p>
