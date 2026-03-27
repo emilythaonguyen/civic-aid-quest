@@ -196,16 +196,42 @@ export default function SurveyResultsPage() {
   const handleRunBackfill = async () => {
     setRunningBackfill(true);
     try {
+      // Try edge function first
       const { data, error: fnErr } = await supabase.functions.invoke("backfill-sentiment");
       if (fnErr) throw fnErr;
       const processed = data?.processed ?? 0;
       const successes = data?.results?.filter((r: any) => r.success).length ?? 0;
       toast.success(`Analyzed ${successes} of ${processed} surveys`);
-      // Refresh data
       await fetchResults();
-    } catch (e) {
-      console.error("Backfill error:", e);
-      toast.error("Failed to run sentiment analysis. Please try again.");
+    } catch {
+      // Edge function may not be deployed - try individual analysis
+      const unanalyzed = results.filter(r => r.sentiment_label == null);
+      if (unanalyzed.length === 0) {
+        toast.info("All surveys already have sentiment analysis.");
+        await fetchResults();
+      } else {
+        let success = 0;
+        for (const survey of unanalyzed) {
+          try {
+            const { error: fnErr2 } = await supabase.functions.invoke("analyze-sentiment", {
+              body: {
+                survey_id: survey.id,
+                responses: survey.responses,
+                questions: parseQuestions(survey.questionnaire).map(q => ({ id: q.id, text: q.text, type: q.type })),
+              },
+            });
+            if (!fnErr2) success++;
+          } catch {
+            // continue to next
+          }
+        }
+        if (success > 0) {
+          toast.success(`Analyzed ${success} of ${unanalyzed.length} surveys`);
+          await fetchResults();
+        } else {
+          toast.error("Sentiment analysis edge functions are not deployed. Please deploy them to your Supabase project or contact your admin.");
+        }
+      }
     } finally {
       setRunningBackfill(false);
     }
