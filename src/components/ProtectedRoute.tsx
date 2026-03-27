@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     );
   }
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
 
   if (role && role !== requiredRole) {
     return <Navigate to={role === "staff" ? "/analytics" : "/portal"} replace />;

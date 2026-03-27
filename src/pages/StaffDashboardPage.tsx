@@ -10,7 +10,7 @@ export default function StaffDashboardPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
