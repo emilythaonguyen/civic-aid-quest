@@ -110,7 +110,7 @@ export default function SurveyResultsPage() {
       try {
         const { data: surveys, error: err } = await supabase
           .from("surveys")
-          .select("id, submitted_at, rating, responses, questionnaire, request_id")
+          .select("id, submitted_at, rating, responses, questionnaire, request_id, sentiment_score, sentiment_label, confidence")
           .not("submitted_at", "is", null)
           .order("submitted_at", { ascending: false });
 
