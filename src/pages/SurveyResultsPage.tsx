@@ -364,13 +364,19 @@ export default function SurveyResultsPage() {
             return (
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-primary" />
-                    Sentiment Analysis
+                  <CardTitle className="text-base flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Brain className="h-5 w-5 text-primary" />
+                      Sentiment Analysis
+                    </span>
+                    <Button size="sm" variant="outline" onClick={handleRunBackfill} disabled={runningBackfill}>
+                      {runningBackfill ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
+                      {runningBackfill ? "Analyzing…" : "Run Analysis"}
+                    </Button>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="py-6 text-center">
-                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Results will appear here automatically after citizens submit their surveys.</p>
+                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Click "Run Analysis" to process existing surveys.</p>
                 </CardContent>
               </Card>
             );
