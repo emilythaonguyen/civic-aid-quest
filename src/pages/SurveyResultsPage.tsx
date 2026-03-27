@@ -349,7 +349,7 @@ export default function SurveyResultsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="py-6 text-center">
-                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Results will appear here once the AI workflow processes survey responses.</p>
+                  <p className="text-sm text-muted-foreground">Sentiment analysis data is not yet available. Results will appear here automatically after citizens submit their surveys.</p>
                 </CardContent>
               </Card>
             );
