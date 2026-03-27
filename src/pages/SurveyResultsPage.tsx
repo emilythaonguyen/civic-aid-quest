@@ -166,6 +166,9 @@ export default function SurveyResultsPage() {
           rating: s.rating ?? null,
           responses: s.responses as Record<string, string | number> | null,
           questionnaire: s.questionnaire,
+          sentiment_score: (s as any).sentiment_score ?? null,
+          sentiment_label: (s as any).sentiment_label ?? null,
+          confidence: (s as any).confidence ?? null,
           request: s.request_id && requestMap[s.request_id]
             ? {
                 id: requestMap[s.request_id].id,
