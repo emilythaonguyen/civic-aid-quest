@@ -310,25 +310,25 @@ export default function SurveyResultsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Card>
                 <CardContent className="pt-5 pb-4 text-center">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Overall Experience</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1 whitespace-nowrap">Overall Experience</p>
                   <p className="text-2xl font-bold text-foreground">{avgRating} / 5 ⭐</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="pt-5 pb-4 text-center">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Resolved to Satisfaction</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1 whitespace-nowrap">Resolved to Satisfaction</p>
                   <p className="text-2xl font-bold text-foreground">{q2Pct}%</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="pt-5 pb-4 text-center">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Improvement Suggestions</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1 whitespace-nowrap">Improvement Suggestions</p>
                   <p className="text-2xl font-bold text-foreground">{q3Count}</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="pt-5 pb-4 text-center">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Would Recommend</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1 whitespace-nowrap">Would Recommend</p>
                   <p className="text-2xl font-bold text-foreground">{q4Pct}%</p>
                 </CardContent>
               </Card>
