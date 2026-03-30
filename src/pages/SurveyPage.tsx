@@ -234,8 +234,10 @@ export default function SurveyPage() {
     const ratingValue = ratingQuestion ? Number(responses[ratingQuestion.id] ?? 0) : 0;
 
     try {
-      // Translate open-text responses if language is not English
+      const originalResponses = { ...responses };
       let finalResponses = { ...responses };
+
+      // Translate open-text responses if language is not English
       if (language !== "en") {
         const openTextQuestions = questionnaire.questions.filter((q) => q.type === "open_text");
         for (const q of openTextQuestions) {
@@ -252,6 +254,7 @@ export default function SurveyPage() {
         .update({
           rating: Number.isFinite(ratingValue) ? ratingValue : 0,
           responses: finalResponses,
+          original_responses: language !== "en" ? originalResponses : null,
           submitted_at: new Date().toISOString(),
         })
         .eq("id", surveyId);
