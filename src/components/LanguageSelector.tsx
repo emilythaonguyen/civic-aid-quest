@@ -12,6 +12,7 @@ import type { Language } from "@/i18n/citizenTranslations";
 interface LanguageSelectorProps {
   language: Language;
   onChange: (lang: Language) => void;
+  className?: string;
 }
 
 const languages: { code: Language; flag: string; label: string; shortLabel: string }[] = [
