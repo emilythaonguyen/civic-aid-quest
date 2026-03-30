@@ -12,6 +12,7 @@ import type { Language } from "@/i18n/citizenTranslations";
 interface LanguageSelectorProps {
   language: Language;
   onChange: (lang: Language) => void;
+  className?: string;
 }
 
 const languages: { code: Language; flag: string; label: string; shortLabel: string }[] = [
@@ -27,13 +28,13 @@ const languages: { code: Language; flag: string; label: string; shortLabel: stri
   { code: "de", flag: "🇩🇪", label: "German (Deutsch)", shortLabel: "German" },
 ];
 
-export default function LanguageSelector({ language, onChange }: LanguageSelectorProps) {
+export default function LanguageSelector({ language, onChange, className }: LanguageSelectorProps) {
   const current = languages.find((l) => l.code === language)!;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-normal">
+        <Button variant="ghost" size="sm" className={`gap-1.5 text-sm font-normal ${className ?? ""}`}>
           <Globe className="h-4 w-4" />
           {current.shortLabel}
         </Button>
