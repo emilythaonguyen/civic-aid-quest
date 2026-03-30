@@ -38,6 +38,11 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    --hero-bg: 220 45% 20%;
+    --hero-accent: 199 89% 60%;
+    --hero-cta: 224 76% 48%;
+    --hero-muted: 220 20% 70%;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
