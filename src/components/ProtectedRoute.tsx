@@ -27,7 +27,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     requiredRole === "staff" ? isStaffLike(role) : role === requiredRole;
 
   if (role && !effectiveMatch) {
-    return <Navigate to={isStaffLike(role) ? "/staff/dashboard" : "/portal"} replace />;
+    return <Navigate to={isStaffLike(role) ? "/analytics" : "/portal"} replace />;
   }
 
   return <>{children}</>;

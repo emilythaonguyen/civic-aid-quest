@@ -48,9 +48,9 @@ export default function StaffLoginPage() {
         return;
       }
 
-      navigate("/staff/dashboard");
+      navigate("/analytics");
     } else {
-      navigate("/staff/dashboard");
+      navigate("/analytics");
     }
   };
 
