@@ -43,7 +43,7 @@ export default function StaffLoginPage() {
 
       if (profile?.role !== "staff" && profile?.role !== "manager") {
         await supabase.auth.signOut();
-        setError("This login is for staff only. Please use the Citizen Login page.");
+        setError("This login is for staff and managers only. Please use the Citizen Login page.");
         setSubmitting(false);
         return;
       }
