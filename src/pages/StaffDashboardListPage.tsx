@@ -66,13 +66,14 @@ export default function StaffDashboardListPage() {
   useEffect(() => {
     if (!user || role !== "manager") return;
     supabase
-      .from("profiles")
-      .select("id, full_name")
-      .eq("role", "staff")
+      .rpc("get_staff_workload")
       .then(({ data }) => {
         if (data) {
           setStaffMembers(
-            data.map((p: any) => ({ id: p.id, name: p.full_name ?? "Unknown" }))
+            (data ?? []).map((r: any) => ({
+              id: r.staff_id,
+              name: r.full_name ?? "Unknown",
+            }))
           );
         }
       });
