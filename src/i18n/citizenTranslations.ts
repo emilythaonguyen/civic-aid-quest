@@ -10,6 +10,7 @@ export const translations = {
   en: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Public Status",
+    myPortal: "My Portal",
     signOut: "Sign Out",
     english: "English",
     spanish: "Spanish (Español)",
