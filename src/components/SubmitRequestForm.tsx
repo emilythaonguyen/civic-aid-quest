@@ -9,14 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Upload, X, CheckCircle2 } from "lucide-react";
+import { translations, type Language } from "@/i18n/citizenTranslations";
 
-const REQUEST_TYPES = [
-  { label: "Pothole", value: "pothole" },
-  { label: "Broken Streetlight", value: "streetlight" },
-  { label: "Illegal Dumping", value: "dumping" },
-  { label: "Graffiti", value: "graffiti" },
-  { label: "Other", value: "other" },
-];
+const REQUEST_TYPE_KEYS = ["pothole", "streetlight", "dumping", "graffiti", "other"] as const;
+
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -30,9 +26,11 @@ interface FormErrors {
 interface SubmitRequestFormProps {
   onSubmitSuccess?: () => void;
   embedded?: boolean;
+  language?: Language;
 }
 
-export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitRequestFormProps = {}) {
+export default function SubmitRequestForm({ onSubmitSuccess, embedded, language = "en" }: SubmitRequestFormProps) {
+  const t = translations[language];
   const { user } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,8 +47,8 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
   const [dragOver, setDragOver] = useState(false);
 
   const validateFile = (f: File): string | null => {
-    if (!ACCEPTED_TYPES.includes(f.type)) return "Only PNG, JPG, and PDF files are accepted.";
-    if (f.size > MAX_FILE_SIZE) return "File is too large. Maximum size is 5MB.";
+    if (!ACCEPTED_TYPES.includes(f.type)) return t.fileTypeError;
+    if (f.size > MAX_FILE_SIZE) return t.fileSizeError;
     return null;
   };
 
@@ -82,12 +80,12 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
 
   const validate = (): FormErrors => {
     const e: FormErrors = {};
-    if (!requestType) e.request_type = "Request type is required.";
-    if (!location.trim()) e.location = "Location is required.";
+    if (!requestType) e.request_type = t.requestTypeRequired;
+    if (!location.trim()) e.location = t.locationRequired;
     if (!description.trim()) {
-      e.description = "Description is required.";
+      e.description = t.descriptionRequired;
     } else if (description.trim().length < 20) {
-      e.description = "Description must be at least 20 characters.";
+      e.description = t.descriptionMinLength;
     }
     return e;
   };
@@ -122,7 +120,7 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
 
       if (uploadError) {
         setSubmitting(false);
-        setSubmitError("File upload failed. Please try again.");
+        setSubmitError(t.uploadFailed);
         return;
       }
 
@@ -151,7 +149,7 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
     if (error || !data) {
       setSubmitting(false);
       console.error("Supabase insert error:", error);
-      setSubmitError(error?.message || "Something went wrong. Please try again.");
+      setSubmitError(error?.message || t.submitFailed);
       return;
     }
 
@@ -167,21 +165,19 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
           <div className="mx-auto mb-2">
             <CheckCircle2 className="h-12 w-12 text-primary" />
           </div>
-          <CardTitle className="text-xl">Request Submitted!</CardTitle>
+          <CardTitle className="text-xl">{t.requestSubmitted}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-muted-foreground">
-            Your request has been logged. Your Request ID is:
-          </p>
+          <p className="text-muted-foreground">{t.requestLogged}</p>
           <p className="font-mono text-sm bg-muted rounded-md px-3 py-2 break-all">
             {submittedId}
           </p>
           <Button onClick={resetForm} className="w-full">
-            Submit Another Request
+            {t.submitAnother}
           </Button>
           {!embedded && (
             <Button onClick={() => navigate("/portal")} className="w-full">
-              Return to Portal
+              {t.returnToPortal}
             </Button>
           )}
         </CardContent>
@@ -192,10 +188,8 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl">Submit a Service Request</CardTitle>
-        <CardDescription>
-          Report a non-emergency issue in your community.
-        </CardDescription>
+        <CardTitle className="text-xl">{t.formTitle}</CardTitle>
+        <CardDescription>{t.formSubtitle}</CardDescription>
       </CardHeader>
       <CardContent>
         {submitError && (
@@ -207,14 +201,14 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           {/* Request Type */}
           <div className="space-y-1.5">
-            <Label htmlFor="request-type">Request Type</Label>
+            <Label htmlFor="request-type">{t.requestType}</Label>
             <Select value={requestType} onValueChange={(v) => { setRequestType(v); setErrors((p) => ({ ...p, request_type: undefined })); }}>
               <SelectTrigger id="request-type" className={errors.request_type ? "border-destructive" : ""}>
-                <SelectValue placeholder="Select a request type" />
+                <SelectValue placeholder={t.selectRequestType} />
               </SelectTrigger>
               <SelectContent>
-                {REQUEST_TYPES.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                {REQUEST_TYPE_KEYS.map((key) => (
+                  <SelectItem key={key} value={key}>{t[key]}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -223,10 +217,10 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
 
           {/* Location */}
           <div className="space-y-1.5">
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="location">{t.location}</Label>
             <Input
               id="location"
-              placeholder="Enter address or intersection"
+              placeholder={t.locationPlaceholder}
               value={location}
               onChange={(e) => { setLocation(e.target.value); setErrors((p) => ({ ...p, location: undefined })); }}
               className={errors.location ? "border-destructive" : ""}
@@ -236,10 +230,10 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
 
           {/* Description */}
           <div className="space-y-1.5">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t.description}</Label>
             <Textarea
               id="description"
-              placeholder="Describe the issue in detail"
+              placeholder={t.descriptionPlaceholder}
               value={description}
               onChange={(e) => { setDescription(e.target.value); setErrors((p) => ({ ...p, description: undefined })); }}
               className={errors.description ? "border-destructive" : ""}
@@ -250,8 +244,8 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
 
           {/* Photo Attachment */}
           <div className="space-y-1.5">
-            <Label>Attach a Photo (Optional)</Label>
-            <p className="text-xs text-muted-foreground">Accepted formats: PNG, JPG, PDF. Max size: 5MB.</p>
+            <Label>{t.attachPhoto}</Label>
+            <p className="text-xs text-muted-foreground">{t.attachHelper}</p>
 
             {!file ? (
               <div
@@ -265,8 +259,8 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
               >
                 <Upload className="h-8 w-8 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
-                  Drag & drop a photo here, or{" "}
-                  <span className="font-medium text-primary underline underline-offset-2">browse files</span>
+                  {t.dragDrop}{" "}
+                  <span className="font-medium text-primary underline underline-offset-2">{t.browseFiles}</span>
                 </p>
                 <input
                   ref={fileInputRef}
@@ -305,7 +299,7 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded }: SubmitR
 
           <Button type="submit" className="w-full" disabled={submitting}>
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Submit Request
+            {t.submitRequest}
           </Button>
         </form>
       </CardContent>
