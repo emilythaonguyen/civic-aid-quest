@@ -273,14 +273,14 @@ export default function SurveyPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10 space-y-4">
-              <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
-              <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
-              <p className="text-muted-foreground text-sm">
+              <CheckCircle2 className="h-14 w-14 text-[#38BDF8] mx-auto" />
+              <h2 className="text-xl font-semibold text-white">Survey Completed</h2>
+              <p className="text-[#94A3B8] text-sm">
                 Survey has already been completed. Thank you for your input!
               </p>
             </CardContent>
