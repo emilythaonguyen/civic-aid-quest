@@ -58,7 +58,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
               </Button>
             ) : (
               <Button key={item.label} size="sm" variant="outline" asChild>
-                <Link to={item.to}>{item.label}</Link>
+                <Link to={resolveLink(item)}>{item.label}</Link>
               </Button>
             )
           )}
