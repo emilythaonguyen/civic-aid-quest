@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2, LogOut, ArrowLeft } from "lucide-react";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import { Loader2, ArrowLeft } from "lucide-react";
+import StaffHeader from "@/components/StaffHeader";
 
 interface WorkloadRow {
   staff_id: string;

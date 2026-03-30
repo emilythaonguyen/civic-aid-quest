@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Loader2, Star, LogOut, ClipboardList, User, MapPin, Tag, Calendar, ChevronDown, Brain } from "lucide-react";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import { Loader2, Star, ClipboardList, User, MapPin, Tag, Calendar, ChevronDown, Brain } from "lucide-react";
+import StaffHeader from "@/components/StaffHeader";
 import { format } from "date-fns";
 
 interface SurveyQuestion {

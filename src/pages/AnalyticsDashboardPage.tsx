@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, BarChart3, Clock, FileText, TrendingUp, LogOut, Search, AlertTriangle } from "lucide-react";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import { Loader2, BarChart3, Clock, FileText, TrendingUp, Search, AlertTriangle } from "lucide-react";
+import StaffHeader from "@/components/StaffHeader";
 import {
   Tooltip,
   ResponsiveContainer,

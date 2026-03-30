@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
-import { Loader2, LogOut, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 

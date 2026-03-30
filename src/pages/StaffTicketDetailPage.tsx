@@ -10,11 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, ArrowLeft, CheckCircle2, AlertCircle, LogOut } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import TicketAssignment from "@/components/TicketAssignment";
 import InternalComments from "@/components/InternalComments";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import StaffHeader from "@/components/StaffHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
