@@ -705,6 +705,9 @@ export const translations = {
     stepInProgressDesc: "Travay ap fèt",
     stepResolved: "Rezoud",
     stepResolvedDesc: "Pwoblèm rezoud",
+    editRequest: "Modifye",
+    saveChanges: "Anrejistre Chanjman",
+    replaceAttachment: "Ranplase Pyès Jwent",
   },
   de: {
     citizenConnect: "Citizen Connect",
