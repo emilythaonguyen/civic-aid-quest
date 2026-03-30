@@ -157,7 +157,7 @@ export default function PublicStatusPage() {
               <CardHeader>
                 <CardTitle className="text-base">Open vs Resolved by Category</CardTitle>
                 <CardDescription>
-                  Counts for the current week — no personal information included
+                  Counts across all requests — no personal information included
                 </CardDescription>
               </CardHeader>
               <CardContent>
