@@ -16,6 +16,7 @@ import TicketAssignment from "@/components/TicketAssignment";
 import InternalComments from "@/components/InternalComments";
 import StaffHeader from "@/components/StaffHeader";
 import { Skeleton } from "@/components/ui/skeleton";
+import TicketLocationMap from "@/components/TicketLocationMap";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 
