@@ -140,35 +140,7 @@ export default function AnalyticsDashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold text-primary">
-            Civic Service Tracker — Staff Portal
-          </h1>
-          <nav className="flex items-center gap-2">
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/staff/dashboard">Dashboard</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/staff/workload">Workload</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/survey-results">Survey Results</Link>
-            </Button>
-            <Button size="sm" variant="default" disabled>
-              Analytics
-            </Button>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground min-w-[60px]">{staffName || "\u00A0"}</span>
-          <RoleSwitcher />
-          <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
-          </Button>
-        </div>
-      </header>
+      <StaffHeader staffName={staffName} activePage="Analytics" />
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
