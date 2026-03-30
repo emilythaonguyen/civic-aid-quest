@@ -12,7 +12,7 @@ import RequestPizzaTracker from "@/components/RequestPizzaTracker";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import LanguageSelector from "@/components/LanguageSelector";
-import { translations, type Language } from "@/i18n/citizenTranslations";
+import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { format } from "date-fns";
 
 interface ServiceRequest {
@@ -37,7 +37,7 @@ function statusClass(status: string) {
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
-  return stored === "es" ? "es" : "en";
+  return isValidLanguage(stored) ? stored : "en";
 }
 
 export default function CitizenPortalPage() {
@@ -123,7 +123,7 @@ export default function CitizenPortalPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === "ar" ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">

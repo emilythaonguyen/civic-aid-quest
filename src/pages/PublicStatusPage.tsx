@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import LanguageSelector from "@/components/LanguageSelector";
-import { translations, type Language } from "@/i18n/citizenTranslations";
+import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import {
   BarChart,
   Bar,
@@ -31,7 +31,7 @@ const RESOLVED_COLOR = "hsl(142, 60%, 45%)";
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
-  return stored === "es" ? "es" : "en";
+  return isValidLanguage(stored) ? stored : "en";
 }
 
 export default function PublicStatusPage() {
@@ -98,7 +98,7 @@ export default function PublicStatusPage() {
   const total = totalOpen + totalResolved;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === "ar" ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="border-b bg-card">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
