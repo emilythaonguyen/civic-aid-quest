@@ -393,6 +393,9 @@ export const translations = {
     stepInProgressDesc: "Đang thực hiện",
     stepResolved: "Đã Giải Quyết",
     stepResolvedDesc: "Vấn đề đã giải quyết",
+    editRequest: "Chỉnh Sửa",
+    saveChanges: "Lưu Thay Đổi",
+    replaceAttachment: "Thay Tệp Đính Kèm",
   },
   zh: {
     citizenConnect: "Citizen Connect",
