@@ -68,7 +68,7 @@ export default function StaffDashboardListPage() {
     supabase
       .from("profiles")
       .select("id, full_name")
-      .in("role", ["staff", "manager"])
+      .eq("role", "staff")
       .then(({ data }) => {
         if (data) {
           setStaffMembers(
