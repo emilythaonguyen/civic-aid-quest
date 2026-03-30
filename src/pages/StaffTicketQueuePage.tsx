@@ -69,7 +69,8 @@ export default function StaffTicketQueuePage() {
           .is("unassigned_at", null);
         if (aErr) throw aErr;
 
-        const assignedIds = (assignments ?? []).map((a: any) => a.request_id);
+        const assignedIdsArr = (assignments ?? []).map((a: any) => a.request_id);
+        const assignedIdsSet = new Set(assignedIdsArr);
 
         // Get ALL currently-assigned request IDs (to find unassigned ones)
         const { data: allAssignments, error: allAErr } = await supabase
