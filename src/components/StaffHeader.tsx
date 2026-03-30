@@ -69,7 +69,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
         <span className="text-sm text-muted-foreground min-w-[60px]">
           {staffName || "\u00A0"}
         </span>
-        <RoleSwitcher />
+        
         <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
           <LogOut className="h-3.5 w-3.5" />
           Logout
