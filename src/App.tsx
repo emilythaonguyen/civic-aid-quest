@@ -28,7 +28,7 @@ const AnalyticsDashboardPage = lazy(() => import("./pages/AnalyticsDashboardPage
 const StaffDashboardPage = lazy(() => import("./pages/StaffDashboardPage.tsx"));
 const StaffDashboardListPage = lazy(() => import("./pages/StaffDashboardListPage.tsx"));
 const StaffTicketDetailPage = lazy(() => import("./pages/StaffTicketDetailPage.tsx"));
-const StaffWorkloadPage = lazy(() => import("./pages/StaffWorkloadPage.tsx"));
+
 const StaffTicketQueuePage = lazy(() => import("./pages/StaffTicketQueuePage.tsx"));
 const SurveyResultsPage = lazy(() => import("./pages/SurveyResultsPage.tsx"));
 
