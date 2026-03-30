@@ -247,6 +247,7 @@ export const translations = {
   pt: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Status Público",
+    myPortal: "Meu Portal",
     signOut: "Sair",
     english: "English",
     spanish: "Spanish (Español)",
