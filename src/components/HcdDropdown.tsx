@@ -41,6 +41,12 @@ export default function HcdDropdown() {
             </Link>
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to="/analytics" className={pathname === "/analytics" ? "font-semibold" : ""}>
+            ← Back to Analytics
+          </Link>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
