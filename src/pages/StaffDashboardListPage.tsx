@@ -29,10 +29,13 @@ export default function StaffDashboardListPage() {
   const [error, setError] = useState("");
 
   // Filters
-  
   const [categoryFilter, setCategoryFilter] = useState("All");
-  
+  const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
+
+  // Assignment data
+  const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId
+  const [staffMembers, setStaffMembers] = useState<{ id: string; name: string }[]>([]);
 
   // Access control
   useEffect(() => {
