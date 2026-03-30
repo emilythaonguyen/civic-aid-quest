@@ -148,6 +148,24 @@ export const translations = {
     dumping: "Vertido Ilegal",
     graffiti: "Grafiti",
     other: "Otro",
+
+    // Status page
+    civicTracker: "Civic Tracker",
+    public: "Público",
+    returnToPortal: "Volver al Portal",
+    serviceRequestStatus: "Estado de Solicitudes de Servicio",
+    statusSubtitle: "Resumen histórico · Vista pública de solo lectura · No requiere inicio de sesión",
+    totalRequests: "Total de Solicitudes",
+    openInProgress: "Abiertas / En Progreso",
+    resolvedClosed: "Resueltas / Cerradas",
+    chartTitle: "Abiertas vs Resueltas por Categoría",
+    chartDescription: "Conteos de todas las solicitudes — no se incluye información personal",
+    noRequestsRecorded: "Aún no se han registrado solicitudes.",
+    openLabel: "Abiertas / En Progreso",
+    resolvedLabel: "Resueltas / Cerradas",
+    privacyNotice: "Esta página muestra solo conteos agregados. No se muestran ni se devuelven en las respuestas de la API nombres, direcciones de correo electrónico, direcciones físicas, números de teléfono ni ninguna otra información personal (S2-06 · F16 — Panel Público Sin PII).",
+    lastUpdated: "Última actualización:",
+    loadStatusError: "No se pudieron cargar los datos de estado. Por favor intente más tarde.",
   },
 } as const;
 
