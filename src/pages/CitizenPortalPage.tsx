@@ -37,7 +37,7 @@ function statusClass(status: string) {
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
-  return stored === "es" ? "es" : "en";
+  return isValidLanguage(stored) ? stored : "en";
 }
 
 export default function CitizenPortalPage() {
