@@ -1,2 +1,5 @@
 [functions.translate]
 verify_jwt = false
+
+[functions.translate-to-english]
+verify_jwt = false

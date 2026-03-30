@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Upload, X, CheckCircle2 } from "lucide-react";
 import { translations, type Language } from "@/i18n/citizenTranslations";
-import { translateToEnglish } from "@/lib/translateToEnglish";
+import { translateFields } from "@/lib/translateToEnglish";
 
 const REQUEST_TYPE_KEYS = ["pothole", "streetlight", "dumping", "graffiti", "other"] as const;
 
@@ -133,17 +133,11 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded, language 
     }
 
     // Translate free-text fields to English if not already English
-    let translatedLocation = location.trim();
-    let translatedDescription = description.trim();
-
-    if (language !== "en") {
-      const [locResult, descResult] = await Promise.all([
-        translateToEnglish(translatedLocation, language),
-        translateToEnglish(translatedDescription, language),
-      ]);
-      translatedLocation = locResult;
-      translatedDescription = descResult;
-    }
+    const { translatedLocation, translatedDescription } = await translateFields(
+      location.trim(),
+      description.trim(),
+      language
+    );
 
     const insertPayload: Record<string, unknown> = {
       type: requestType,
