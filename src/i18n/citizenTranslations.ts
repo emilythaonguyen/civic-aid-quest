@@ -65,6 +65,24 @@ export const translations = {
     dumping: "Illegal Dumping",
     graffiti: "Graffiti",
     other: "Other",
+
+    // Status page
+    civicTracker: "Civic Tracker",
+    public: "Public",
+    returnToPortal: "Return to Portal",
+    serviceRequestStatus: "Service Request Status",
+    statusSubtitle: "All-time overview · Public read-only view · No login required",
+    totalRequests: "Total Requests",
+    openInProgress: "Open / In Progress",
+    resolvedClosed: "Resolved / Closed",
+    chartTitle: "Open vs Resolved by Category",
+    chartDescription: "Counts across all requests — no personal information included",
+    noRequestsRecorded: "No requests recorded yet.",
+    openLabel: "Open / In Progress",
+    resolvedLabel: "Resolved / Closed",
+    privacyNotice: "This page displays aggregate counts only. No names, email addresses, physical addresses, phone numbers, or any other personal information are shown or returned in API responses (S2-06 · F16 — Zero-PII Public Dashboard).",
+    lastUpdated: "Last updated:",
+    loadStatusError: "Unable to load status data. Please try again later.",
   },
   es: {
     // Header
