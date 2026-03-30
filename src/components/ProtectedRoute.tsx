@@ -6,6 +6,9 @@ interface ProtectedRouteProps {
   requiredRole: "citizen" | "staff";
 }
 
+const isStaffLike = (r: string | null): r is "staff" | "manager" =>
+  r === "staff" || r === "manager";
+
 export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { user, role, loading } = useAuth();
 
@@ -19,8 +22,12 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
 
   if (!user) return <Navigate to="/" replace />;
 
-  if (role && role !== requiredRole) {
-    return <Navigate to={role === "staff" ? "/analytics" : "/portal"} replace />;
+  // Manager is treated the same as staff for access control
+  const effectiveMatch =
+    requiredRole === "staff" ? isStaffLike(role) : role === requiredRole;
+
+  if (role && !effectiveMatch) {
+    return <Navigate to={isStaffLike(role) ? "/staff/dashboard" : "/portal"} replace />;
   }
 
   return <>{children}</>;

@@ -41,14 +41,14 @@ export default function StaffLoginPage() {
         .eq("id", user.id)
         .single();
 
-      if (profile?.role !== "staff") {
+      if (profile?.role !== "staff" && profile?.role !== "manager") {
         await supabase.auth.signOut();
         setError("This login is for staff only. Please use the Citizen Login page.");
         setSubmitting(false);
         return;
       }
 
-      navigate("/analytics");
+      navigate("/staff/dashboard");
     } else {
       navigate("/analytics");
     }
