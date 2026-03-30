@@ -111,7 +111,7 @@ export default function StaffTicketDetailPage() {
           .select(`
             id, type, status, location, description, created_at,
             triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
-            suggestions,
+            suggestions, latitude, longitude,
             profiles!user_id ( full_name )
           `)
           .eq("id", id)
