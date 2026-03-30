@@ -205,7 +205,7 @@ export default function CitizenPortalPage() {
                         })()}
                       </div>
                     </div>
-                    <RequestPizzaTracker status={req.status} />
+                    <RequestPizzaTracker status={req.status} language={language} />
                   </CardContent>
                 </Card>
               ))}
@@ -222,7 +222,7 @@ export default function CitizenPortalPage() {
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 pt-2">
-              <RequestPizzaTracker status={selectedRequest.status} />
+              <RequestPizzaTracker status={selectedRequest.status} language={language} />
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.requestId}</p>
                 <p className="font-mono text-sm break-all">{selectedRequest.id}</p>
