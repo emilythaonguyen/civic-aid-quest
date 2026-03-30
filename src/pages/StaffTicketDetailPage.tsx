@@ -135,6 +135,8 @@ export default function StaffTicketDetailPage() {
           triage_confidence: (tData as any).triage_confidence ?? null,
           triage_completed_at: (tData as any).triage_completed_at ?? null,
           suggestions: (tData as any).suggestions ?? null,
+          latitude: (tData as any).latitude ?? null,
+          longitude: (tData as any).longitude ?? null,
         };
         setTicket(t);
         setNewStatus(t.status);
