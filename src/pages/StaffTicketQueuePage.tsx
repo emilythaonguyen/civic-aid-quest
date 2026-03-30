@@ -125,10 +125,12 @@ export default function StaffTicketQueuePage() {
   const filtered = useMemo(() => {
     return tickets.filter((t) => {
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
+      if (assignmentFilter === "My Tickets" && !assignedIds.has(t.id)) return false;
+      if (assignmentFilter === "Unassigned" && assignedIds.has(t.id)) return false;
       if (locationFilter && !t.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
       return true;
     });
-  }, [tickets, categoryFilter, locationFilter]);
+  }, [tickets, categoryFilter, assignmentFilter, assignedIds, locationFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
