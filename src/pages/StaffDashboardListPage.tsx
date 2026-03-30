@@ -143,6 +143,7 @@ export default function StaffDashboardListPage() {
         assignmentFilter !== "Unassigned" &&
         assignments[t.id] !== assignmentFilter
       ) return false;
+      if (workloadStaffFilter && assignments[t.id] !== workloadStaffFilter) return false;
       if (
         locationFilter &&
         !t.location.toLowerCase().includes(locationFilter.toLowerCase())
