@@ -9,7 +9,7 @@ import HcdDropdown from "@/components/HcdDropdown";
 interface StaffHeaderProps {
   staffName: string;
   /** Label of the currently active nav item (will render as disabled button) */
-  activePage?: "Dashboard" | "Workload" | "Survey Results" | "My Tickets" | "Analytics";
+  activePage?: "Dashboard" | "Survey Results" | "My Tickets" | "Analytics";
 }
 
 type NavItem = {
