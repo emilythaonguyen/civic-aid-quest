@@ -28,7 +28,7 @@ const languages: { code: Language; flag: string; label: string; shortLabel: stri
   { code: "de", flag: "🇩🇪", label: "German (Deutsch)", shortLabel: "German" },
 ];
 
-export default function LanguageSelector({ language, onChange }: LanguageSelectorProps) {
+export default function LanguageSelector({ language, onChange, className }: LanguageSelectorProps) {
   const current = languages.find((l) => l.code === language)!;
 
   return (
