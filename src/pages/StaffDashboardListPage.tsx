@@ -151,7 +151,7 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter]);
+  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter, workloadStaffFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
