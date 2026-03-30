@@ -10,7 +10,7 @@ interface AuthContextType {
   role: UserRole;
   loading: boolean;
   signOut: () => Promise<void>;
-  switchRole: (newRole: "citizen" | "staff") => Promise<void>;
+  switchRole: (newRole: "citizen" | "staff" | "manager") => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
