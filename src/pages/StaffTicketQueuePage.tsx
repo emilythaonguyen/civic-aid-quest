@@ -53,7 +53,7 @@ export default function StaffTicketQueuePage() {
   }, [staffId]);
 
   useEffect(() => {
-    if (!user || role !== "staff" || !staffId) return;
+    if (!user || (role !== "staff" && role !== "manager") || !staffId) return;
     const fetchTickets = async () => {
       setLoading(true);
       setError("");

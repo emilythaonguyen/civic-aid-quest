@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
-type UserRole = "citizen" | "staff" | null;
+type UserRole = "citizen" | "staff" | "manager" | null;
 
 interface AuthContextType {
   user: User | null;
@@ -10,7 +10,7 @@ interface AuthContextType {
   role: UserRole;
   loading: boolean;
   signOut: () => Promise<void>;
-  switchRole: (newRole: "citizen" | "staff") => Promise<void>;
+  switchRole: (newRole: "citizen" | "staff" | "manager") => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const switchRole = async (newRole: "citizen" | "staff") => {
+  const switchRole = async (newRole: "citizen" | "staff" | "manager") => {
     if (!user) return;
     const { error } = await supabase
       .from("profiles")

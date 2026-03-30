@@ -18,7 +18,7 @@ export default function RoleSwitcher() {
     if (newRole === role) return;
     await switchRole(newRole);
     toast.success(`Switched to ${newRole} role`);
-    navigate(newRole === "staff" ? "/analytics" : "/portal");
+    navigate(newRole === "staff" ? "/staff/dashboard" : "/portal");
   };
 
   return (
@@ -38,7 +38,7 @@ export default function RoleSwitcher() {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => handleSwitch("staff")}
-          className={role === "staff" ? "bg-accent" : ""}
+          className={role === "staff" || role === "manager" ? "bg-accent" : ""}
         >
           Staff
         </DropdownMenuItem>
