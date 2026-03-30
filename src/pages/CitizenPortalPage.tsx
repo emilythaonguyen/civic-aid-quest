@@ -9,6 +9,7 @@ import { Loader2, ExternalLink } from "lucide-react";
 import RequestStatusHistory from "@/components/RequestStatusHistory";
 import RequestPizzaTracker from "@/components/RequestPizzaTracker";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
+import EditRequestDialog from "@/components/EditRequestDialog";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import LanguageSelector from "@/components/LanguageSelector";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
@@ -65,6 +66,7 @@ export default function CitizenPortalPage() {
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
   const [completedSurveys, setCompletedSurveys] = useState<Set<string>>(new Set());
   const [surveyIdMap, setSurveyIdMap] = useState<Record<string, string>>({});
+  const [editingRequest, setEditingRequest] = useState<ServiceRequest | null>(null);
 
   const fetchRequests = useCallback(async () => {
     if (!user) return;
@@ -211,6 +213,16 @@ export default function CitizenPortalPage() {
                       <p className="text-xs text-[hsl(var(--hero-muted))]">{req.original_location || req.location}</p>
                     </div>
                     <div className="flex items-center gap-3">
+                      {req.status === "Open" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+                          onClick={() => setEditingRequest(req)}
+                        >
+                          {t.editRequest}
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
@@ -304,6 +316,17 @@ export default function CitizenPortalPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Edit Request Dialog */}
+      {editingRequest && (
+        <EditRequestDialog
+          request={editingRequest}
+          open={!!editingRequest}
+          onOpenChange={(open) => { if (!open) setEditingRequest(null); }}
+          onSaved={fetchRequests}
+          language={language}
+        />
+      )}
     </div>
   );
 }

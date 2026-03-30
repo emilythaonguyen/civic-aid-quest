@@ -81,6 +81,9 @@ export const translations = {
     stepInProgressDesc: "Work underway",
     stepResolved: "Resolved",
     stepResolvedDesc: "Issue resolved",
+    editRequest: "Edit",
+    saveChanges: "Save Changes",
+    replaceAttachment: "Replace Attachment",
   },
   es: {
     citizenConnect: "Citizen Connect",
@@ -156,6 +159,9 @@ export const translations = {
     stepInProgressDesc: "Trabajo en curso",
     stepResolved: "Resuelto",
     stepResolvedDesc: "Problema resuelto",
+    editRequest: "Editar",
+    saveChanges: "Guardar Cambios",
+    replaceAttachment: "Reemplazar Adjunto",
   },
   fr: {
     citizenConnect: "Citizen Connect",
@@ -231,6 +237,9 @@ export const translations = {
     stepInProgressDesc: "Travaux en cours",
     stepResolved: "Résolu",
     stepResolvedDesc: "Problème résolu",
+    editRequest: "Modifier",
+    saveChanges: "Enregistrer",
+    replaceAttachment: "Remplacer la Pièce Jointe",
   },
   pt: {
     citizenConnect: "Citizen Connect",
@@ -306,6 +315,9 @@ export const translations = {
     stepInProgressDesc: "Trabalho em curso",
     stepResolved: "Resolvido",
     stepResolvedDesc: "Problema resolvido",
+    editRequest: "Editar",
+    saveChanges: "Salvar Alterações",
+    replaceAttachment: "Substituir Anexo",
   },
   vi: {
     citizenConnect: "Citizen Connect",
@@ -381,6 +393,9 @@ export const translations = {
     stepInProgressDesc: "Đang thực hiện",
     stepResolved: "Đã Giải Quyết",
     stepResolvedDesc: "Vấn đề đã giải quyết",
+    editRequest: "Chỉnh Sửa",
+    saveChanges: "Lưu Thay Đổi",
+    replaceAttachment: "Thay Tệp Đính Kèm",
   },
   zh: {
     citizenConnect: "Citizen Connect",
@@ -456,6 +471,9 @@ export const translations = {
     stepInProgressDesc: "正在处理",
     stepResolved: "已解决",
     stepResolvedDesc: "问题已解决",
+    editRequest: "编辑",
+    saveChanges: "保存更改",
+    replaceAttachment: "替换附件",
   },
   ko: {
     citizenConnect: "Citizen Connect",
@@ -531,6 +549,9 @@ export const translations = {
     stepInProgressDesc: "작업 진행 중",
     stepResolved: "해결됨",
     stepResolvedDesc: "문제 해결됨",
+    editRequest: "편집",
+    saveChanges: "변경 사항 저장",
+    replaceAttachment: "첨부 파일 교체",
   },
   ar: {
     citizenConnect: "Citizen Connect",
@@ -606,6 +627,9 @@ export const translations = {
     stepInProgressDesc: "العمل جارٍ",
     stepResolved: "تم الحل",
     stepResolvedDesc: "تم حل المشكلة",
+    editRequest: "تعديل",
+    saveChanges: "حفظ التغييرات",
+    replaceAttachment: "استبدال المرفق",
   },
   ht: {
     citizenConnect: "Citizen Connect",
@@ -681,6 +705,9 @@ export const translations = {
     stepInProgressDesc: "Travay ap fèt",
     stepResolved: "Rezoud",
     stepResolvedDesc: "Pwoblèm rezoud",
+    editRequest: "Modifye",
+    saveChanges: "Anrejistre Chanjman",
+    replaceAttachment: "Ranplase Pyès Jwent",
   },
   de: {
     citizenConnect: "Citizen Connect",
@@ -756,6 +783,9 @@ export const translations = {
     stepInProgressDesc: "Arbeit läuft",
     stepResolved: "Gelöst",
     stepResolvedDesc: "Problem gelöst",
+    editRequest: "Bearbeiten",
+    saveChanges: "Änderungen Speichern",
+    replaceAttachment: "Anhang Ersetzen",
   },
 } as const;
 
