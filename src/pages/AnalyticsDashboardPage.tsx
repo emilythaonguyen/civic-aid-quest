@@ -40,8 +40,7 @@ const COLORS = [
 ];
 
 export default function AnalyticsDashboardPage() {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

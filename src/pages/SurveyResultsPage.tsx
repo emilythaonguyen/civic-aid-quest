@@ -87,8 +87,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function SurveyResultsPage() {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [results, setResults] = useState<SurveyResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
