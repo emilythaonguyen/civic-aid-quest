@@ -202,41 +202,6 @@ export default function PublicStatusPage() {
             </Card>
 
             {/* Category breakdown table */}
-            {stats.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Breakdown by Category</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b text-left text-muted-foreground">
-                          <th className="pb-2 font-medium">Category</th>
-                          <th className="pb-2 font-medium text-right">Open</th>
-                          <th className="pb-2 font-medium text-right">Resolved</th>
-                          <th className="pb-2 font-medium text-right">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {stats.map((row) => (
-                          <tr key={row.category} className="border-b last:border-0">
-                            <td className="py-2 font-medium">{row.category}</td>
-                            <td className="py-2 text-right text-primary">{row.open}</td>
-                            <td className="py-2 text-right" style={{ color: RESOLVED_COLOR }}>
-                              {row.resolved}
-                            </td>
-                            <td className="py-2 text-right text-muted-foreground">
-                              {row.open + row.resolved}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
 
             {/* Privacy notice footer */}
             <div className="rounded-md bg-muted/50 border border-border px-4 py-3 flex items-start gap-3 text-xs text-muted-foreground">
