@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, lazy, Suspense } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,6 +17,8 @@ import {
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, X } from "lucide-react";
+
+const RequestMap = lazy(() => import("@/components/RequestMap"));
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
@@ -179,10 +181,15 @@ export default function StaffDashboardListPage() {
       <main className="px-6 py-6 space-y-4">
         {/* Workload summary (manager only) */}
         {role === "manager" && (
-          <StaffWorkloadSummary
-            onSelectStaff={setWorkloadStaffFilter}
-            selectedStaffId={workloadStaffFilter}
-          />
+          <>
+            <StaffWorkloadSummary
+              onSelectStaff={setWorkloadStaffFilter}
+              selectedStaffId={workloadStaffFilter}
+            />
+            <Suspense fallback={<div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>}>
+              <RequestMap />
+            </Suspense>
+          </>
         )}
 
         {/* Filter bar */}
