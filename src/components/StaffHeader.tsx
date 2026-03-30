@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import RoleSwitcher from "@/components/RoleSwitcher";
+
 import { LogOut } from "lucide-react";
 import HcdDropdown from "@/components/HcdDropdown";
 

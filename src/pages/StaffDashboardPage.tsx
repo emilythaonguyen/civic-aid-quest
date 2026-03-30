@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import RoleSwitcher from "@/components/RoleSwitcher";
+
 
 export default function StaffDashboardPage() {
   const { user, signOut } = useAuth();
