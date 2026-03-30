@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Upload, X, CheckCircle2 } from "lucide-react";
 import { translations, type Language } from "@/i18n/citizenTranslations";
+import { translateToEnglish } from "@/lib/translateToEnglish";
 
 const REQUEST_TYPE_KEYS = ["pothole", "streetlight", "dumping", "graffiti", "other"] as const;
 
