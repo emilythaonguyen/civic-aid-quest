@@ -239,12 +239,16 @@ export default function SurveyPage() {
     }
   };
 
+  const darkPageClass = "min-h-screen relative" as const;
+  const darkPageStyle = { backgroundColor: "#0F172A", backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" } as const;
+  const darkCardStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, backdropFilter: "blur(12px)" } as const;
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center py-32">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
         </div>
       </div>
     );
