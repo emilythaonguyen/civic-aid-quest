@@ -4,12 +4,14 @@ import { useAuth } from "@/contexts/AuthContext";
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole: "citizen" | "staff";
+  /** When true, only role === "manager" is allowed (not plain staff) */
+  managerOnly?: boolean;
 }
 
 const isStaffLike = (r: string | null): r is "staff" | "manager" =>
   r === "staff" || r === "manager";
 
-export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export default function ProtectedRoute({ children, requiredRole, managerOnly }: ProtectedRouteProps) {
   const { user, role, loading } = useAuth();
 
   if (loading) {
@@ -28,6 +30,11 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
 
   if (role && !effectiveMatch) {
     return <Navigate to={isStaffLike(role) ? "/analytics" : "/portal"} replace />;
+  }
+
+  // Manager-only routes: staff gets redirected to /analytics
+  if (managerOnly && role === "staff") {
+    return <Navigate to="/analytics" replace />;
   }
 
   return <>{children}</>;

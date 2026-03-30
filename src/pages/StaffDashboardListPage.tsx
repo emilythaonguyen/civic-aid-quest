@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import StaffHeader from "@/components/StaffHeader";
 import {
   Select,
   SelectContent,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
-import { Loader2, LogOut, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
@@ -124,11 +124,6 @@ export default function StaffDashboardListPage() {
   const hasActiveFilters =
     categoryFilter !== "All" || locationFilter !== "";
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   if (authLoading || (!user && !authLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -140,37 +135,7 @@ export default function StaffDashboardListPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold text-primary">
-            Civic Service Tracker — Staff Portal
-          </h1>
-          <nav className="flex items-center gap-2">
-            <Button size="sm" variant="default" disabled>
-              Dashboard
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/staff/workload">Workload</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/survey-results">Survey Results</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/analytics">Analytics</Link>
-            </Button>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground min-w-[60px]">
-            {staffName || "\u00A0"}
-          </span>
-          <RoleSwitcher />
-          <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
-          </Button>
-        </div>
-      </header>
+      <StaffHeader staffName={staffName} activePage="Dashboard" />
 
       <main className="px-6 py-6 space-y-4">
         {/* Filter bar */}

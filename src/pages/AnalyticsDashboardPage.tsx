@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, BarChart3, Clock, FileText, TrendingUp, LogOut, Search, AlertTriangle } from "lucide-react";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import { Loader2, BarChart3, Clock, FileText, TrendingUp, Search, AlertTriangle } from "lucide-react";
+import StaffHeader from "@/components/StaffHeader";
 import {
   Tooltip,
   ResponsiveContainer,
@@ -40,8 +39,7 @@ const COLORS = [
 ];
 
 export default function AnalyticsDashboardPage() {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -124,11 +122,6 @@ export default function AnalyticsDashboardPage() {
     fetchAnalytics();
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   const formatResolutionTime = (hours: number | null) => {
     if (hours === null) return "N/A";
     if (hours < 24) return `${hours}h`;
@@ -140,35 +133,7 @@ export default function AnalyticsDashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold text-primary">
-            Civic Service Tracker — Staff Portal
-          </h1>
-          <nav className="flex items-center gap-2">
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/staff/dashboard">Dashboard</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/staff/workload">Workload</Link>
-            </Button>
-            <Button size="sm" variant="outline" asChild>
-              <Link to="/survey-results">Survey Results</Link>
-            </Button>
-            <Button size="sm" variant="default" disabled>
-              Analytics
-            </Button>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground min-w-[60px]">{staffName || "\u00A0"}</span>
-          <RoleSwitcher />
-          <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
-          </Button>
-        </div>
-      </header>
+      <StaffHeader staffName={staffName} activePage="Analytics" />
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
