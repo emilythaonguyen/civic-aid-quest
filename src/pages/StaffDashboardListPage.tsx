@@ -62,31 +62,56 @@ export default function StaffDashboardListPage() {
       });
   }, [user]);
 
-  // Fetch tickets
+  // Fetch staff members
+  useEffect(() => {
+    if (!user || role !== "manager") return;
+    supabase
+      .from("profiles")
+      .select("id, full_name")
+      .in("role", ["staff", "manager"])
+      .then(({ data }) => {
+        if (data) {
+          setStaffMembers(
+            data.map((p: any) => ({ id: p.id, name: p.full_name ?? "Unknown" }))
+          );
+        }
+      });
+  }, [user, role]);
+
+  // Fetch tickets & assignments
   useEffect(() => {
     if (!user || (role !== "staff" && role !== "manager")) return;
     const fetchTickets = async () => {
       setLoading(true);
       setError("");
       try {
-        const { data, error: fetchErr } = await supabase
-          .from("requests")
-          .select(`
-            id,
-            type,
-            status,
-            triage_priority,
-            location,
-            created_at,
-            profiles!user_id (
-              full_name
-            )
-          `)
-          .order("created_at", { ascending: false });
+        const [ticketRes, assignRes] = await Promise.all([
+          supabase
+            .from("requests")
+            .select(`
+              id,
+              type,
+              status,
+              triage_priority,
+              location,
+              created_at,
+              profiles!user_id (
+                full_name
+              )
+            `)
+            .order("created_at", { ascending: false }),
+          supabase.from("assignments").select("request_id, staff_id"),
+        ]);
 
-        if (fetchErr) throw fetchErr;
+        if (ticketRes.error) throw ticketRes.error;
 
-        const mapped: TicketRow[] = (data ?? []).map((r: any) => ({
+        const assignMap: Record<string, string> = {};
+        (assignRes.data ?? []).forEach((a: any) => {
+          assignMap[a.request_id] = a.staff_id;
+        });
+        setAssignments(assignMap);
+
+        const mapped: TicketRow[] = (ticketRes.data ?? []).map((r: any) => ({
           id: r.id,
           citizen_name: r.profiles?.full_name ?? "Unknown",
           category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
