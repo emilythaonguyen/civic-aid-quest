@@ -28,7 +28,9 @@ export default function StaffTicketQueuePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
+  const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (authLoading) return;
