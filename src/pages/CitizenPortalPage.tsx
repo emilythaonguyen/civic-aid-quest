@@ -123,7 +123,7 @@ export default function CitizenPortalPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === "ar" ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">

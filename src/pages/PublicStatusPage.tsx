@@ -98,7 +98,7 @@ export default function PublicStatusPage() {
   const total = totalOpen + totalResolved;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === "ar" ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="border-b bg-card">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
