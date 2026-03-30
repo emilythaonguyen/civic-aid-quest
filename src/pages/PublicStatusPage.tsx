@@ -163,7 +163,7 @@ export default function PublicStatusPage() {
               <CardContent>
                 {stats.length === 0 ? (
                   <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
-                    No requests recorded this week yet.
+                    No requests recorded yet.
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={320}>
