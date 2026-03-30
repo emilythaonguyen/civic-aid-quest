@@ -133,8 +133,13 @@ export default function StaffDashboardListPage() {
 
   const filtered = useMemo(() => {
     return tickets.filter((t) => {
-      
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
+      if (assignmentFilter === "Unassigned" && assignments[t.id]) return false;
+      if (
+        assignmentFilter !== "All" &&
+        assignmentFilter !== "Unassigned" &&
+        assignments[t.id] !== assignmentFilter
+      ) return false;
       if (
         locationFilter &&
         !t.location.toLowerCase().includes(locationFilter.toLowerCase())
@@ -142,15 +147,16 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, categoryFilter, locationFilter]);
+  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
+    setAssignmentFilter("All");
     setLocationFilter("");
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || locationFilter !== "";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
 
   if (authLoading || (!user && !authLoading)) {
     return (
