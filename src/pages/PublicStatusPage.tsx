@@ -137,7 +137,7 @@ export default function PublicStatusPage() {
               variant="outline"
               size="sm"
               className="border-white/20 text-white hover:bg-white/10 bg-transparent"
-              onClick={async () => { await signOut(); navigate("/citizen-login"); }}
+              onClick={async () => { await signOut(); navigate("/"); }}
             >
               {t.signOut}
             </Button>
