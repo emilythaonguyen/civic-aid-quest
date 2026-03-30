@@ -100,7 +100,7 @@ export default function StaffTicketQueuePage() {
         if (fetchErr) throw fetchErr;
 
         const mapped: TicketRow[] = (data ?? [])
-          .filter((r: any) => assignedIds.includes(r.id) || !allAssignedIds.has(r.id))
+          .filter((r: any) => assignedIdsSet.has(r.id) || !allAssignedIds.has(r.id))
           .map((r: any) => ({
             id: r.id,
             citizen_name: r.profiles?.full_name ?? "Unknown",
