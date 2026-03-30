@@ -96,14 +96,14 @@ export default function PublicStatusPage() {
   const total = totalOpen + totalResolved;
 
   return (
-    <div className="min-h-screen relative" style={{ backgroundColor: '#0F172A' }} dir={language === "ar" ? "rtl" : "ltr"}>
+    <div className="min-h-screen relative bg-[hsl(var(--hero-bg))]" dir={language === "ar" ? "rtl" : "ltr"}>
       {/* Grid pattern overlay */}
       <div
-        className="pointer-events-none fixed inset-0 z-0"
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.06]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
+            "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
         }}
       />
 
