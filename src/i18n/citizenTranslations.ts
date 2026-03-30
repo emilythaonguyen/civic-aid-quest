@@ -627,6 +627,9 @@ export const translations = {
     stepInProgressDesc: "العمل جارٍ",
     stepResolved: "تم الحل",
     stepResolvedDesc: "تم حل المشكلة",
+    editRequest: "تعديل",
+    saveChanges: "حفظ التغييرات",
+    replaceAttachment: "استبدال المرفق",
   },
   ht: {
     citizenConnect: "Citizen Connect",
