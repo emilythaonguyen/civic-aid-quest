@@ -316,6 +316,17 @@ export default function CitizenPortalPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Edit Request Dialog */}
+      {editingRequest && (
+        <EditRequestDialog
+          request={editingRequest}
+          open={!!editingRequest}
+          onOpenChange={(open) => { if (!open) setEditingRequest(null); }}
+          onSaved={fetchRequests}
+          language={language}
+        />
+      )}
     </div>
   );
 }
