@@ -185,7 +185,7 @@ export default function CitizenPortalPage() {
                           </span>
                         </div>
                         <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
-                        <p className="text-xs text-muted-foreground">{req.location}</p>
+                        <p className="text-xs text-muted-foreground">{req.original_location || req.location}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
