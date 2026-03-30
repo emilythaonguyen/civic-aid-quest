@@ -63,6 +63,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
               </Button>
             )
           )}
+          {role === "manager" && <HcdDropdown />}
         </nav>
       </div>
       <div className="flex items-center gap-4">
