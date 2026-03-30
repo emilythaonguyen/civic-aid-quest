@@ -132,8 +132,8 @@ export default function PublicStatusPage() {
             <div className="grid grid-cols-3 gap-4">
               <Card>
                 <CardContent className="pt-6 text-center">
-                  <p className="text-3xl font-bold">{totalThisWeek}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Total This Week</p>
+                  <p className="text-3xl font-bold">{total}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Total Requests</p>
                 </CardContent>
               </Card>
               <Card>
