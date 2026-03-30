@@ -721,6 +721,7 @@ export const translations = {
   de: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Öffentlicher Status",
+    myPortal: "Mein Portal",
     signOut: "Abmelden",
     english: "English",
     spanish: "Spanish (Español)",
