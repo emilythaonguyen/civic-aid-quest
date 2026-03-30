@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
-// Fix default marker icons (Leaflet + bundler issue)
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -16,6 +14,8 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
+
+const LeafletMap = lazy(() => import("./RequestMapLeaflet"));
 
 interface MapRequest {
   id: string;
@@ -29,9 +29,14 @@ interface MapRequest {
 export default function RequestMap() {
   const [requests, setRequests] = useState<MapRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const fetch = async () => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const fetchRequests = async () => {
       const { data, error } = await supabase
         .from("requests")
         .select("id, type, status, description, latitude, longitude")
@@ -40,30 +45,42 @@ export default function RequestMap() {
 
       if (!error && data) {
         setRequests(
-          data.map((r: any) => ({
-            id: r.id,
-            type: r.type ?? "Unknown",
-            status: r.status ?? "Open",
-            description: r.description ?? "",
-            latitude: Number(r.latitude),
-            longitude: Number(r.longitude),
-          }))
+          data
+            .map((r: any) => ({
+              id: r.id,
+              type: r.type ?? "Unknown",
+              status: r.status ?? "Open",
+              description: r.description ?? "",
+              latitude: Number(r.latitude),
+              longitude: Number(r.longitude),
+            }))
+            .filter((r) => Number.isFinite(r.latitude) && Number.isFinite(r.longitude))
         );
       }
+
       setLoading(false);
     };
-    fetch();
+
+    fetchRequests();
   }, []);
+
+  const center = useMemo<[number, number] | null>(() => {
+    if (requests.length === 0) return null;
+    return [
+      requests.reduce((sum, r) => sum + r.latitude, 0) / requests.length,
+      requests.reduce((sum, r) => sum + r.longitude, 0) / requests.length,
+    ];
+  }, [requests]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center rounded-lg border border-border bg-muted/30 py-12">
         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
-  if (requests.length === 0) {
+  if (!requests.length || !center) {
     return (
       <div className="rounded-lg border border-border bg-muted/30 p-4 text-center text-sm text-muted-foreground">
         No geolocated requests found.
@@ -71,31 +88,28 @@ export default function RequestMap() {
     );
   }
 
-  const center: [number, number] = [
-    requests.reduce((s, r) => s + r.latitude, 0) / requests.length,
-    requests.reduce((s, r) => s + r.longitude, 0) / requests.length,
-  ];
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center rounded-lg border border-border bg-muted/30 py-12">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
-    <div className="rounded-lg border border-border overflow-hidden" style={{ height: 350 }}>
-      <MapContainer center={center} zoom={12} style={{ height: "100%", width: "100%" }} scrollWheelZoom>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {requests.map((r) => (
-          <Marker key={r.id} position={[r.latitude, r.longitude]}>
-            <Popup>
-              <div className="space-y-1 text-xs">
-                <p className="font-mono font-bold">#{r.id.slice(0, 8)}</p>
-                <p><strong>Type:</strong> {r.type}</p>
-                <p><strong>Status:</strong> {r.status}</p>
-                <p className="max-w-[200px] truncate"><strong>Desc:</strong> {r.description}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+    <div className="space-y-2">
+      <h3 className="text-sm font-semibold text-foreground">Request Map</h3>
+      <div className="overflow-hidden rounded-lg border border-border" style={{ height: 350 }}>
+        <Suspense
+          fallback={
+            <div className="flex h-full items-center justify-center bg-muted/30">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          }
+        >
+          <LeafletMap requests={requests} center={center} />
+        </Suspense>
+      </div>
     </div>
   );
 }
