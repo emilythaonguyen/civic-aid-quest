@@ -237,6 +237,9 @@ export const translations = {
     stepInProgressDesc: "Travaux en cours",
     stepResolved: "Résolu",
     stepResolvedDesc: "Problème résolu",
+    editRequest: "Modifier",
+    saveChanges: "Enregistrer",
+    replaceAttachment: "Remplacer la Pièce Jointe",
   },
   pt: {
     citizenConnect: "Citizen Connect",
