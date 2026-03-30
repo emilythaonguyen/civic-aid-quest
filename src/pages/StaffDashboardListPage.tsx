@@ -157,10 +157,11 @@ export default function StaffDashboardListPage() {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
+    setWorkloadStaffFilter(null);
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null;
 
   if (authLoading || (!user && !authLoading)) {
     return (
