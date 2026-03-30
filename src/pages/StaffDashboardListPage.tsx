@@ -18,6 +18,8 @@ import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, X } from "lucide-react";
 
+const RequestMap = lazy(() => import("@/components/RequestMap"));
+
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
 
