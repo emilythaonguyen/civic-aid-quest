@@ -32,7 +32,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/staff-login");
+    navigate("/");
   };
 
   const visibleItems = allNavItems.filter((item) => {
