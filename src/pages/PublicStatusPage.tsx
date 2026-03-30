@@ -26,7 +26,7 @@ interface CategoryStat {
   resolved: number;
 }
 
-const OPEN_COLOR = "#1E293B";
+const OPEN_COLOR = "#3B82F6";
 const RESOLVED_COLOR = "#4ADE80";
 
 function getStoredLanguage(): Language {
