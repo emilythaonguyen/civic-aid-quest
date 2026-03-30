@@ -14,7 +14,7 @@ export default function RoleSwitcher() {
   const { role, switchRole } = useAuth();
   const navigate = useNavigate();
 
-  const handleSwitch = async (newRole: "citizen" | "staff") => {
+  const handleSwitch = async (newRole: "citizen" | "staff" | "manager") => {
     if (newRole === role) return;
     await switchRole(newRole);
     toast.success(`Switched to ${newRole} role`);
@@ -38,9 +38,15 @@ export default function RoleSwitcher() {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => handleSwitch("staff")}
-          className={role === "staff" || role === "manager" ? "bg-accent" : ""}
+          className={role === "staff" ? "bg-accent" : ""}
         >
           Staff
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => handleSwitch("manager")}
+          className={role === "manager" ? "bg-accent" : ""}
+        >
+          Manager
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
