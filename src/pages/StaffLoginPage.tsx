@@ -87,10 +87,6 @@ export default function StaffLoginPage() {
         </form>
 
         <CardFooter className="flex flex-col items-center gap-3">
-          <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-primary font-medium hover:underline">Register</Link>
-          </p>
           <Button className="bg-black text-white hover:bg-black/90" onClick={() => navigate("/")}>
             Return to Home
           </Button>
