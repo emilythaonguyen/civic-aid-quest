@@ -111,7 +111,7 @@ export default function PublicStatusPage() {
         <div>
           <h2 className="text-2xl font-bold text-foreground">Service Request Status</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Week of {weekLabel} · Public read-only view · No login required
+            All-time overview · Public read-only view · No login required
           </p>
           <Badge variant="secondary" className="text-xs mt-2">S2-06 · F16</Badge>
         </div>
