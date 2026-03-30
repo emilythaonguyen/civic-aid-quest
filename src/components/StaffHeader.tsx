@@ -8,18 +8,26 @@ import { LogOut } from "lucide-react";
 interface StaffHeaderProps {
   staffName: string;
   /** Label of the currently active nav item (will render as disabled button) */
-  activePage?: "Dashboard" | "Workload" | "Survey Results" | "Analytics";
+  activePage?: "Dashboard" | "Workload" | "Survey Results" | "My Tickets" | "Analytics";
 }
 
-const allNavItems: { label: StaffHeaderProps["activePage"]; to: string; managerOnly: boolean }[] = [
-  { label: "Dashboard", to: "/staff/dashboard", managerOnly: true },
-  { label: "Workload", to: "/staff/workload", managerOnly: true },
-  { label: "Survey Results", to: "/survey-results", managerOnly: false },
-  { label: "Analytics", to: "/analytics", managerOnly: false },
+type NavItem = {
+  label: NonNullable<StaffHeaderProps["activePage"]>;
+  to: string | null; // null = resolved dynamically
+  managerOnly: boolean;
+  staffOnly: boolean;
+};
+
+const allNavItems: NavItem[] = [
+  { label: "Dashboard", to: "/staff/dashboard", managerOnly: true, staffOnly: false },
+  { label: "Workload", to: "/staff/workload", managerOnly: true, staffOnly: false },
+  { label: "Survey Results", to: "/survey-results", managerOnly: false, staffOnly: false },
+  { label: "My Tickets", to: null, managerOnly: false, staffOnly: true },
+  { label: "Analytics", to: "/analytics", managerOnly: false, staffOnly: false },
 ];
 
 export default function StaffHeader({ staffName, activePage }: StaffHeaderProps) {
-  const { role, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -27,9 +35,14 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
     navigate("/staff-login");
   };
 
-  const visibleItems = allNavItems.filter(
-    (item) => !item.managerOnly || role === "manager"
-  );
+  const visibleItems = allNavItems.filter((item) => {
+    if (item.managerOnly && role !== "manager") return false;
+    if (item.staffOnly && role !== "staff") return false;
+    return true;
+  });
+
+  const resolveLink = (item: NavItem) =>
+    item.to ?? (user ? `/staff/tickets/${user.id}` : "#");
 
   return (
     <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
@@ -45,7 +58,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
               </Button>
             ) : (
               <Button key={item.label} size="sm" variant="outline" asChild>
-                <Link to={item.to}>{item.label}</Link>
+                <Link to={resolveLink(item)}>{item.label}</Link>
               </Button>
             )
           )}

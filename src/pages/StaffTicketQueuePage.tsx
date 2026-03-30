@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/select";
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
-import { Loader2, ArrowLeft, X, LogOut } from "lucide-react";
+import { Loader2, X } from "lucide-react";
+import StaffHeader from "@/components/StaffHeader";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
@@ -136,18 +137,7 @@ export default function StaffTicketQueuePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-4">
-        <Button variant="ghost" size="sm" asChild className="gap-1.5">
-          <Link to="/staff/workload">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Workload
-          </Link>
-        </Button>
-        <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/staff-login"); }} className="gap-1.5">
-          <LogOut className="h-3.5 w-3.5" />
-          Logout
-        </Button>
-      </header>
+      <StaffHeader staffName={staffName} activePage="My Tickets" />
 
       <main className="px-6 py-6 space-y-4">
         <h2 className="text-xl font-bold text-foreground">
