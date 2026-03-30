@@ -10,7 +10,7 @@ import RequestStatusHistory from "@/components/RequestStatusHistory";
 import RequestPizzaTracker from "@/components/RequestPizzaTracker";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import EditRequestDialog from "@/components/EditRequestDialog";
-import RoleSwitcher from "@/components/RoleSwitcher";
+
 import LanguageSelector from "@/components/LanguageSelector";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { format } from "date-fns";
@@ -161,7 +161,7 @@ export default function CitizenPortalPage() {
         <div className="flex items-center gap-4">
            <LanguageSelector language={language} onChange={handleLanguageChange} className="text-white hover:text-black hover:bg-white/10" />
            <span className="text-sm text-[hsl(var(--hero-muted))] text-white">{user?.user_metadata?.full_name || user?.email}</span>
-          <RoleSwitcher />
+          
           <Button
             variant="outline"
             size="sm"

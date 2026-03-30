@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import RoleSwitcher from "@/components/RoleSwitcher";
+
 import { LogOut } from "lucide-react";
 import HcdDropdown from "@/components/HcdDropdown";
 
@@ -69,7 +69,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
         <span className="text-sm text-muted-foreground min-w-[60px]">
           {staffName || "\u00A0"}
         </span>
-        <RoleSwitcher />
+        
         <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
           <LogOut className="h-3.5 w-3.5" />
           Logout

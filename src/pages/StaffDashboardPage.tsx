@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import RoleSwitcher from "@/components/RoleSwitcher";
+
 
 export default function StaffDashboardPage() {
   const { user, signOut } = useAuth();
@@ -23,7 +23,7 @@ export default function StaffDashboardPage() {
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{user?.email}</span>
-          <RoleSwitcher />
+          
           <Button variant="outline" size="sm" onClick={handleSignOut}>Sign Out</Button>
         </div>
       </header>
