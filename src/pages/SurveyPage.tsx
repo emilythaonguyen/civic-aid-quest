@@ -332,25 +332,25 @@ export default function SurveyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={darkPageClass} style={darkPageStyle}>
       <SurveyHeader />
       <div className="py-10 px-4">
-      <Card className="max-w-lg mx-auto">
+      <Card className="max-w-lg mx-auto bg-transparent shadow-none" style={darkCardStyle}>
         <CardHeader>
-          <CardTitle className="text-lg">Service Satisfaction Survey</CardTitle>
+          <CardTitle className="text-lg text-white">Service Satisfaction Survey</CardTitle>
           {questionnaire.survey_intro && (
-            <p className="text-sm text-muted-foreground">{questionnaire.survey_intro}</p>
+            <p className="text-sm text-[#94A3B8]">{questionnaire.survey_intro}</p>
           )}
         </CardHeader>
         <CardContent className="space-y-6">
           {questionnaire.questions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#94A3B8]">
               No questions are configured in this survey yet. Please contact support.
             </p>
           ) : (
             questionnaire.questions.map((q) => (
               <div key={q.id} className="space-y-2">
-                <label className="text-sm font-medium text-foreground">{q.text}</label>
+                <label className="text-sm font-medium text-white">{q.text}</label>
 
                 {q.type === "rating_1_5" && (
                   <div className="flex gap-1">
@@ -367,8 +367,8 @@ export default function SurveyPage() {
                         <Star
                           className={`h-8 w-8 ${
                             n <= ((hoverRatings[q.id] || 0) || ((responses[q.id] as number) || 0))
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-muted-foreground/30"
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-[#334155]"
                           }`}
                         />
                       </button>
@@ -378,20 +378,28 @@ export default function SurveyPage() {
 
                 {q.type === "yes_no" && (
                   <div className="flex gap-2">
-                    <Button
+                    <button
                       type="button"
-                      variant={responses[q.id] === "yes" ? "default" : "outline"}
                       onClick={() => setResponse(q.id, "yes")}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        responses[q.id] === "yes"
+                          ? "bg-[#2563EB] text-white"
+                          : "bg-[#1E293B] text-white border border-white/15 hover:bg-[#263548]"
+                      }`}
                     >
                       Yes
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                       type="button"
-                      variant={responses[q.id] === "no" ? "default" : "outline"}
                       onClick={() => setResponse(q.id, "no")}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        responses[q.id] === "no"
+                          ? "bg-[#2563EB] text-white"
+                          : "bg-[#1E293B] text-white border border-white/15 hover:bg-[#263548]"
+                      }`}
                     >
                       No
-                    </Button>
+                    </button>
                   </div>
                 )}
 
@@ -400,14 +408,18 @@ export default function SurveyPage() {
                     value={(responses[q.id] as string) ?? ""}
                     onChange={(e) => setResponse(q.id, e.target.value)}
                     placeholder="Your response…"
-                    className="min-h-[80px] text-sm"
+                    className="min-h-[80px] text-sm bg-[#1E293B] text-white border-white/15 placeholder:text-[#475569] focus-visible:ring-[#2563EB]"
                   />
                 )}
               </div>
             ))
           )}
 
-          <Button className="w-full" onClick={handleSubmit} disabled={!allAnswered || submitting}>
+          <Button
+            className="w-full bg-[#2563EB] text-white hover:bg-[#3B82F6]"
+            onClick={handleSubmit}
+            disabled={!allAnswered || submitting}
+          >
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Survey"}
           </Button>
         </CardContent>
