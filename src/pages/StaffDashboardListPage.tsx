@@ -29,10 +29,13 @@ export default function StaffDashboardListPage() {
   const [error, setError] = useState("");
 
   // Filters
-  
   const [categoryFilter, setCategoryFilter] = useState("All");
-  
+  const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
+
+  // Assignment data
+  const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId
+  const [staffMembers, setStaffMembers] = useState<{ id: string; name: string }[]>([]);
 
   // Access control
   useEffect(() => {
@@ -59,31 +62,56 @@ export default function StaffDashboardListPage() {
       });
   }, [user]);
 
-  // Fetch tickets
+  // Fetch staff members
+  useEffect(() => {
+    if (!user || role !== "manager") return;
+    supabase
+      .from("profiles")
+      .select("id, full_name")
+      .in("role", ["staff", "manager"])
+      .then(({ data }) => {
+        if (data) {
+          setStaffMembers(
+            data.map((p: any) => ({ id: p.id, name: p.full_name ?? "Unknown" }))
+          );
+        }
+      });
+  }, [user, role]);
+
+  // Fetch tickets & assignments
   useEffect(() => {
     if (!user || (role !== "staff" && role !== "manager")) return;
     const fetchTickets = async () => {
       setLoading(true);
       setError("");
       try {
-        const { data, error: fetchErr } = await supabase
-          .from("requests")
-          .select(`
-            id,
-            type,
-            status,
-            triage_priority,
-            location,
-            created_at,
-            profiles!user_id (
-              full_name
-            )
-          `)
-          .order("created_at", { ascending: false });
+        const [ticketRes, assignRes] = await Promise.all([
+          supabase
+            .from("requests")
+            .select(`
+              id,
+              type,
+              status,
+              triage_priority,
+              location,
+              created_at,
+              profiles!user_id (
+                full_name
+              )
+            `)
+            .order("created_at", { ascending: false }),
+          supabase.from("assignments").select("request_id, staff_id"),
+        ]);
 
-        if (fetchErr) throw fetchErr;
+        if (ticketRes.error) throw ticketRes.error;
 
-        const mapped: TicketRow[] = (data ?? []).map((r: any) => ({
+        const assignMap: Record<string, string> = {};
+        (assignRes.data ?? []).forEach((a: any) => {
+          assignMap[a.request_id] = a.staff_id;
+        });
+        setAssignments(assignMap);
+
+        const mapped: TicketRow[] = (ticketRes.data ?? []).map((r: any) => ({
           id: r.id,
           citizen_name: r.profiles?.full_name ?? "Unknown",
           category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
@@ -105,8 +133,13 @@ export default function StaffDashboardListPage() {
 
   const filtered = useMemo(() => {
     return tickets.filter((t) => {
-      
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
+      if (assignmentFilter === "Unassigned" && assignments[t.id]) return false;
+      if (
+        assignmentFilter !== "All" &&
+        assignmentFilter !== "Unassigned" &&
+        assignments[t.id] !== assignmentFilter
+      ) return false;
       if (
         locationFilter &&
         !t.location.toLowerCase().includes(locationFilter.toLowerCase())
@@ -114,15 +147,16 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, categoryFilter, locationFilter]);
+  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
+    setAssignmentFilter("All");
     setLocationFilter("");
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || locationFilter !== "";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
 
   if (authLoading || (!user && !authLoading)) {
     return (
@@ -156,6 +190,23 @@ export default function StaffDashboardListPage() {
             </Select>
           </div>
 
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Assignment</label>
+            <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
+              <SelectTrigger className="w-[170px] h-9 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="Unassigned">Unassigned</SelectItem>
+                {staffMembers.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
