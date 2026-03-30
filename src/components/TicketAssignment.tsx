@@ -31,40 +31,57 @@ export default function TicketAssignment({ ticketId, userId }: { ticketId: strin
     const load = async () => {
       setLoading(true);
       try {
-        let staffQuery;
+        const assignmentPromise = supabase
+          .from("assignments")
+          .select("assigned_to")
+          .eq("request_id", ticketId)
+          .is("unassigned_at", null)
+          .limit(1);
+
         if (role === "manager") {
-          // Manager can assign to any staff or manager
-          staffQuery = supabase
-            .from("profiles")
-            .select("id, full_name")
-            .in("role", ["staff", "manager"])
-            .order("full_name", { ascending: true });
+          const [workloadRes, selfRes, assignRes] = await Promise.all([
+            supabase.rpc("get_staff_workload"),
+            supabase.from("profiles").select("id, full_name").eq("id", userId).single(),
+            assignmentPromise,
+          ]);
+
+          const workloadStaff = (workloadRes.data ?? []).map((r: any) => ({
+            id: r.staff_id,
+            full_name: r.full_name ?? "Unknown",
+          }));
+
+          const selfOption = selfRes.data
+            ? [{ id: selfRes.data.id, full_name: selfRes.data.full_name ?? "Unknown" }]
+            : [];
+
+          const dedupedStaff = [...workloadStaff, ...selfOption].filter(
+            (staff, index, list) => list.findIndex((item) => item.id === staff.id) === index
+          );
+
+          setStaffList(dedupedStaff);
+
+          if (assignRes.data && assignRes.data.length > 0) {
+            const assignedTo = (assignRes.data[0] as any).assigned_to;
+            setSelectedStaff(assignedTo);
+            setCurrentAssignment(assignedTo);
+          }
         } else {
-          // Staff can only assign to themselves
-          staffQuery = supabase
-            .from("profiles")
-            .select("id, full_name")
-            .eq("id", userId);
-        }
+          const [staffRes, assignRes] = await Promise.all([
+            supabase.from("profiles").select("id, full_name").eq("id", userId).single(),
+            assignmentPromise,
+          ]);
 
-        const [staffRes, assignRes] = await Promise.all([
-          staffQuery,
-          supabase
-            .from("assignments")
-            .select("assigned_to")
-            .eq("request_id", ticketId)
-            .is("unassigned_at", null)
-            .limit(1),
-        ]);
+          setStaffList(
+            staffRes.data
+              ? [{ id: staffRes.data.id, full_name: staffRes.data.full_name ?? "Unknown" }]
+              : []
+          );
 
-        if (staffRes.data) {
-          setStaffList(staffRes.data.map((p: any) => ({ id: p.id, full_name: p.full_name ?? "Unknown" })));
-        }
-
-        if (assignRes.data && assignRes.data.length > 0) {
-          const assignedTo = (assignRes.data[0] as any).assigned_to;
-          setSelectedStaff(assignedTo);
-          setCurrentAssignment(assignedTo);
+          if (assignRes.data && assignRes.data.length > 0) {
+            const assignedTo = (assignRes.data[0] as any).assigned_to;
+            setSelectedStaff(assignedTo);
+            setCurrentAssignment(assignedTo);
+          }
         }
       } catch (err) {
         console.error(err);
