@@ -203,7 +203,14 @@ export default function SurveyPage() {
         if (data.submitted_at) {
           setSubmitted(true);
         } else {
-          setQuestionnaire(parseQuestionnaire(data.questionnaire));
+          let parsed = parseQuestionnaire(data.questionnaire);
+
+          // Translate questionnaire content if language is not English
+          if (language !== "en") {
+            parsed = await translateQuestionnaire(parsed, language);
+          }
+
+          setQuestionnaire(parsed);
         }
       } catch {
         setError(t.surveyLoadError);
