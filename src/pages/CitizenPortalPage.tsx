@@ -11,8 +11,9 @@ import RequestStatusHistory from "@/components/RequestStatusHistory";
 import RequestPizzaTracker from "@/components/RequestPizzaTracker";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import RoleSwitcher from "@/components/RoleSwitcher";
+import LanguageSelector from "@/components/LanguageSelector";
+import { translations, type Language } from "@/i18n/citizenTranslations";
 import { format } from "date-fns";
-
 
 interface ServiceRequest {
   id: string;
@@ -34,13 +35,28 @@ function statusClass(status: string) {
   return STATUS_STYLES[status] ?? STATUS_STYLES["Open"];
 }
 
-function formatType(type: string) {
-  return type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, " ");
+function getStoredLanguage(): Language {
+  const stored = localStorage.getItem("citizen-lang");
+  return stored === "es" ? "es" : "en";
 }
 
 export default function CitizenPortalPage() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const [language, setLanguage] = useState<Language>(getStoredLanguage);
+  const t = translations[language];
+
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem("citizen-lang", lang);
+  };
+
+  const formatType = (type: string) => {
+    const key = type as keyof typeof t;
+    if (key in t) return t[key];
+    return type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, " ");
+  };
 
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,8 +80,6 @@ export default function CitizenPortalPage() {
       setFetchError(true);
     } else {
       setRequests(data ?? []);
-
-      // Fetch all surveys for these requests (id, request_id, submitted_at)
       if (data && data.length > 0) {
         const ids = data.map((r) => r.id);
         const { data: surveys } = await supabase
@@ -76,7 +90,6 @@ export default function CitizenPortalPage() {
         const idMap: Record<string, string> = {};
         const completed = new Set<string>();
         for (const s of surveys ?? []) {
-          // Store first survey id found per request
           if (!idMap[s.request_id]) idMap[s.request_id] = s.id;
           if (s.submitted_at) completed.add(s.request_id);
         }
@@ -91,7 +104,6 @@ export default function CitizenPortalPage() {
     fetchRequests();
   }, [fetchRequests]);
 
-  // Listen for inserts to auto-refresh
   useEffect(() => {
     if (!user) return;
     const channel = supabase
@@ -102,7 +114,6 @@ export default function CitizenPortalPage() {
         () => fetchRequests()
       )
       .subscribe();
-
     return () => { supabase.removeChannel(channel); };
   }, [user, fetchRequests]);
 
@@ -116,49 +127,43 @@ export default function CitizenPortalPage() {
       {/* Header */}
       <header className="border-b bg-card px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-primary">Citizen Connect</h1>
+          <h1 className="text-xl font-bold text-primary">{t.citizenConnect}</h1>
           <Button className="bg-white text-black border border-input hover:bg-gray-100" size="sm" onClick={() => navigate("/status")}>
-            Public Status
+            {t.publicStatus}
           </Button>
         </div>
         <div className="flex items-center gap-4">
+          <LanguageSelector language={language} onChange={handleLanguageChange} />
           <span className="text-sm text-muted-foreground">{user?.user_metadata?.full_name || user?.email}</span>
           <RoleSwitcher />
-          <Button variant="outline" size="sm" onClick={handleSignOut}>Sign Out</Button>
+          <Button variant="outline" size="sm" onClick={handleSignOut}>{t.signOut}</Button>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-10 space-y-10">
         {/* Welcome */}
         <section className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-foreground">Welcome to Your Citizen Portal</h2>
-          <p className="text-muted-foreground">
-            Report a non-emergency issue in your community. Fill out the form below and track your request status.
-          </p>
+          <h2 className="text-2xl font-bold text-foreground">{t.pageTitle}</h2>
+          <p className="text-muted-foreground">{t.pageSubtitle}</p>
         </section>
 
         {/* Submit Request Form */}
         <section>
-          <SubmitRequestForm onSubmitSuccess={fetchRequests} embedded />
+          <SubmitRequestForm onSubmitSuccess={fetchRequests} embedded language={language} />
         </section>
-
 
         {/* My Requests */}
         <section className="space-y-4">
-          <h3 className="text-lg font-semibold text-foreground text-center">My Requests</h3>
+          <h3 className="text-lg font-semibold text-foreground text-center">{t.myRequests}</h3>
 
           {loading ? (
             <div className="flex justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           ) : fetchError ? (
-            <p className="text-center text-sm text-destructive">
-              Unable to load your requests. Please refresh the page.
-            </p>
+            <p className="text-center text-sm text-destructive">{t.loadError}</p>
           ) : requests.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">
-              You haven't submitted any requests yet.
-            </p>
+            <p className="text-center text-sm text-muted-foreground">{t.noRequests}</p>
           ) : (
             <div className="space-y-3">
               {requests.map((req) => (
@@ -182,7 +187,7 @@ export default function CitizenPortalPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
-                          View
+                          {t.view}
                         </Button>
                         {(() => {
                           const surveyId = surveyIdMap[req.id];
@@ -194,7 +199,7 @@ export default function CitizenPortalPage() {
                               disabled={surveyDisabled}
                               onClick={() => !surveyDisabled && navigate(`/survey?id=${surveyId}`)}
                             >
-                              Survey
+                              {t.survey}
                             </Button>
                           );
                         })()}
@@ -213,43 +218,41 @@ export default function CitizenPortalPage() {
       <Dialog open={!!selectedRequest} onOpenChange={(open) => { if (!open) setSelectedRequest(null); }}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Request Details</DialogTitle>
+            <DialogTitle>{t.requestDetails}</DialogTitle>
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 pt-2">
-              {/* Pizza Tracker */}
               <RequestPizzaTracker status={selectedRequest.status} />
-
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Request ID</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.requestId}</p>
                 <p className="font-mono text-sm break-all">{selectedRequest.id}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Status</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.status}</p>
                 <Badge variant="outline" className={statusClass(selectedRequest.status)}>
                   {selectedRequest.status}
                 </Badge>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Request Type</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.requestType}</p>
                 <p className="text-sm">{formatType(selectedRequest.type)}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Location</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.location}</p>
                 <p className="text-sm">{selectedRequest.location}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.description}</p>
                 <p className="text-sm whitespace-pre-wrap">{selectedRequest.description}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Date Submitted</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.dateSubmitted}</p>
                 <p className="text-sm">
                   {format(new Date(selectedRequest.created_at), "MMM dd, yyyy 'at' hh:mm a")}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Attachment</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t.attachment}</p>
                 {selectedRequest.attachment_url ? (
                   <a
                     href={selectedRequest.attachment_url}
@@ -257,15 +260,14 @@ export default function CitizenPortalPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
                   >
-                    View Attached File <ExternalLink className="h-3.5 w-3.5" />
+                    {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ) : (
-                  <p className="text-sm text-muted-foreground">No attachment provided.</p>
+                  <p className="text-sm text-muted-foreground">{t.noAttachment}</p>
                 )}
               </div>
-              {/* Status History */}
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-2">Status History</p>
+                <p className="text-xs font-medium text-muted-foreground mb-2">{t.statusHistory}</p>
                 <RequestStatusHistory requestId={selectedRequest.id} />
               </div>
             </div>
