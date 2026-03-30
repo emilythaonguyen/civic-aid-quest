@@ -66,6 +66,7 @@ export default function CitizenPortalPage() {
   const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
   const [completedSurveys, setCompletedSurveys] = useState<Set<string>>(new Set());
   const [surveyIdMap, setSurveyIdMap] = useState<Record<string, string>>({});
+  const [editingRequest, setEditingRequest] = useState<ServiceRequest | null>(null);
 
   const fetchRequests = useCallback(async () => {
     if (!user) return;
