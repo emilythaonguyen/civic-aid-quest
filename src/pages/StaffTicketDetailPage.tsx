@@ -48,6 +48,8 @@ interface TicketDetail {
   triage_confidence: string | null;
   triage_completed_at: string | null;
   suggestions: unknown;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 interface HistoryEntry {
