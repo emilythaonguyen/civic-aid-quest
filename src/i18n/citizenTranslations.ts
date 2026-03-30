@@ -326,6 +326,7 @@ export const translations = {
   vi: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Trạng Thái Công Khai",
+    myPortal: "Cổng Của Tôi",
     signOut: "Đăng Xuất",
     english: "English",
     spanish: "Spanish (Español)",
