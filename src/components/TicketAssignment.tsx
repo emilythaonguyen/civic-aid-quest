@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -18,6 +19,7 @@ interface StaffOption {
 const UNASSIGNED = "__unassigned__";
 
 export default function TicketAssignment({ ticketId, userId }: { ticketId: string; userId: string }) {
+  const { role } = useAuth();
   const [staffList, setStaffList] = useState<StaffOption[]>([]);
   const [selectedStaff, setSelectedStaff] = useState(UNASSIGNED);
   const [currentAssignment, setCurrentAssignment] = useState(UNASSIGNED);
@@ -29,13 +31,24 @@ export default function TicketAssignment({ ticketId, userId }: { ticketId: strin
     const load = async () => {
       setLoading(true);
       try {
-        // Fetch staff list and current assignment in parallel
-        const [staffRes, assignRes] = await Promise.all([
-          supabase
+        let staffQuery;
+        if (role === "manager") {
+          // Manager can assign to any staff or manager
+          staffQuery = supabase
             .from("profiles")
             .select("id, full_name")
             .in("role", ["staff", "manager"])
-            .order("full_name", { ascending: true }),
+            .order("full_name", { ascending: true });
+        } else {
+          // Staff can only assign to themselves
+          staffQuery = supabase
+            .from("profiles")
+            .select("id, full_name")
+            .eq("id", userId);
+        }
+
+        const [staffRes, assignRes] = await Promise.all([
+          staffQuery,
           supabase
             .from("assignments")
             .select("assigned_to")
@@ -60,7 +73,7 @@ export default function TicketAssignment({ ticketId, userId }: { ticketId: strin
       }
     };
     load();
-  }, [ticketId]);
+  }, [ticketId, role, userId]);
 
   const handleSave = async () => {
     if (selectedStaff === currentAssignment) return;
