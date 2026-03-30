@@ -484,6 +484,7 @@ export const translations = {
   ko: {
     citizenConnect: "Citizen Connect",
     publicStatus: "공개 상태",
+    myPortal: "내 포털",
     signOut: "로그아웃",
     english: "English",
     spanish: "Spanish (Español)",
