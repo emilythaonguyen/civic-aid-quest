@@ -102,7 +102,7 @@ export default function StaffTicketDetailPage() {
 
   // Fetch ticket + history
   useEffect(() => {
-    if (!user || role !== "staff" || !id) return;
+    if (!user || (role !== "staff" && role !== "manager") || !id) return;
 
     const fetchData = async () => {
       setLoading(true);

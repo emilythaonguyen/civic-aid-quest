@@ -34,7 +34,7 @@ export default function TicketAssignment({ ticketId, userId }: { ticketId: strin
           supabase
             .from("profiles")
             .select("id, full_name")
-            .eq("role", "staff")
+            .in("role", ["staff", "manager"])
             .order("full_name", { ascending: true }),
           supabase
             .from("assignments")

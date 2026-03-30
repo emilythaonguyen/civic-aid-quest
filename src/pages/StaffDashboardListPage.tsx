@@ -61,7 +61,7 @@ export default function StaffDashboardListPage() {
 
   // Fetch tickets
   useEffect(() => {
-    if (!user || role !== "staff") return;
+    if (!user || (role !== "staff" && role !== "manager")) return;
     const fetchTickets = async () => {
       setLoading(true);
       setError("");

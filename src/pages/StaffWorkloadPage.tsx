@@ -50,7 +50,7 @@ export default function StaffWorkloadPage() {
   }, [user, role, authLoading, navigate]);
 
   useEffect(() => {
-    if (!user || role !== "staff") return;
+    if (!user || (role !== "staff" && role !== "manager")) return;
     const fetchWorkload = async () => {
       setLoading(true);
       setError("");
