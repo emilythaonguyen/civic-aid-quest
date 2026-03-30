@@ -405,6 +405,7 @@ export const translations = {
   zh: {
     citizenConnect: "Citizen Connect",
     publicStatus: "公共状态",
+    myPortal: "我的门户",
     signOut: "退出登录",
     english: "English",
     spanish: "Spanish (Español)",
