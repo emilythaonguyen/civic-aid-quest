@@ -33,6 +33,7 @@ export default function StaffDashboardListPage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
+  const [workloadStaffFilter, setWorkloadStaffFilter] = useState<string | null>(null);
 
   // Assignment data
   const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId
