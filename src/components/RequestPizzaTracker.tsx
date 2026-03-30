@@ -1,29 +1,31 @@
 import { CheckCircle2, Circle, Clock, Search, Wrench, PartyPopper } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { translations, type Language } from "@/i18n/citizenTranslations";
 
-const STEPS = [
-  { key: "Open", label: "Submitted", icon: Clock, description: "Request received" },
-  { key: "In Review", label: "In Review", icon: Search, description: "Being evaluated" },
-  { key: "In Progress", label: "In Progress", icon: Wrench, description: "Work underway" },
-  { key: "Resolved", label: "Resolved", icon: PartyPopper, description: "Issue resolved" },
+const STEP_KEYS = [
+  { key: "Open", labelKey: "stepSubmitted" as const, descKey: "stepSubmittedDesc" as const, icon: Clock },
+  { key: "In Review", labelKey: "stepInReview" as const, descKey: "stepInReviewDesc" as const, icon: Search },
+  { key: "In Progress", labelKey: "stepInProgress" as const, descKey: "stepInProgressDesc" as const, icon: Wrench },
+  { key: "Resolved", labelKey: "stepResolved" as const, descKey: "stepResolvedDesc" as const, icon: PartyPopper },
 ];
 
 interface RequestPizzaTrackerProps {
   status: string;
+  language?: Language;
 }
 
-export default function RequestPizzaTracker({ status }: RequestPizzaTrackerProps) {
-  const currentIndex = STEPS.findIndex((s) => s.key === status);
+export default function RequestPizzaTracker({ status, language = "en" }: RequestPizzaTrackerProps) {
+  const t = translations[language];
+  const currentIndex = STEP_KEYS.findIndex((s) => s.key === status);
   const activeIndex = currentIndex === -1 ? 0 : currentIndex;
 
   return (
     <div className="w-full py-4">
       <div className="flex items-start justify-between relative">
-        {/* Connector lines between icons */}
-        {STEPS.map((_, i) => {
-          if (i === STEPS.length - 1) return null;
+        {STEP_KEYS.map((_, i) => {
+          if (i === STEP_KEYS.length - 1) return null;
           const segmentCompleted = i < activeIndex;
-          const stepWidth = 100 / STEPS.length;
+          const stepWidth = 100 / STEP_KEYS.length;
           return (
             <div
               key={`line-${i}`}
@@ -39,7 +41,7 @@ export default function RequestPizzaTracker({ status }: RequestPizzaTrackerProps
           );
         })}
 
-        {STEPS.map((step, i) => {
+        {STEP_KEYS.map((step, i) => {
           const isCompleted = i < activeIndex;
           const isCurrent = i === activeIndex;
           const Icon = step.icon;
@@ -70,10 +72,10 @@ export default function RequestPizzaTracker({ status }: RequestPizzaTrackerProps
                   isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-muted-foreground"
                 )}
               >
-                {step.label}
+                {t[step.labelKey]}
               </span>
               <span className="text-[10px] text-muted-foreground text-center mt-0.5">
-                {step.description}
+                {t[step.descKey]}
               </span>
             </div>
           );
