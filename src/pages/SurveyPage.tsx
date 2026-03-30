@@ -112,11 +112,11 @@ export default function SurveyPage() {
   };
 
   const SurveyHeader = () => (
-    <header className="border-b bg-card px-6 py-3 flex items-center justify-between">
-      <Button variant="ghost" size="sm" onClick={() => navigate("/portal")}>
+    <header className="px-6 py-3 flex items-center justify-between" style={{ backgroundColor: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+      <Button variant="ghost" size="sm" className="text-[#94A3B8] hover:text-white hover:bg-white/10" onClick={() => navigate("/portal")}>
         <ArrowLeft className="h-4 w-4 mr-1" /> Back to Portal
       </Button>
-      <Button variant="outline" size="sm" onClick={handleSignOut}>
+      <Button size="sm" className="border border-white/20 bg-transparent text-white hover:bg-white/10" onClick={handleSignOut}>
         <LogOut className="h-4 w-4 mr-1" /> Sign Out
       </Button>
     </header>
@@ -239,25 +239,29 @@ export default function SurveyPage() {
     }
   };
 
+  const darkPageClass = "min-h-screen relative" as const;
+  const darkPageStyle = { backgroundColor: "#0F172A", backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" } as const;
+  const darkCardStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, backdropFilter: "blur(12px)" } as const;
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center py-32">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
         </div>
       </div>
     );
   }
   if (noSurvey) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10 space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-lg font-semibold text-white">No Survey Available</h2>
+              <p className="text-sm text-[#94A3B8]">
                 A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
               </p>
             </CardContent>
@@ -269,14 +273,14 @@ export default function SurveyPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10 space-y-4">
-              <CheckCircle2 className="h-14 w-14 text-primary mx-auto" />
-              <h2 className="text-xl font-semibold text-foreground">Survey Completed</h2>
-              <p className="text-muted-foreground text-sm">
+              <CheckCircle2 className="h-14 w-14 text-[#38BDF8] mx-auto" />
+              <h2 className="text-xl font-semibold text-white">Survey Completed</h2>
+              <p className="text-[#94A3B8] text-sm">
                 Survey has already been completed. Thank you for your input!
               </p>
             </CardContent>
@@ -288,12 +292,12 @@ export default function SurveyPage() {
 
   if (!surveyId && !requestId) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10">
-              <p className="text-muted-foreground">No survey linked. Please access this page from your request portal.</p>
+              <p className="text-[#94A3B8]">No survey linked. Please access this page from your request portal.</p>
             </CardContent>
           </Card>
         </div>
@@ -303,12 +307,12 @@ export default function SurveyPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10">
-              <p className="text-destructive">{error}</p>
+              <p className="text-red-400">{error}</p>
             </CardContent>
           </Card>
         </div>
@@ -318,35 +322,35 @@ export default function SurveyPage() {
 
   if (!questionnaire) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={darkPageClass} style={darkPageStyle}>
       <SurveyHeader />
       <div className="py-10 px-4">
-      <Card className="max-w-lg mx-auto">
+      <Card className="max-w-lg mx-auto bg-transparent shadow-none" style={darkCardStyle}>
         <CardHeader>
-          <CardTitle className="text-lg">Service Satisfaction Survey</CardTitle>
+          <CardTitle className="text-lg text-white">Service Satisfaction Survey</CardTitle>
           {questionnaire.survey_intro && (
-            <p className="text-sm text-muted-foreground">{questionnaire.survey_intro}</p>
+            <p className="text-sm text-[#94A3B8]">{questionnaire.survey_intro}</p>
           )}
         </CardHeader>
         <CardContent className="space-y-6">
           {questionnaire.questions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#94A3B8]">
               No questions are configured in this survey yet. Please contact support.
             </p>
           ) : (
             questionnaire.questions.map((q) => (
               <div key={q.id} className="space-y-2">
-                <label className="text-sm font-medium text-foreground">{q.text}</label>
+                <label className="text-sm font-medium text-white">{q.text}</label>
 
                 {q.type === "rating_1_5" && (
                   <div className="flex gap-1">
@@ -363,8 +367,8 @@ export default function SurveyPage() {
                         <Star
                           className={`h-8 w-8 ${
                             n <= ((hoverRatings[q.id] || 0) || ((responses[q.id] as number) || 0))
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-muted-foreground/30"
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-[#334155]"
                           }`}
                         />
                       </button>
@@ -374,20 +378,28 @@ export default function SurveyPage() {
 
                 {q.type === "yes_no" && (
                   <div className="flex gap-2">
-                    <Button
+                    <button
                       type="button"
-                      variant={responses[q.id] === "yes" ? "default" : "outline"}
                       onClick={() => setResponse(q.id, "yes")}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        responses[q.id] === "yes"
+                          ? "bg-[#2563EB] text-white"
+                          : "bg-[#1E293B] text-white border border-white/15 hover:bg-[#263548]"
+                      }`}
                     >
                       Yes
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                       type="button"
-                      variant={responses[q.id] === "no" ? "default" : "outline"}
                       onClick={() => setResponse(q.id, "no")}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        responses[q.id] === "no"
+                          ? "bg-[#2563EB] text-white"
+                          : "bg-[#1E293B] text-white border border-white/15 hover:bg-[#263548]"
+                      }`}
                     >
                       No
-                    </Button>
+                    </button>
                   </div>
                 )}
 
@@ -396,14 +408,18 @@ export default function SurveyPage() {
                     value={(responses[q.id] as string) ?? ""}
                     onChange={(e) => setResponse(q.id, e.target.value)}
                     placeholder="Your response…"
-                    className="min-h-[80px] text-sm"
+                    className="min-h-[80px] text-sm bg-[#1E293B] text-white border-white/15 placeholder:text-[#475569] focus-visible:ring-[#2563EB]"
                   />
                 )}
               </div>
             ))
           )}
 
-          <Button className="w-full" onClick={handleSubmit} disabled={!allAnswered || submitting}>
+          <Button
+            className="w-full bg-[#2563EB] text-white hover:bg-[#3B82F6]"
+            onClick={handleSubmit}
+            disabled={!allAnswered || submitting}
+          >
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Survey"}
           </Button>
         </CardContent>
