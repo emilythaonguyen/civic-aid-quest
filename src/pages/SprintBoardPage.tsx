@@ -251,7 +251,10 @@ export default function SprintBoardPage() {
   const openEditSprint = (sprint: SprintData) => { setEditingSprint(sprint); setSprintDialogOpen(true); };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F9FAFB", fontFamily: "'Segoe UI', system-ui, sans-serif", padding: "40px 24px 64px" }}>
+    <div style={{ minHeight: "100vh", background: "#F9FAFB", fontFamily: "'Segoe UI', system-ui, sans-serif", padding: "40px 24px 64px", position: "relative" }}>
+      <div style={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}>
+        <HcdDropdown />
+      </div>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
 
         {/* Header */}

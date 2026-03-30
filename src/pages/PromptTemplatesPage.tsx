@@ -346,7 +346,11 @@ export default function PromptTemplatesPage() {
       minHeight: "100vh", background: "#F9FAFB",
       fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
       padding: "48px 24px",
+      position: "relative",
     }}>
+      <div style={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}>
+        <HcdDropdown />
+      </div>
       <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
 
         {/* Page Header */}

@@ -439,6 +439,10 @@ export default function HCDArtifactsPage() {
       style={{
         minHeight: "100vh",
         background: "#F9FAFB",
+        position: "relative",
+      }}>
+      <div style={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}>
+        <HcdDropdown />
         fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
         padding: "48px 24px",
       }}
