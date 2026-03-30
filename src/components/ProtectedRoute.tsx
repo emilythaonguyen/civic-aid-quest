@@ -4,6 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole: "citizen" | "staff";
+  /** When true, only role === "manager" is allowed (not plain staff) */
+  managerOnly?: boolean;
 }
 
 const isStaffLike = (r: string | null): r is "staff" | "manager" =>
