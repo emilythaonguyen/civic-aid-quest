@@ -136,7 +136,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
       language,
     );
 
-    const { error } = await supabase
+    const { error, count } = await supabase
       .from("requests")
       .update({
         type: requestType,
@@ -146,7 +146,8 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
         original_description: description.trim(),
         attachment_url: attachmentUrl,
       })
-      .eq("id", request.id);
+      .eq("id", request.id)
+      .eq("user_id", user!.id);
 
     if (error) {
       console.error("Update error:", error);
