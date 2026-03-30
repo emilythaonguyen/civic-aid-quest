@@ -168,6 +168,7 @@ export const translations = {
   fr: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Statut Public",
+    myPortal: "Mon Portail",
     signOut: "Déconnexion",
     english: "English",
     spanish: "Spanish (Español)",
