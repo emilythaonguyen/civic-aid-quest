@@ -51,6 +51,7 @@ interface TicketDetail {
   suggestions: unknown;
   latitude: number | null;
   longitude: number | null;
+  attachment_url: string | null;
 }
 
 interface HistoryEntry {
