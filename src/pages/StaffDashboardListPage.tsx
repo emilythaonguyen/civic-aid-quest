@@ -177,6 +177,14 @@ export default function StaffDashboardListPage() {
       <StaffHeader staffName={staffName} activePage="Dashboard" />
 
       <main className="px-6 py-6 space-y-4">
+        {/* Workload summary (manager only) */}
+        {role === "manager" && (
+          <StaffWorkloadSummary
+            onSelectStaff={setWorkloadStaffFilter}
+            selectedStaffId={workloadStaffFilter}
+          />
+        )}
+
         {/* Filter bar */}
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1">
