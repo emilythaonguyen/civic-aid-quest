@@ -134,10 +134,11 @@ export default function StaffTicketQueuePage() {
 
   const clearFilters = () => {
     setCategoryFilter("All");
+    setAssignmentFilter("All");
     setLocationFilter("");
   };
 
-  const hasActiveFilters = categoryFilter !== "All" || locationFilter !== "";
+  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
 
   if (authLoading) {
     return (
