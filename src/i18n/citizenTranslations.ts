@@ -315,6 +315,9 @@ export const translations = {
     stepInProgressDesc: "Trabalho em curso",
     stepResolved: "Resolvido",
     stepResolvedDesc: "Problema resolvido",
+    editRequest: "Editar",
+    saveChanges: "Salvar Alterações",
+    replaceAttachment: "Substituir Anexo",
   },
   vi: {
     citizenConnect: "Citizen Connect",
