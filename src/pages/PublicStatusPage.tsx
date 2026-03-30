@@ -31,7 +31,7 @@ const RESOLVED_COLOR = "hsl(142, 60%, 45%)";
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
-  return stored === "es" ? "es" : "en";
+  return isValidLanguage(stored) ? stored : "en";
 }
 
 export default function PublicStatusPage() {
