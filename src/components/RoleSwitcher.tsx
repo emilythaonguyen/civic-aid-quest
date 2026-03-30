@@ -18,7 +18,7 @@ export default function RoleSwitcher() {
     if (newRole === role) return;
     await switchRole(newRole);
     toast.success(`Switched to ${newRole} role`);
-    navigate(newRole === "staff" ? "/analytics" : "/portal");
+    navigate(newRole === "staff" ? "/staff/dashboard" : "/portal");
   };
 
   return (
