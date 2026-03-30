@@ -307,12 +307,12 @@ export default function SurveyPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10">
-              <p className="text-destructive">{error}</p>
+              <p className="text-red-400">{error}</p>
             </CardContent>
           </Card>
         </div>
