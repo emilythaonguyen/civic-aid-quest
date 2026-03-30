@@ -28,17 +28,6 @@ interface CategoryStat {
 const OPEN_COLOR = "hsl(var(--primary))";
 const RESOLVED_COLOR = "hsl(142, 60%, 45%)";
 
-function getWeekRange() {
-  const now = new Date();
-  const day = now.getDay(); // 0=Sun
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((day + 6) % 7));
-  monday.setHours(0, 0, 0, 0);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23, 59, 59, 999);
-  return { start: monday.toISOString(), end: sunday.toISOString() };
-}
 
 export default function PublicStatusPage() {
   const navigate = useNavigate();
