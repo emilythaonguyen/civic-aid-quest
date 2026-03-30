@@ -111,7 +111,7 @@ export default function StaffTicketDetailPage() {
         const { data: tData, error: tErr } = await supabase
           .from("requests")
           .select(`
-            id, type, status, location, description, created_at,
+            id, type, status, location, description, created_at, attachment_url,
             triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
             suggestions, latitude, longitude,
             profiles!user_id ( full_name )
