@@ -14,7 +14,7 @@ export default function RoleSwitcher() {
   const { role, switchRole } = useAuth();
   const navigate = useNavigate();
 
-  const handleSwitch = async (newRole: "citizen" | "staff") => {
+  const handleSwitch = async (newRole: "citizen" | "staff" | "manager") => {
     if (newRole === role) return;
     await switchRole(newRole);
     toast.success(`Switched to ${newRole} role`);
