@@ -322,10 +322,10 @@ export default function SurveyPage() {
 
   if (!questionnaire) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
         </div>
       </div>
     );
