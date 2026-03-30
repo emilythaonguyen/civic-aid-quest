@@ -34,7 +34,7 @@ export default function LanguageSelector({ language, onChange, className }: Lang
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1.5 text-sm font-normal">
+        <Button variant="ghost" size="sm" className={`gap-1.5 text-sm font-normal ${className ?? ""}`}>
           <Globe className="h-4 w-4" />
           {current.shortLabel}
         </Button>
