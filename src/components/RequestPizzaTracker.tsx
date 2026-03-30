@@ -12,9 +12,10 @@ const STEP_KEYS = [
 interface RequestPizzaTrackerProps {
   status: string;
   language?: Language;
+  dark?: boolean;
 }
 
-export default function RequestPizzaTracker({ status, language = "en" }: RequestPizzaTrackerProps) {
+export default function RequestPizzaTracker({ status, language = "en", dark }: RequestPizzaTrackerProps) {
   const t = translations[language];
   const currentIndex = STEP_KEYS.findIndex((s) => s.key === status);
   const activeIndex = currentIndex === -1 ? 0 : currentIndex;
@@ -35,8 +36,13 @@ export default function RequestPizzaTracker({ status, language = "en" }: Request
                 width: `calc(${stepWidth}% - 40px)`,
               }}
             >
-              <div className="w-full h-full bg-muted" />
-              {segmentCompleted && <div className="absolute inset-0 bg-primary transition-all duration-500" />}
+              <div className={cn("w-full h-full", dark ? "bg-[hsl(215_25%_22%)]" : "bg-muted")} />
+              {segmentCompleted && (
+                <div className={cn(
+                  "absolute inset-0 transition-all duration-500",
+                  dark ? "bg-[hsl(var(--hero-cta))]" : "bg-primary"
+                )} />
+              )}
             </div>
           );
         })}
@@ -51,11 +57,17 @@ export default function RequestPizzaTracker({ status, language = "en" }: Request
               <div
                 className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
-                  isCompleted
-                    ? "bg-primary border-primary text-primary-foreground"
-                    : isCurrent
-                      ? "bg-primary/10 border-primary text-primary ring-4 ring-primary/20"
-                      : "bg-background border-muted text-muted-foreground"
+                  dark
+                    ? isCompleted
+                      ? "bg-[hsl(var(--hero-bg))] border-[hsl(var(--hero-cta))] text-white"
+                      : isCurrent
+                        ? "bg-[hsl(var(--hero-cta))]/15 border-[hsl(var(--hero-cta))] text-[hsl(var(--hero-accent))] ring-4 ring-[hsl(var(--hero-cta))]/20"
+                        : "bg-transparent border-[hsl(215_20%_34%)] text-[hsl(215_20%_34%)]"
+                    : isCompleted
+                      ? "bg-primary border-primary text-primary-foreground"
+                      : isCurrent
+                        ? "bg-primary/10 border-primary text-primary ring-4 ring-primary/20"
+                        : "bg-background border-muted text-muted-foreground"
                 )}
               >
                 {isCompleted ? (
@@ -69,12 +81,17 @@ export default function RequestPizzaTracker({ status, language = "en" }: Request
               <span
                 className={cn(
                   "text-xs font-medium mt-2 text-center",
-                  isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                  dark
+                    ? isCurrent ? "text-[hsl(var(--hero-accent))]" : isCompleted ? "text-white" : "text-[hsl(var(--hero-muted))]"
+                    : isCurrent ? "text-primary" : isCompleted ? "text-foreground" : "text-muted-foreground"
                 )}
               >
                 {t[step.labelKey]}
               </span>
-              <span className="text-[10px] text-muted-foreground text-center mt-0.5">
+              <span className={cn(
+                "text-[10px] text-center mt-0.5",
+                dark ? "text-[hsl(215_25%_40%)]" : "text-muted-foreground"
+              )}>
                 {t[step.descKey]}
               </span>
             </div>
