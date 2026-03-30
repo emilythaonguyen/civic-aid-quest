@@ -65,6 +65,23 @@ export const translations = {
     dumping: "Illegal Dumping",
     graffiti: "Graffiti",
     other: "Other",
+
+    // Status page
+    civicTracker: "Civic Tracker",
+    public: "Public",
+    serviceRequestStatus: "Service Request Status",
+    statusSubtitle: "All-time overview · Public read-only view · No login required",
+    totalRequests: "Total Requests",
+    openInProgress: "Open / In Progress",
+    resolvedClosed: "Resolved / Closed",
+    chartTitle: "Open vs Resolved by Category",
+    chartDescription: "Counts across all requests — no personal information included",
+    noRequestsRecorded: "No requests recorded yet.",
+    openLabel: "Open / In Progress",
+    resolvedLabel: "Resolved / Closed",
+    privacyNotice: "This page displays aggregate counts only. No names, email addresses, physical addresses, phone numbers, or any other personal information are shown or returned in API responses (S2-06 · F16 — Zero-PII Public Dashboard).",
+    lastUpdated: "Last updated:",
+    loadStatusError: "Unable to load status data. Please try again later.",
   },
   es: {
     // Header
@@ -130,6 +147,23 @@ export const translations = {
     dumping: "Vertido Ilegal",
     graffiti: "Grafiti",
     other: "Otro",
+
+    // Status page
+    civicTracker: "Civic Tracker",
+    public: "Público",
+    serviceRequestStatus: "Estado de Solicitudes de Servicio",
+    statusSubtitle: "Resumen histórico · Vista pública de solo lectura · No requiere inicio de sesión",
+    totalRequests: "Total de Solicitudes",
+    openInProgress: "Abiertas / En Progreso",
+    resolvedClosed: "Resueltas / Cerradas",
+    chartTitle: "Abiertas vs Resueltas por Categoría",
+    chartDescription: "Conteos de todas las solicitudes — no se incluye información personal",
+    noRequestsRecorded: "Aún no se han registrado solicitudes.",
+    openLabel: "Abiertas / En Progreso",
+    resolvedLabel: "Resueltas / Cerradas",
+    privacyNotice: "Esta página muestra solo conteos agregados. No se muestran ni se devuelven en las respuestas de la API nombres, direcciones de correo electrónico, direcciones físicas, números de teléfono ni ninguna otra información personal (S2-06 · F16 — Panel Público Sin PII).",
+    lastUpdated: "Última actualización:",
+    loadStatusError: "No se pudieron cargar los datos de estado. Por favor intente más tarde.",
   },
 } as const;
 

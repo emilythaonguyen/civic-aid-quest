@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
+import LanguageSelector from "@/components/LanguageSelector";
+import { translations, type Language } from "@/i18n/citizenTranslations";
 import {
   BarChart,
   Bar,
@@ -16,7 +18,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Cell,
 } from "recharts";
 
 interface CategoryStat {
@@ -28,6 +29,10 @@ interface CategoryStat {
 const OPEN_COLOR = "hsl(var(--primary))";
 const RESOLVED_COLOR = "hsl(142, 60%, 45%)";
 
+function getStoredLanguage(): Language {
+  const stored = localStorage.getItem("citizen-lang");
+  return stored === "es" ? "es" : "en";
+}
 
 export default function PublicStatusPage() {
   const navigate = useNavigate();
@@ -37,12 +42,19 @@ export default function PublicStatusPage() {
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
+  const [language, setLanguage] = useState<Language>(getStoredLanguage);
+  const t = translations[language];
+
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem("citizen-lang", lang);
+  };
+
   const fetchStats = async () => {
     setLoading(true);
     setError("");
 
     try {
-      // Query ALL requests — no date filter
       const { data, error: fetchError } = await supabase
         .from("requests")
         .select("type, status");
@@ -51,7 +63,6 @@ export default function PublicStatusPage() {
 
       const rows = data ?? [];
 
-      // Aggregate by category
       const map: Record<string, { open: number; resolved: number }> = {};
       rows.forEach((r) => {
         const cat = r.type || "Other";
@@ -72,7 +83,7 @@ export default function PublicStatusPage() {
       setLastUpdated(new Date());
     } catch (err) {
       console.error(err);
-      setError("Unable to load status data. Please try again later.");
+      setError(t.loadStatusError);
     } finally {
       setLoading(false);
     }
@@ -92,16 +103,17 @@ export default function PublicStatusPage() {
       <header className="border-b bg-card">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-primary">Civic Tracker</h1>
-            <Badge variant="outline" className="text-xs">Public</Badge>
+            <h1 className="text-xl font-bold text-primary">{t.civicTracker}</h1>
+            <Badge variant="outline" className="text-xs">{t.public}</Badge>
             <Button className="bg-white text-black border border-input hover:bg-gray-100" size="sm" onClick={() => navigate("/portal")}>
-              Return to Portal
+              {t.returnToPortal}
             </Button>
           </div>
           <div className="flex items-center gap-4">
+            <LanguageSelector language={language} onChange={handleLanguageChange} />
             <span className="text-sm text-muted-foreground">{user?.user_metadata?.full_name || user?.email}</span>
             <RoleSwitcher />
-            <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/citizen-login"); }}>Sign Out</Button>
+            <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/citizen-login"); }}>{t.signOut}</Button>
           </div>
         </div>
       </header>
@@ -109,10 +121,8 @@ export default function PublicStatusPage() {
       <main className="max-w-5xl mx-auto px-6 py-10 space-y-8">
         {/* Title */}
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Service Request Status</h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            All-time overview · Public read-only view · No login required
-          </p>
+          <h2 className="text-2xl font-bold text-foreground">{t.serviceRequestStatus}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{t.statusSubtitle}</p>
           <Badge variant="secondary" className="text-xs mt-2">S2-06 · F16</Badge>
         </div>
 
@@ -133,13 +143,13 @@ export default function PublicStatusPage() {
               <Card>
                 <CardContent className="pt-6 text-center">
                   <p className="text-3xl font-bold">{total}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Total Requests</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t.totalRequests}</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="pt-6 text-center">
                   <p className="text-3xl font-bold text-primary">{totalOpen}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Open / In Progress</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t.openInProgress}</p>
                 </CardContent>
               </Card>
               <Card>
@@ -147,7 +157,7 @@ export default function PublicStatusPage() {
                   <p className="text-3xl font-bold" style={{ color: RESOLVED_COLOR }}>
                     {totalResolved}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">Resolved / Closed</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t.resolvedClosed}</p>
                 </CardContent>
               </Card>
             </div>
@@ -155,15 +165,13 @@ export default function PublicStatusPage() {
             {/* Grouped Bar Chart */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Open vs Resolved by Category</CardTitle>
-                <CardDescription>
-                  Counts across all requests — no personal information included
-                </CardDescription>
+                <CardTitle className="text-base">{t.chartTitle}</CardTitle>
+                <CardDescription>{t.chartDescription}</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.length === 0 ? (
                   <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
-                    No requests recorded yet.
+                    {t.noRequestsRecorded}
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={320}>
@@ -193,29 +201,23 @@ export default function PublicStatusPage() {
                         labelStyle={{ color: "hsl(var(--foreground))" }}
                       />
                       <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                      <Bar dataKey="open" name="Open / In Progress" fill={OPEN_COLOR} radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="resolved" name="Resolved / Closed" fill={RESOLVED_COLOR} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="open" name={t.openLabel} fill={OPEN_COLOR} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="resolved" name={t.resolvedLabel} fill={RESOLVED_COLOR} radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
               </CardContent>
             </Card>
 
-            {/* Category breakdown table */}
-
             {/* Privacy notice footer */}
             <div className="rounded-md bg-muted/50 border border-border px-4 py-3 flex items-start gap-3 text-xs text-muted-foreground">
               <ShieldCheck className="h-4 w-4 mt-0.5 shrink-0" />
-              <span>
-                This page displays aggregate counts only. No names, email addresses, physical
-                addresses, phone numbers, or any other personal information are shown or returned
-                in API responses (S2-06 · F16 — Zero-PII Public Dashboard).
-              </span>
+              <span>{t.privacyNotice}</span>
             </div>
 
             {lastUpdated && (
               <p className="text-xs text-center text-muted-foreground">
-                Last updated: {lastUpdated.toLocaleTimeString()}
+                {t.lastUpdated} {lastUpdated.toLocaleTimeString()}
               </p>
             )}
           </>
