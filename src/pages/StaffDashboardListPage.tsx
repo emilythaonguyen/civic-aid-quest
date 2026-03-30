@@ -190,6 +190,23 @@ export default function StaffDashboardListPage() {
             </Select>
           </div>
 
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Assignment</label>
+            <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
+              <SelectTrigger className="w-[170px] h-9 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="Unassigned">Unassigned</SelectItem>
+                {staffMembers.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
