@@ -748,6 +748,14 @@ export const translations = {
     privacyNotice: "Diese Seite zeigt nur aggregierte Zählungen an. Es werden keine Namen, E-Mail-Adressen, physischen Adressen, Telefonnummern oder andere persönliche Informationen angezeigt oder in API-Antworten zurückgegeben (S2-06 · F16 — Null-PII Öffentliches Dashboard).",
     lastUpdated: "Zuletzt aktualisiert:",
     loadStatusError: "Statusdaten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+    stepSubmitted: "Eingereicht",
+    stepSubmittedDesc: "Anfrage eingegangen",
+    stepInReview: "In Prüfung",
+    stepInReviewDesc: "Wird ausgewertet",
+    stepInProgress: "In Bearbeitung",
+    stepInProgressDesc: "Arbeit läuft",
+    stepResolved: "Gelöst",
+    stepResolvedDesc: "Problem gelöst",
   },
 } as const;
 
