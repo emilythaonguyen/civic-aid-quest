@@ -72,14 +72,8 @@ const App = () => (
               }
             />
 
-            <Route
-              path="/staff/workload"
-              element={
-                <ProtectedRoute requiredRole="staff" managerOnly>
-                  <StaffWorkloadPage />
-                </ProtectedRoute>
-              }
-            />
+
+
             <Route
               path="/staff/tickets/:staffId"
               element={
