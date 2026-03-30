@@ -110,7 +110,7 @@ export default function RegisterPage() {
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
+            <Link to="/citizen-login" className="text-primary font-medium hover:underline">Sign in</Link>
           </p>
         </CardFooter>
       </Card>
