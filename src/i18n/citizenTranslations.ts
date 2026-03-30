@@ -549,6 +549,9 @@ export const translations = {
     stepInProgressDesc: "작업 진행 중",
     stepResolved: "해결됨",
     stepResolvedDesc: "문제 해결됨",
+    editRequest: "편집",
+    saveChanges: "변경 사항 저장",
+    replaceAttachment: "첨부 파일 교체",
   },
   ar: {
     citizenConnect: "Citizen Connect",
