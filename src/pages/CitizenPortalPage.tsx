@@ -213,6 +213,16 @@ export default function CitizenPortalPage() {
                       <p className="text-xs text-[hsl(var(--hero-muted))]">{req.original_location || req.location}</p>
                     </div>
                     <div className="flex items-center gap-3">
+                      {req.status === "Open" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+                          onClick={() => setEditingRequest(req)}
+                        >
+                          {t.editRequest || "Edit"}
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
