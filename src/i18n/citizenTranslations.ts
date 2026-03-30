@@ -10,6 +10,7 @@ export const translations = {
   en: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Public Status",
+    myPortal: "My Portal",
     signOut: "Sign Out",
     english: "English",
     spanish: "Spanish (Español)",
@@ -88,6 +89,7 @@ export const translations = {
   es: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Estado Público",
+    myPortal: "Mi Portal",
     signOut: "Cerrar Sesión",
     english: "English",
     spanish: "Spanish (Español)",
@@ -166,6 +168,7 @@ export const translations = {
   fr: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Statut Public",
+    myPortal: "Mon Portail",
     signOut: "Déconnexion",
     english: "English",
     spanish: "Spanish (Español)",
@@ -244,6 +247,7 @@ export const translations = {
   pt: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Status Público",
+    myPortal: "Meu Portal",
     signOut: "Sair",
     english: "English",
     spanish: "Spanish (Español)",
@@ -322,6 +326,7 @@ export const translations = {
   vi: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Trạng Thái Công Khai",
+    myPortal: "Cổng Của Tôi",
     signOut: "Đăng Xuất",
     english: "English",
     spanish: "Spanish (Español)",
@@ -400,6 +405,7 @@ export const translations = {
   zh: {
     citizenConnect: "Citizen Connect",
     publicStatus: "公共状态",
+    myPortal: "我的门户",
     signOut: "退出登录",
     english: "English",
     spanish: "Spanish (Español)",
@@ -478,6 +484,7 @@ export const translations = {
   ko: {
     citizenConnect: "Citizen Connect",
     publicStatus: "공개 상태",
+    myPortal: "내 포털",
     signOut: "로그아웃",
     english: "English",
     spanish: "Spanish (Español)",
@@ -556,6 +563,7 @@ export const translations = {
   ar: {
     citizenConnect: "Citizen Connect",
     publicStatus: "الحالة العامة",
+    myPortal: "بوابتي",
     signOut: "تسجيل الخروج",
     english: "English",
     spanish: "Spanish (Español)",
@@ -634,6 +642,7 @@ export const translations = {
   ht: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Estati Piblik",
+    myPortal: "Pòtay Mwen",
     signOut: "Dekonekte",
     english: "English",
     spanish: "Spanish (Español)",
@@ -712,6 +721,7 @@ export const translations = {
   de: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Öffentlicher Status",
+    myPortal: "Mein Portal",
     signOut: "Abmelden",
     english: "English",
     spanish: "Spanish (Español)",

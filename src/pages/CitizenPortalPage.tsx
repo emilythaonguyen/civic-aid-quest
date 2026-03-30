@@ -149,6 +149,14 @@ export default function CitizenPortalPage() {
           >
             {t.publicStatus}
           </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+            onClick={() => navigate("/portal")}
+          >
+            {t.myPortal}
+          </Button>
         </div>
         <div className="flex items-center gap-4">
            <LanguageSelector language={language} onChange={handleLanguageChange} className="text-white hover:text-black hover:bg-white/10" />
