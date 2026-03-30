@@ -28,7 +28,9 @@ export default function StaffTicketQueuePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
+  const [assignedIds, setAssignedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (authLoading) return;
@@ -67,7 +69,8 @@ export default function StaffTicketQueuePage() {
           .is("unassigned_at", null);
         if (aErr) throw aErr;
 
-        const assignedIds = (assignments ?? []).map((a: any) => a.request_id);
+        const assignedIdsArr = (assignments ?? []).map((a: any) => a.request_id);
+        const assignedIdsSet = new Set(assignedIdsArr);
 
         // Get ALL currently-assigned request IDs (to find unassigned ones)
         const { data: allAssignments, error: allAErr } = await supabase
@@ -97,7 +100,7 @@ export default function StaffTicketQueuePage() {
         if (fetchErr) throw fetchErr;
 
         const mapped: TicketRow[] = (data ?? [])
-          .filter((r: any) => assignedIds.includes(r.id) || !allAssignedIds.has(r.id))
+          .filter((r: any) => assignedIdsSet.has(r.id) || !allAssignedIds.has(r.id))
           .map((r: any) => ({
             id: r.id,
             citizen_name: r.profiles?.full_name ?? "Unknown",
@@ -107,6 +110,7 @@ export default function StaffTicketQueuePage() {
             location: r.location ?? "",
             created_at: r.created_at,
           }));
+        setAssignedIds(assignedIdsSet);
         setTickets(mapped);
       } catch (err) {
         console.error(err);
@@ -121,17 +125,20 @@ export default function StaffTicketQueuePage() {
   const filtered = useMemo(() => {
     return tickets.filter((t) => {
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
+      if (assignmentFilter === "My Tickets" && !assignedIds.has(t.id)) return false;
+      if (assignmentFilter === "Unassigned" && assignedIds.has(t.id)) return false;
       if (locationFilter && !t.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
       return true;
     });
-  }, [tickets, categoryFilter, locationFilter]);
+  }, [tickets, categoryFilter, assignmentFilter, assignedIds, locationFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
+    setAssignmentFilter("All");
     setLocationFilter("");
   };
 
-  const hasActiveFilters = categoryFilter !== "All" || locationFilter !== "";
+  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
 
   if (authLoading) {
     return (
@@ -162,6 +169,19 @@ export default function StaffTicketQueuePage() {
                 {CATEGORY_OPTIONS.map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Assignment</label>
+            <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
+              <SelectTrigger className="w-[150px] h-9 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="My Tickets">My Tickets</SelectItem>
+                <SelectItem value="Unassigned">Unassigned</SelectItem>
               </SelectContent>
             </Select>
           </div>
