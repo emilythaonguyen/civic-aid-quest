@@ -20,6 +20,8 @@ interface ServiceRequest {
   type: string;
   location: string;
   description: string;
+  original_location: string | null;
+  original_description: string | null;
   status: string;
   created_at: string;
   attachment_url: string | null;
@@ -71,7 +73,7 @@ export default function CitizenPortalPage() {
     setFetchError(false);
     const { data, error } = await supabase
       .from("requests")
-      .select("id, type, location, description, status, created_at, attachment_url")
+      .select("id, type, location, description, original_location, original_description, status, created_at, attachment_url")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -183,7 +185,7 @@ export default function CitizenPortalPage() {
                           </span>
                         </div>
                         <p className="font-medium text-sm text-foreground">{formatType(req.type)}</p>
-                        <p className="text-xs text-muted-foreground">{req.location}</p>
+                        <p className="text-xs text-muted-foreground">{req.original_location || req.location}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <Button variant="outline" size="sm" onClick={() => setSelectedRequest(req)}>
@@ -239,11 +241,11 @@ export default function CitizenPortalPage() {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.location}</p>
-                <p className="text-sm">{selectedRequest.location}</p>
+                <p className="text-sm">{selectedRequest.original_location || selectedRequest.location}</p>
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.description}</p>
-                <p className="text-sm whitespace-pre-wrap">{selectedRequest.description}</p>
+                <p className="text-sm whitespace-pre-wrap">{selectedRequest.original_description || selectedRequest.description}</p>
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.dateSubmitted}</p>

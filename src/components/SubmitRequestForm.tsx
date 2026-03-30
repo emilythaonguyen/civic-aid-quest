@@ -143,6 +143,8 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded, language 
       type: requestType,
       location: translatedLocation,
       description: translatedDescription,
+      original_location: location.trim(),
+      original_description: description.trim(),
       status: "Open",
       user_id: user!.id,
       attachment_url: attachmentUrl,
