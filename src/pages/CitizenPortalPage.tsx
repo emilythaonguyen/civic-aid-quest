@@ -245,7 +245,7 @@ export default function CitizenPortalPage() {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.description}</p>
-                <p className="text-sm whitespace-pre-wrap">{selectedRequest.description}</p>
+                <p className="text-sm whitespace-pre-wrap">{selectedRequest.original_description || selectedRequest.description}</p>
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.dateSubmitted}</p>
