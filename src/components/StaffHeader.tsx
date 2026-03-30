@@ -8,14 +8,22 @@ import { LogOut } from "lucide-react";
 interface StaffHeaderProps {
   staffName: string;
   /** Label of the currently active nav item (will render as disabled button) */
-  activePage?: "Dashboard" | "Workload" | "Survey Results" | "Analytics";
+  activePage?: "Dashboard" | "Workload" | "Survey Results" | "My Tickets" | "Analytics";
 }
 
-const allNavItems: { label: StaffHeaderProps["activePage"]; to: string; managerOnly: boolean }[] = [
-  { label: "Dashboard", to: "/staff/dashboard", managerOnly: true },
-  { label: "Workload", to: "/staff/workload", managerOnly: true },
-  { label: "Survey Results", to: "/survey-results", managerOnly: false },
-  { label: "Analytics", to: "/analytics", managerOnly: false },
+type NavItem = {
+  label: NonNullable<StaffHeaderProps["activePage"]>;
+  to: string | null; // null = resolved dynamically
+  managerOnly: boolean;
+  staffOnly: boolean;
+};
+
+const allNavItems: NavItem[] = [
+  { label: "Dashboard", to: "/staff/dashboard", managerOnly: true, staffOnly: false },
+  { label: "Workload", to: "/staff/workload", managerOnly: true, staffOnly: false },
+  { label: "Survey Results", to: "/survey-results", managerOnly: false, staffOnly: false },
+  { label: "My Tickets", to: null, managerOnly: false, staffOnly: true },
+  { label: "Analytics", to: "/analytics", managerOnly: false, staffOnly: false },
 ];
 
 export default function StaffHeader({ staffName, activePage }: StaffHeaderProps) {
