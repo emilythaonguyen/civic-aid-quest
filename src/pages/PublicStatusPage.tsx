@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, ShieldCheck } from "lucide-react";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import LanguageSelector from "@/components/LanguageSelector";
-import { translations, type Language } from "@/i18n/citizenTranslations";
+import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import {
   BarChart,
   Bar,
