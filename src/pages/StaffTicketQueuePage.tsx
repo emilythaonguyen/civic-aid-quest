@@ -173,6 +173,19 @@ export default function StaffTicketQueuePage() {
             </Select>
           </div>
           <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Assignment</label>
+            <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
+              <SelectTrigger className="w-[150px] h-9 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="My Tickets">My Tickets</SelectItem>
+                <SelectItem value="Unassigned">Unassigned</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
             <Input
               placeholder="Filter by location…"
