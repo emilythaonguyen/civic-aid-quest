@@ -38,7 +38,7 @@ export default function RoleSwitcher() {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => handleSwitch("staff")}
-          className={role === "staff" ? "bg-accent" : ""}
+          className={role === "staff" || role === "manager" ? "bg-accent" : ""}
         >
           Staff
         </DropdownMenuItem>

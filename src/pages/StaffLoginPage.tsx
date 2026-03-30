@@ -50,7 +50,7 @@ export default function StaffLoginPage() {
 
       navigate("/staff/dashboard");
     } else {
-      navigate("/analytics");
+      navigate("/staff/dashboard");
     }
   };
 
