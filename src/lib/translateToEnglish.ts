@@ -13,6 +13,7 @@ export async function translateToEnglish(
   }
 
   try {
+    console.log(`Translating from ${sourceLang} to English...`);
     const { data, error } = await supabase.functions.invoke(
       "translate-to-english",
       { body: { text, sourceLang } }
@@ -23,7 +24,9 @@ export async function translateToEnglish(
       return text;
     }
 
-    return data?.translatedText || text;
+    const translated = data?.translatedText || text;
+    console.log(`Translation result: "${text}" → "${translated}"`);
+    return translated;
   } catch (err) {
     console.warn("Translation failed — saving original text", err);
     return text;
