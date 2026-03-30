@@ -20,10 +20,10 @@ type NavItem = {
 };
 
 const allNavItems: NavItem[] = [
+  { label: "Analytics", to: "/analytics", managerOnly: false, staffOnly: false },
   { label: "Dashboard", to: "/staff/dashboard", managerOnly: true, staffOnly: false },
   { label: "Survey Results", to: "/survey-results", managerOnly: false, staffOnly: false },
   { label: "My Tickets", to: null, managerOnly: false, staffOnly: true },
-  { label: "Analytics", to: "/analytics", managerOnly: false, staffOnly: false },
 ];
 
 export default function StaffHeader({ staffName, activePage }: StaffHeaderProps) {
