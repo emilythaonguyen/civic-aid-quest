@@ -1,6 +1,11 @@
+import HcdDropdown from "@/components/HcdDropdown";
+
 const EmpathyMap = () => {
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
+    <div className="min-h-screen bg-white relative" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
+      <div className="absolute top-4 right-4 z-10">
+        <HcdDropdown />
+      </div>
       {/* SECTION 1 — PAGE HEADER */}
       <header className="py-10 px-6 text-white text-center" style={{ backgroundColor: '#1B6B5A' }}>
         <h1 className="text-3xl md:text-4xl font-bold mb-2">Staff Empathy Map</h1>

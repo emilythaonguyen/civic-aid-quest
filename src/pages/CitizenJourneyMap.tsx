@@ -1,3 +1,5 @@
+import HcdDropdown from "@/components/HcdDropdown";
+
 const stages = [
   { num: 1, name: "Discovery", bg: "#1B6B5A" },
   { num: 2, name: "Submission", bg: "#1A5276" },
@@ -121,7 +123,10 @@ const quotes = [
 
 const CitizenJourneyMap = () => {
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
+    <div className="min-h-screen bg-white relative" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
+      <div className="absolute top-4 right-4 z-10">
+        <HcdDropdown />
+      </div>
       {/* HEADER */}
       <header className="py-10 px-6 text-white text-center" style={{ backgroundColor: '#1B6B5A' }}>
         <h1 className="text-3xl md:text-4xl font-bold mb-2">Citizen Journey Map</h1>

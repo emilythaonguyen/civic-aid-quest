@@ -1,4 +1,5 @@
 import { useState } from "react";
+import HcdDropdown from "@/components/HcdDropdown";
 
 const sandraData = {
   persona: "Sandra Chen",
@@ -440,8 +441,12 @@ export default function HCDArtifactsPage() {
         background: "#F9FAFB",
         fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
         padding: "48px 24px",
+        position: "relative",
       }}
     >
+      <div style={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}>
+        <HcdDropdown />
+      </div>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         {/* Page Header */}
         <div style={{ marginBottom: "48px" }}>

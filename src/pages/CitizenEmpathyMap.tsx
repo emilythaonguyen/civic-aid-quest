@@ -1,3 +1,5 @@
+import HcdDropdown from "@/components/HcdDropdown";
+
 const quadrants = [
   {
     label: "SAYS",
@@ -55,7 +57,10 @@ const quadrants = [
 
 const CitizenEmpathyMap = () => {
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
+    <div className="min-h-screen bg-white relative" style={{ fontFamily: '-apple-system, "Segoe UI", sans-serif' }}>
+      <div className="absolute top-4 right-4 z-10">
+        <HcdDropdown />
+      </div>
       {/* Header */}
       <header className="py-10 px-6 text-white text-center relative" style={{ backgroundColor: "#1B6B5A" }}>
         <div className="absolute top-4 right-6 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded">

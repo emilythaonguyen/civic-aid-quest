@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import { LogOut } from "lucide-react";
+import HcdDropdown from "@/components/HcdDropdown";
 
 interface StaffHeaderProps {
   staffName: string;
@@ -62,6 +63,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
               </Button>
             )
           )}
+          {role === "manager" && <HcdDropdown />}
         </nav>
       </div>
       <div className="flex items-center gap-4">
