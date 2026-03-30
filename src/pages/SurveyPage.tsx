@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Star, CheckCircle2, ArrowLeft, LogOut } from "lucide-react";
+import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
+import { translateFields } from "@/lib/translateToEnglish";
 
 interface SurveyQuestion {
   id: string;
@@ -100,11 +102,22 @@ const parseQuestionnaire = (raw: unknown): Questionnaire => {
   };
 };
 
+function getStoredLanguage(): Language {
+  const stored = localStorage.getItem("citizen-lang");
+  return isValidLanguage(stored) ? stored : "en";
+}
+
+const RTL_LANGUAGES: Language[] = ["ar"];
+
 export default function SurveyPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const requestId = searchParams.get("request_id");
   const directSurveyId = searchParams.get("id");
+
+  const [language] = useState<Language>(getStoredLanguage);
+  const t = translations[language];
+  const isRtl = RTL_LANGUAGES.includes(language);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -114,10 +127,10 @@ export default function SurveyPage() {
   const SurveyHeader = () => (
     <header className="px-6 py-3 flex items-center justify-between" style={{ backgroundColor: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
       <Button variant="ghost" size="sm" className="text-[#94A3B8] hover:text-white hover:bg-white/10" onClick={() => navigate("/portal")}>
-        <ArrowLeft className="h-4 w-4 mr-1" /> Back to Portal
+        <ArrowLeft className="h-4 w-4 mr-1" /> {t.surveyBackToPortal}
       </Button>
       <Button size="sm" className="border border-white/20 bg-transparent text-white hover:bg-white/10" onClick={handleSignOut}>
-        <LogOut className="h-4 w-4 mr-1" /> Sign Out
+        <LogOut className="h-4 w-4 mr-1" /> {t.surveySignOut}
       </Button>
     </header>
   );
@@ -193,7 +206,7 @@ export default function SurveyPage() {
           setQuestionnaire(parseQuestionnaire(data.questionnaire));
         }
       } catch {
-        setError("Unable to load survey. The link may be invalid, expired, or inaccessible.");
+        setError(t.surveyLoadError);
       } finally {
         setLoading(false);
       }
@@ -221,11 +234,24 @@ export default function SurveyPage() {
     const ratingValue = ratingQuestion ? Number(responses[ratingQuestion.id] ?? 0) : 0;
 
     try {
+      // Translate open-text responses if language is not English
+      let finalResponses = { ...responses };
+      if (language !== "en") {
+        const openTextQuestions = questionnaire.questions.filter((q) => q.type === "open_text");
+        for (const q of openTextQuestions) {
+          const originalText = finalResponses[q.id];
+          if (typeof originalText === "string" && originalText.trim().length > 0) {
+            const { translatedDescription } = await translateFields("", originalText, language);
+            finalResponses[q.id] = translatedDescription;
+          }
+        }
+      }
+
       const { error: updateErr } = await supabase
         .from("surveys")
         .update({
           rating: Number.isFinite(ratingValue) ? ratingValue : 0,
-          responses,
+          responses: finalResponses,
           submitted_at: new Date().toISOString(),
         })
         .eq("id", surveyId);
@@ -233,7 +259,7 @@ export default function SurveyPage() {
       if (updateErr) throw updateErr;
       setSubmitted(true);
     } catch {
-      setError("Failed to submit survey. Please try again.");
+      setError(t.surveySubmitFailed);
     } finally {
       setSubmitting(false);
     }
@@ -245,7 +271,7 @@ export default function SurveyPage() {
 
   if (loading) {
     return (
-      <div className={darkPageClass} style={darkPageStyle}>
+      <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
         <SurveyHeader />
         <div className="flex items-center justify-center py-32">
           <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
@@ -255,15 +281,13 @@ export default function SurveyPage() {
   }
   if (noSurvey) {
     return (
-      <div className={darkPageClass} style={darkPageStyle}>
+      <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
           <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10 space-y-2">
-              <h2 className="text-lg font-semibold text-white">No Survey Available</h2>
-              <p className="text-sm text-[#94A3B8]">
-                A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
-              </p>
+              <h2 className="text-lg font-semibold text-white">{t.surveyNoSurvey}</h2>
+              <p className="text-sm text-[#94A3B8]">{t.surveyNoSurveyMessage}</p>
             </CardContent>
           </Card>
         </div>
@@ -273,16 +297,14 @@ export default function SurveyPage() {
 
   if (submitted) {
     return (
-      <div className={darkPageClass} style={darkPageStyle}>
+      <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
           <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10 space-y-4">
               <CheckCircle2 className="h-14 w-14 text-[#38BDF8] mx-auto" />
-              <h2 className="text-xl font-semibold text-white">Survey Completed</h2>
-              <p className="text-[#94A3B8] text-sm">
-                Survey has already been completed. Thank you for your input!
-              </p>
+              <h2 className="text-xl font-semibold text-white">{t.surveyCompleted}</h2>
+              <p className="text-[#94A3B8] text-sm">{t.surveyCompletedMessage}</p>
             </CardContent>
           </Card>
         </div>
@@ -292,12 +314,12 @@ export default function SurveyPage() {
 
   if (!surveyId && !requestId) {
     return (
-      <div className={darkPageClass} style={darkPageStyle}>
+      <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
           <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10">
-              <p className="text-[#94A3B8]">No survey linked. Please access this page from your request portal.</p>
+              <p className="text-[#94A3B8]">{t.surveyNoLink}</p>
             </CardContent>
           </Card>
         </div>
@@ -307,7 +329,7 @@ export default function SurveyPage() {
 
   if (error) {
     return (
-      <div className={darkPageClass} style={darkPageStyle}>
+      <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
           <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
@@ -322,7 +344,7 @@ export default function SurveyPage() {
 
   if (!questionnaire) {
     return (
-      <div className={darkPageClass} style={darkPageStyle}>
+      <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
           <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
@@ -332,21 +354,19 @@ export default function SurveyPage() {
   }
 
   return (
-    <div className={darkPageClass} style={darkPageStyle}>
+    <div className={darkPageClass} style={darkPageStyle} dir={isRtl ? "rtl" : undefined}>
       <SurveyHeader />
       <div className="py-10 px-4">
       <Card className="max-w-lg mx-auto bg-transparent shadow-none" style={darkCardStyle}>
         <CardHeader>
-          <CardTitle className="text-lg text-white">Service Satisfaction Survey</CardTitle>
+          <CardTitle className="text-lg text-white">{t.surveyTitle}</CardTitle>
           {questionnaire.survey_intro && (
             <p className="text-sm text-[#94A3B8]">{questionnaire.survey_intro}</p>
           )}
         </CardHeader>
         <CardContent className="space-y-6">
           {questionnaire.questions.length === 0 ? (
-            <p className="text-sm text-[#94A3B8]">
-              No questions are configured in this survey yet. Please contact support.
-            </p>
+            <p className="text-sm text-[#94A3B8]">{t.surveyNoQuestions}</p>
           ) : (
             questionnaire.questions.map((q) => (
               <div key={q.id} className="space-y-2">
@@ -387,7 +407,7 @@ export default function SurveyPage() {
                           : "bg-[#1E293B] text-white border border-white/15 hover:bg-[#263548]"
                       }`}
                     >
-                      Yes
+                      {t.surveyYes}
                     </button>
                     <button
                       type="button"
@@ -398,7 +418,7 @@ export default function SurveyPage() {
                           : "bg-[#1E293B] text-white border border-white/15 hover:bg-[#263548]"
                       }`}
                     >
-                      No
+                      {t.surveyNo}
                     </button>
                   </div>
                 )}
@@ -407,7 +427,7 @@ export default function SurveyPage() {
                   <Textarea
                     value={(responses[q.id] as string) ?? ""}
                     onChange={(e) => setResponse(q.id, e.target.value)}
-                    placeholder="Your response…"
+                    placeholder={t.surveyPlaceholder}
                     className="min-h-[80px] text-sm bg-[#1E293B] text-white border-white/15 placeholder:text-[#475569] focus-visible:ring-[#2563EB]"
                   />
                 )}
@@ -420,7 +440,7 @@ export default function SurveyPage() {
             onClick={handleSubmit}
             disabled={!allAnswered || submitting}
           >
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Survey"}
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t.surveySubmit}
           </Button>
         </CardContent>
       </Card>
