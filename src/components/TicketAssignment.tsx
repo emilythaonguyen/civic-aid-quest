@@ -39,26 +39,20 @@ export default function TicketAssignment({ ticketId, userId }: { ticketId: strin
           .limit(1);
 
         if (role === "manager") {
-          const [workloadRes, selfRes, assignRes] = await Promise.all([
+          const [workloadRes, assignRes] = await Promise.all([
             supabase.rpc("get_staff_workload"),
-            supabase.from("profiles").select("id, full_name").eq("id", userId).single(),
             assignmentPromise,
           ]);
 
-          const workloadStaff = (workloadRes.data ?? []).map((r: any) => ({
-            id: r.staff_id,
-            full_name: r.full_name ?? "Unknown",
-          }));
+          // Only include users with role='staff' (exclude managers)
+          const staffOnly = (workloadRes.data ?? [])
+            .filter((r: any) => r.staff_id !== userId)
+            .map((r: any) => ({
+              id: r.staff_id,
+              full_name: r.full_name ?? "Unknown",
+            }));
 
-          const selfOption = selfRes.data
-            ? [{ id: selfRes.data.id, full_name: selfRes.data.full_name ?? "Unknown" }]
-            : [];
-
-          const dedupedStaff = [...workloadStaff, ...selfOption].filter(
-            (staff, index, list) => list.findIndex((item) => item.id === staff.id) === index
-          );
-
-          setStaffList(dedupedStaff);
+          setStaffList(staffOnly);
 
           if (assignRes.data && assignRes.data.length > 0) {
             const assignedTo = (assignRes.data[0] as any).assigned_to;
