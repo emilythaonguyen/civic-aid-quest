@@ -53,14 +53,10 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const { start, end } = getWeekRange();
-
-      // Query ONLY aggregate-safe fields — no PII (no user_id, email, name, location, description)
+      // Query ALL requests — no date filter
       const { data, error: fetchError } = await supabase
         .from("requests")
-        .select("type, status")
-        .gte("created_at", start)
-        .lte("created_at", end);
+        .select("type, status");
 
       if (fetchError) throw fetchError;
 
