@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import RoleSwitcher from "@/components/RoleSwitcher";
+import StaffHeader from "@/components/StaffHeader";
 import {
   Select,
   SelectContent,
