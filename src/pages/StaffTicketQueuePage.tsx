@@ -110,6 +110,7 @@ export default function StaffTicketQueuePage() {
             location: r.location ?? "",
             created_at: r.created_at,
           }));
+        setAssignedIds(assignedIdsSet);
         setTickets(mapped);
       } catch (err) {
         console.error(err);
