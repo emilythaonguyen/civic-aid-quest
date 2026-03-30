@@ -100,14 +100,14 @@ export default function StaffDashboardListPage() {
               )
             `)
             .order("created_at", { ascending: false }),
-          supabase.from("assignments").select("request_id, staff_id"),
+          supabase.from("assignments").select("request_id, assigned_to").is("unassigned_at", null),
         ]);
 
         if (ticketRes.error) throw ticketRes.error;
 
         const assignMap: Record<string, string> = {};
         (assignRes.data ?? []).forEach((a: any) => {
-          assignMap[a.request_id] = a.staff_id;
+          assignMap[a.request_id] = a.assigned_to;
         });
         setAssignments(assignMap);
 
