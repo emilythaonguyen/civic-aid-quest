@@ -783,6 +783,9 @@ export const translations = {
     stepInProgressDesc: "Arbeit läuft",
     stepResolved: "Gelöst",
     stepResolvedDesc: "Problem gelöst",
+    editRequest: "Bearbeiten",
+    saveChanges: "Änderungen Speichern",
+    replaceAttachment: "Anhang Ersetzen",
   },
 } as const;
 
