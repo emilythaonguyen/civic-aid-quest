@@ -151,7 +151,6 @@ export const translations = {
     // Status page
     civicTracker: "Civic Tracker",
     public: "Público",
-    returnToPortal: "Volver al Portal",
     serviceRequestStatus: "Estado de Solicitudes de Servicio",
     statusSubtitle: "Resumen histórico · Vista pública de solo lectura · No requiere inicio de sesión",
     totalRequests: "Total de Solicitudes",
