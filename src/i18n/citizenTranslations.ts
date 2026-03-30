@@ -642,6 +642,7 @@ export const translations = {
   ht: {
     citizenConnect: "Citizen Connect",
     publicStatus: "Estati Piblik",
+    myPortal: "Pòtay Mwen",
     signOut: "Dekonekte",
     english: "English",
     spanish: "Spanish (Español)",
