@@ -241,7 +241,7 @@ export default function CitizenPortalPage() {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.location}</p>
-                <p className="text-sm">{selectedRequest.location}</p>
+                <p className="text-sm">{selectedRequest.original_location || selectedRequest.location}</p>
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t.description}</p>
