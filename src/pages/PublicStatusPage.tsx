@@ -84,14 +84,7 @@ export default function PublicStatusPage() {
 
   const totalOpen = stats.reduce((s, c) => s + c.open, 0);
   const totalResolved = stats.reduce((s, c) => s + c.resolved, 0);
-  const totalThisWeek = totalOpen + totalResolved;
-
-  const { start } = getWeekRange();
-  const weekLabel = new Date(start).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const total = totalOpen + totalResolved;
 
   return (
     <div className="min-h-screen bg-background">
