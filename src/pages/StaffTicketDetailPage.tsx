@@ -16,6 +16,7 @@ import TicketAssignment from "@/components/TicketAssignment";
 import InternalComments from "@/components/InternalComments";
 import StaffHeader from "@/components/StaffHeader";
 import { Skeleton } from "@/components/ui/skeleton";
+import TicketLocationMap from "@/components/TicketLocationMap";
 
 const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 
@@ -48,6 +49,8 @@ interface TicketDetail {
   triage_confidence: string | null;
   triage_completed_at: string | null;
   suggestions: unknown;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 interface HistoryEntry {
@@ -109,7 +112,7 @@ export default function StaffTicketDetailPage() {
           .select(`
             id, type, status, location, description, created_at,
             triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
-            suggestions,
+            suggestions, latitude, longitude,
             profiles!user_id ( full_name )
           `)
           .eq("id", id)
@@ -133,6 +136,8 @@ export default function StaffTicketDetailPage() {
           triage_confidence: (tData as any).triage_confidence ?? null,
           triage_completed_at: (tData as any).triage_completed_at ?? null,
           suggestions: (tData as any).suggestions ?? null,
+          latitude: (tData as any).latitude ?? null,
+          longitude: (tData as any).longitude ?? null,
         };
         setTicket(t);
         setNewStatus(t.status);
@@ -346,6 +351,15 @@ export default function StaffTicketDetailPage() {
               {ticket.description || "No description provided."}
             </p>
           </div>
+
+          {/* Location Map */}
+          <TicketLocationMap
+            latitude={ticket.latitude}
+            longitude={ticket.longitude}
+            ticketId={ticket.id}
+            address={ticket.location}
+            description={ticket.description}
+          />
         </div>
 
         {/* AI Triage */}
