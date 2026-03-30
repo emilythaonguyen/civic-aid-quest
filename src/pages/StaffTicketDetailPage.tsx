@@ -51,6 +51,7 @@ interface TicketDetail {
   suggestions: unknown;
   latitude: number | null;
   longitude: number | null;
+  attachment_url: string | null;
 }
 
 interface HistoryEntry {
@@ -110,7 +111,7 @@ export default function StaffTicketDetailPage() {
         const { data: tData, error: tErr } = await supabase
           .from("requests")
           .select(`
-            id, type, status, location, description, created_at,
+            id, type, status, location, description, created_at, attachment_url,
             triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
             suggestions, latitude, longitude,
             profiles!user_id ( full_name )
@@ -138,6 +139,7 @@ export default function StaffTicketDetailPage() {
           suggestions: (tData as any).suggestions ?? null,
           latitude: (tData as any).latitude ?? null,
           longitude: (tData as any).longitude ?? null,
+          attachment_url: (tData as any).attachment_url ?? null,
         };
         setTicket(t);
         setNewStatus(t.status);
@@ -351,6 +353,33 @@ export default function StaffTicketDetailPage() {
               {ticket.description || "No description provided."}
             </p>
           </div>
+
+          {/* Citizen Attachment */}
+          {ticket.attachment_url && (
+            <div>
+              <span className="text-sm text-muted-foreground">Attachment</span>
+              <div className="mt-1 rounded-md border bg-muted/30 p-3">
+                {/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(ticket.attachment_url) ? (
+                  <a href={ticket.attachment_url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={ticket.attachment_url}
+                      alt="Citizen attachment"
+                      className="max-w-full max-h-80 rounded-md object-contain"
+                    />
+                  </a>
+                ) : (
+                  <a
+                    href={ticket.attachment_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                  >
+                    📎 View attached file
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Location Map */}
           <TicketLocationMap
