@@ -181,13 +181,15 @@ export default function StaffDashboardListPage() {
       <main className="px-6 py-6 space-y-4">
         {/* Workload summary (manager only) */}
         {role === "manager" && (
-          <StaffWorkloadSummary
-            onSelectStaff={setWorkloadStaffFilter}
-            selectedStaffId={workloadStaffFilter}
-          />
-          <Suspense fallback={<div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>}>
-            <RequestMap />
-          </Suspense>
+          <>
+            <StaffWorkloadSummary
+              onSelectStaff={setWorkloadStaffFilter}
+              selectedStaffId={workloadStaffFilter}
+            />
+            <Suspense fallback={<div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>}>
+              <RequestMap />
+            </Suspense>
+          </>
         )}
 
         {/* Filter bar */}
