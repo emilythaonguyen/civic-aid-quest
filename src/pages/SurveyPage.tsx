@@ -255,13 +255,13 @@ export default function SurveyPage() {
   }
   if (noSurvey) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className={darkPageClass} style={darkPageStyle}>
         <SurveyHeader />
         <div className="flex items-center justify-center px-4 py-32">
-          <Card className="max-w-md w-full text-center">
+          <Card className="max-w-md w-full text-center bg-transparent shadow-none" style={darkCardStyle}>
             <CardContent className="pt-10 pb-10 space-y-2">
-              <h2 className="text-lg font-semibold text-foreground">No Survey Available</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-lg font-semibold text-white">No Survey Available</h2>
+              <p className="text-sm text-[#94A3B8]">
                 A satisfaction survey has not been generated for this request yet. Surveys are typically created once a request is resolved.
               </p>
             </CardContent>
