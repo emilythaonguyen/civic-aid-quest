@@ -67,13 +67,18 @@ export default function StaffTicketQueuePage() {
           .is("unassigned_at", null);
         if (aErr) throw aErr;
 
-        const requestIds = (assignments ?? []).map((a: any) => a.request_id);
-        if (requestIds.length === 0) {
-          setTickets([]);
-          setLoading(false);
-          return;
-        }
+        const assignedIds = (assignments ?? []).map((a: any) => a.request_id);
 
+        // Get ALL currently-assigned request IDs (to find unassigned ones)
+        const { data: allAssignments, error: allAErr } = await supabase
+          .from("assignments")
+          .select("request_id")
+          .is("unassigned_at", null);
+        if (allAErr) throw allAErr;
+
+        const allAssignedIds = new Set((allAssignments ?? []).map((a: any) => a.request_id));
+
+        // Fetch all requests, then filter to assigned-to-staff + unassigned
         const { data, error: fetchErr } = await supabase
           .from("requests")
           .select(`
@@ -87,20 +92,21 @@ export default function StaffTicketQueuePage() {
               full_name
             )
           `)
-          .in("id", requestIds)
           .order("created_at", { ascending: false });
 
         if (fetchErr) throw fetchErr;
 
-        const mapped: TicketRow[] = (data ?? []).map((r: any) => ({
-          id: r.id,
-          citizen_name: r.profiles?.full_name ?? "Unknown",
-          category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
-          status: r.status ?? "Open",
-          priority: r.triage_priority ?? null,
-          location: r.location ?? "",
-          created_at: r.created_at,
-        }));
+        const mapped: TicketRow[] = (data ?? [])
+          .filter((r: any) => assignedIds.includes(r.id) || !allAssignedIds.has(r.id))
+          .map((r: any) => ({
+            id: r.id,
+            citizen_name: r.profiles?.full_name ?? "Unknown",
+            category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
+            status: r.status ?? "Open",
+            priority: r.triage_priority ?? null,
+            location: r.location ?? "",
+            created_at: r.created_at,
+          }));
         setTickets(mapped);
       } catch (err) {
         console.error(err);
