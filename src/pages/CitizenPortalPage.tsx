@@ -205,7 +205,7 @@ export default function CitizenPortalPage() {
                         })()}
                       </div>
                     </div>
-                    <RequestPizzaTracker status={req.status} />
+                    <RequestPizzaTracker status={req.status} language={language} />
                   </CardContent>
                 </Card>
               ))}
