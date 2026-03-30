@@ -73,7 +73,7 @@ export default function CitizenPortalPage() {
     setFetchError(false);
     const { data, error } = await supabase
       .from("requests")
-      .select("id, type, location, description, status, created_at, attachment_url")
+      .select("id, type, location, description, original_location, original_description, status, created_at, attachment_url")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
