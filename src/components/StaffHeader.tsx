@@ -27,7 +27,7 @@ const allNavItems: NavItem[] = [
 ];
 
 export default function StaffHeader({ staffName, activePage }: StaffHeaderProps) {
-  const { role, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -35,9 +35,14 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
     navigate("/staff-login");
   };
 
-  const visibleItems = allNavItems.filter(
-    (item) => !item.managerOnly || role === "manager"
-  );
+  const visibleItems = allNavItems.filter((item) => {
+    if (item.managerOnly && role !== "manager") return false;
+    if (item.staffOnly && role !== "staff") return false;
+    return true;
+  });
+
+  const resolveLink = (item: NavItem) =>
+    item.to ?? (user ? `/staff/tickets/${user.id}` : "#");
 
   return (
     <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
