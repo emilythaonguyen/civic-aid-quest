@@ -563,6 +563,7 @@ export const translations = {
   ar: {
     citizenConnect: "Citizen Connect",
     publicStatus: "الحالة العامة",
+    myPortal: "بوابتي",
     signOut: "تسجيل الخروج",
     english: "English",
     spanish: "Spanish (Español)",
