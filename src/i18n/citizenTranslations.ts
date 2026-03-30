@@ -471,6 +471,9 @@ export const translations = {
     stepInProgressDesc: "正在处理",
     stepResolved: "已解决",
     stepResolvedDesc: "问题已解决",
+    editRequest: "编辑",
+    saveChanges: "保存更改",
+    replaceAttachment: "替换附件",
   },
   ko: {
     citizenConnect: "Citizen Connect",
