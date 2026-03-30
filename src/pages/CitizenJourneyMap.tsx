@@ -1,3 +1,5 @@
+import HcdDropdown from "@/components/HcdDropdown";
+
 const stages = [
   { num: 1, name: "Discovery", bg: "#1B6B5A" },
   { num: 2, name: "Submission", bg: "#1A5276" },
