@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/select";
 import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
-import { Loader2, ArrowLeft, X, LogOut } from "lucide-react";
+import { Loader2, X } from "lucide-react";
+import StaffHeader from "@/components/StaffHeader";
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
