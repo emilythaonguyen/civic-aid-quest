@@ -20,6 +20,8 @@ interface ServiceRequest {
   type: string;
   location: string;
   description: string;
+  original_location: string | null;
+  original_description: string | null;
   status: string;
   created_at: string;
   attachment_url: string | null;
