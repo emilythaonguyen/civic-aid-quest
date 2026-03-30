@@ -28,17 +28,6 @@ interface CategoryStat {
 const OPEN_COLOR = "hsl(var(--primary))";
 const RESOLVED_COLOR = "hsl(142, 60%, 45%)";
 
-function getWeekRange() {
-  const now = new Date();
-  const day = now.getDay(); // 0=Sun
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((day + 6) % 7));
-  monday.setHours(0, 0, 0, 0);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23, 59, 59, 999);
-  return { start: monday.toISOString(), end: sunday.toISOString() };
-}
 
 export default function PublicStatusPage() {
   const navigate = useNavigate();
@@ -53,14 +42,10 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const { start, end } = getWeekRange();
-
-      // Query ONLY aggregate-safe fields — no PII (no user_id, email, name, location, description)
+      // Query ALL requests — no date filter
       const { data, error: fetchError } = await supabase
         .from("requests")
-        .select("type, status")
-        .gte("created_at", start)
-        .lte("created_at", end);
+        .select("type, status");
 
       if (fetchError) throw fetchError;
 
@@ -99,14 +84,7 @@ export default function PublicStatusPage() {
 
   const totalOpen = stats.reduce((s, c) => s + c.open, 0);
   const totalResolved = stats.reduce((s, c) => s + c.resolved, 0);
-  const totalThisWeek = totalOpen + totalResolved;
-
-  const { start } = getWeekRange();
-  const weekLabel = new Date(start).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const total = totalOpen + totalResolved;
 
   return (
     <div className="min-h-screen bg-background">
@@ -133,7 +111,7 @@ export default function PublicStatusPage() {
         <div>
           <h2 className="text-2xl font-bold text-foreground">Service Request Status</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Week of {weekLabel} · Public read-only view · No login required
+            All-time overview · Public read-only view · No login required
           </p>
           <Badge variant="secondary" className="text-xs mt-2">S2-06 · F16</Badge>
         </div>
@@ -154,8 +132,8 @@ export default function PublicStatusPage() {
             <div className="grid grid-cols-3 gap-4">
               <Card>
                 <CardContent className="pt-6 text-center">
-                  <p className="text-3xl font-bold">{totalThisWeek}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Total This Week</p>
+                  <p className="text-3xl font-bold">{total}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Total Requests</p>
                 </CardContent>
               </Card>
               <Card>
@@ -179,13 +157,13 @@ export default function PublicStatusPage() {
               <CardHeader>
                 <CardTitle className="text-base">Open vs Resolved by Category</CardTitle>
                 <CardDescription>
-                  Counts for the current week — no personal information included
+                  Counts across all requests — no personal information included
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.length === 0 ? (
                   <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
-                    No requests recorded this week yet.
+                    No requests recorded yet.
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={320}>
