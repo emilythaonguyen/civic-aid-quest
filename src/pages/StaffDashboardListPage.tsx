@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import StaffHeader from "@/components/StaffHeader";
+import StaffWorkloadSummary from "@/components/StaffWorkloadSummary";
 import {
   Select,
   SelectContent,
@@ -32,6 +33,7 @@ export default function StaffDashboardListPage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
+  const [workloadStaffFilter, setWorkloadStaffFilter] = useState<string | null>(null);
 
   // Assignment data
   const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId
@@ -141,6 +143,7 @@ export default function StaffDashboardListPage() {
         assignmentFilter !== "Unassigned" &&
         assignments[t.id] !== assignmentFilter
       ) return false;
+      if (workloadStaffFilter && assignments[t.id] !== workloadStaffFilter) return false;
       if (
         locationFilter &&
         !t.location.toLowerCase().includes(locationFilter.toLowerCase())
@@ -148,16 +151,17 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter]);
+  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter, workloadStaffFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
+    setWorkloadStaffFilter(null);
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null;
 
   if (authLoading || (!user && !authLoading)) {
     return (
@@ -173,6 +177,14 @@ export default function StaffDashboardListPage() {
       <StaffHeader staffName={staffName} activePage="Dashboard" />
 
       <main className="px-6 py-6 space-y-4">
+        {/* Workload summary (manager only) */}
+        {role === "manager" && (
+          <StaffWorkloadSummary
+            onSelectStaff={setWorkloadStaffFilter}
+            selectedStaffId={workloadStaffFilter}
+          />
+        )}
+
         {/* Filter bar */}
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1">

@@ -9,7 +9,7 @@ import HcdDropdown from "@/components/HcdDropdown";
 interface StaffHeaderProps {
   staffName: string;
   /** Label of the currently active nav item (will render as disabled button) */
-  activePage?: "Dashboard" | "Workload" | "Survey Results" | "My Tickets" | "Analytics";
+  activePage?: "Dashboard" | "Survey Results" | "My Tickets" | "Analytics";
 }
 
 type NavItem = {
@@ -21,7 +21,6 @@ type NavItem = {
 
 const allNavItems: NavItem[] = [
   { label: "Dashboard", to: "/staff/dashboard", managerOnly: true, staffOnly: false },
-  { label: "Workload", to: "/staff/workload", managerOnly: true, staffOnly: false },
   { label: "Survey Results", to: "/survey-results", managerOnly: false, staffOnly: false },
   { label: "My Tickets", to: null, managerOnly: false, staffOnly: true },
   { label: "Analytics", to: "/analytics", managerOnly: false, staffOnly: false },
