@@ -512,6 +512,40 @@ export default function StaffTicketDetailPage() {
 
         {/* Internal Comments */}
         <InternalComments requestId={ticket.id} userId={user!.id} />
+
+        {/* Citizen Attachment — collapsible */}
+        {ticket.attachment_url && (
+          <Collapsible>
+            <div className="border rounded-lg p-4 space-y-3">
+              <CollapsibleTrigger className="flex items-center gap-2 w-full text-left">
+                <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180" />
+                <h3 className="text-sm font-semibold text-foreground">Citizen Attachment</h3>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="mt-2 rounded-md border bg-muted/30 p-3">
+                  {/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(ticket.attachment_url) ? (
+                    <a href={ticket.attachment_url} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={ticket.attachment_url}
+                        alt="Citizen attachment"
+                        className="max-w-full max-h-80 rounded-md object-contain"
+                      />
+                    </a>
+                  ) : (
+                    <a
+                      href={ticket.attachment_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                    >
+                      📎 View attached file
+                    </a>
+                  )}
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
+        )}
       </main>
     </div>
   );
