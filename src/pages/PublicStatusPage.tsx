@@ -26,8 +26,8 @@ interface CategoryStat {
   resolved: number;
 }
 
-const OPEN_COLOR = "hsl(var(--primary))";
-const RESOLVED_COLOR = "hsl(142, 60%, 45%)";
+const OPEN_COLOR = "#1E293B";
+const RESOLVED_COLOR = "#4ADE80";
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
