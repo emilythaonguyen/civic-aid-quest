@@ -109,6 +109,38 @@ function getStoredLanguage(): Language {
 
 const RTL_LANGUAGES: Language[] = ["ar"];
 
+async function translateQuestionnaire(q: Questionnaire, lang: Language): Promise<Questionnaire> {
+  try {
+    const textsToTranslate: string[] = [];
+    if (q.survey_intro) textsToTranslate.push(q.survey_intro);
+    for (const question of q.questions) {
+      textsToTranslate.push(question.text);
+    }
+
+    if (textsToTranslate.length === 0) return q;
+
+    const { data, error } = await supabase.functions.invoke("translate-from-english", {
+      body: { texts: textsToTranslate, targetLang: lang },
+    });
+
+    if (error || !data?.translatedTexts) return q;
+
+    const translated: string[] = data.translatedTexts;
+    let idx = 0;
+
+    const newIntro = q.survey_intro ? (translated[idx++] || q.survey_intro) : "";
+    const newQuestions = q.questions.map((question) => ({
+      ...question,
+      text: translated[idx++] || question.text,
+    }));
+
+    return { survey_intro: newIntro, questions: newQuestions };
+  } catch {
+    console.warn("Failed to translate questionnaire, showing English");
+    return q;
+  }
+}
+
 export default function SurveyPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
