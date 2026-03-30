@@ -81,6 +81,9 @@ export const translations = {
     stepInProgressDesc: "Work underway",
     stepResolved: "Resolved",
     stepResolvedDesc: "Issue resolved",
+    editRequest: "Edit",
+    saveChanges: "Save Changes",
+    replaceAttachment: "Replace Attachment",
   },
   es: {
     citizenConnect: "Citizen Connect",
