@@ -112,11 +112,11 @@ export default function SurveyPage() {
   };
 
   const SurveyHeader = () => (
-    <header className="border-b bg-card px-6 py-3 flex items-center justify-between">
-      <Button variant="ghost" size="sm" onClick={() => navigate("/portal")}>
+    <header className="px-6 py-3 flex items-center justify-between" style={{ backgroundColor: "#0F172A", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+      <Button variant="ghost" size="sm" className="text-[#94A3B8] hover:text-white hover:bg-white/10" onClick={() => navigate("/portal")}>
         <ArrowLeft className="h-4 w-4 mr-1" /> Back to Portal
       </Button>
-      <Button variant="outline" size="sm" onClick={handleSignOut}>
+      <Button size="sm" className="border border-white/20 bg-transparent text-white hover:bg-white/10" onClick={handleSignOut}>
         <LogOut className="h-4 w-4 mr-1" /> Sign Out
       </Button>
     </header>
