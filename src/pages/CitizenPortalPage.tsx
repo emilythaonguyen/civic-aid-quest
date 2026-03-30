@@ -150,7 +150,7 @@ export default function CitizenPortalPage() {
         </div>
         <div className="flex items-center gap-4">
            <LanguageSelector language={language} onChange={handleLanguageChange} className="text-[hsl(var(--hero-muted))] hover:text-white" />
-           <span className="text-sm text-[hsl(var(--hero-muted))]">{user?.user_metadata?.full_name || user?.email}</span>
+           <span className="text-sm text-[hsl(var(--hero-muted))] text-white">{user?.user_metadata?.full_name || user?.email}</span>
           <RoleSwitcher />
           <Button
             variant="outline"
