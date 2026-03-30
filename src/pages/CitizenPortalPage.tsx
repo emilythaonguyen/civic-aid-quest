@@ -12,7 +12,7 @@ import RequestPizzaTracker from "@/components/RequestPizzaTracker";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import LanguageSelector from "@/components/LanguageSelector";
-import { translations, type Language } from "@/i18n/citizenTranslations";
+import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { format } from "date-fns";
 
 interface ServiceRequest {
