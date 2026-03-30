@@ -109,23 +109,38 @@ export default function PublicStatusPage() {
 
       <div className="relative z-10">
         {/* Header */}
-        <header style={{ backgroundColor: '#0F172A', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-white">{t.civicTracker}</h1>
-              <Button size="sm" className="bg-transparent text-white hover:bg-white/10" style={{ border: '1px solid rgba(255,255,255,0.2)' }}>
-                {t.public}
-              </Button>
-              <Button size="sm" className="bg-transparent text-white hover:bg-white/10" style={{ border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => navigate("/portal")}>
-                {t.returnToPortal}
-              </Button>
-            </div>
-            <div className="flex items-center gap-4">
-              <LanguageSelector language={language} onChange={handleLanguageChange} className="text-[#94A3B8] hover:text-white" />
-              <span className="text-sm text-[#94A3B8]">{user?.user_metadata?.full_name || user?.email}</span>
-              <RoleSwitcher />
-              <Button size="sm" className="bg-transparent text-[#94A3B8] hover:text-white hover:bg-white/10" style={{ border: '1px solid rgba(255,255,255,0.2)' }} onClick={async () => { await signOut(); navigate("/citizen-login"); }}>{t.signOut}</Button>
-            </div>
+        <header className="border-b border-white/10 bg-[hsl(var(--hero-bg))] px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-white">{t.citizenConnect}</h1>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              onClick={() => navigate("/status")}
+            >
+              {t.publicStatus}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              onClick={() => navigate("/portal")}
+            >
+              {t.myPortal}
+            </Button>
+          </div>
+          <div className="flex items-center gap-4">
+            <LanguageSelector language={language} onChange={handleLanguageChange} className="text-white hover:text-black hover:bg-white/10" />
+            <span className="text-sm text-white">{user?.user_metadata?.full_name || user?.email}</span>
+            <RoleSwitcher />
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              onClick={async () => { await signOut(); navigate("/citizen-login"); }}
+            >
+              {t.signOut}
+            </Button>
           </div>
         </header>
 
