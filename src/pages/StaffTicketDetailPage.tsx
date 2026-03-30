@@ -70,11 +70,6 @@ export default function StaffTicketDetailPage() {
       .then(({ data }) => { if (data?.full_name) setStaffName(data.full_name); });
   }, [user]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);

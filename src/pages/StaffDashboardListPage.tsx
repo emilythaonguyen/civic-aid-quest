@@ -124,11 +124,6 @@ export default function StaffDashboardListPage() {
   const hasActiveFilters =
     categoryFilter !== "All" || locationFilter !== "";
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   if (authLoading || (!user && !authLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">

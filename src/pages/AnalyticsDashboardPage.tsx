@@ -124,11 +124,6 @@ export default function AnalyticsDashboardPage() {
     fetchAnalytics();
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   const formatResolutionTime = (hours: number | null) => {
     if (hours === null) return "N/A";
     if (hours < 24) return `${hours}h`;

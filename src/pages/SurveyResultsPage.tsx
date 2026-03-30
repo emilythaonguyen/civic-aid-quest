@@ -100,11 +100,6 @@ export default function SurveyResultsPage() {
       .then(({ data }) => { if (data?.full_name) setStaffName(data.full_name); });
   }, [user]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   useEffect(() => {
     (async () => {
       try {

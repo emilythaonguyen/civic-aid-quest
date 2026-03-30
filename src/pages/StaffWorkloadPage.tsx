@@ -78,11 +78,6 @@ export default function StaffWorkloadPage() {
     fetchWorkload();
   }, [user, role]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/staff-login");
-  };
-
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
