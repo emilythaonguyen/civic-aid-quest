@@ -15,7 +15,7 @@ export async function translateToEnglish(
   try {
     console.log(`Translating from ${sourceLang} to English...`);
     const { data, error } = await supabase.functions.invoke(
-      "translate-to-english",
+      "translate",
       { body: { text, sourceLang } }
     );
 
