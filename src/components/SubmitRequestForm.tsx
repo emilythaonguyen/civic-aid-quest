@@ -132,10 +132,23 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded, language 
       attachmentUrl = urlData.publicUrl;
     }
 
+    // Translate free-text fields to English if not already English
+    let translatedLocation = location.trim();
+    let translatedDescription = description.trim();
+
+    if (language !== "en") {
+      const [locResult, descResult] = await Promise.all([
+        translateToEnglish(translatedLocation, language),
+        translateToEnglish(translatedDescription, language),
+      ]);
+      translatedLocation = locResult;
+      translatedDescription = descResult;
+    }
+
     const insertPayload: Record<string, unknown> = {
       type: requestType,
-      location: location.trim(),
-      description: description.trim(),
+      location: translatedLocation,
+      description: translatedDescription,
       status: "Open",
       user_id: user!.id,
       attachment_url: attachmentUrl,
