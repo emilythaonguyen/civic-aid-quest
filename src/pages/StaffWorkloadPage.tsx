@@ -90,7 +90,7 @@ export default function StaffWorkloadPage() {
     <div className="min-h-screen bg-background">
       <StaffHeader staffName={staffName} activePage="Dashboard" />
 
-      <main className="px-6 py-6 space-y-4">
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         <h2 className="text-xl font-bold text-foreground">Staff Workload Summary</h2>
 
         {error && (

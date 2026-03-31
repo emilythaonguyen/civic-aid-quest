@@ -179,7 +179,7 @@ export default function StaffDashboardListPage() {
       {/* Header */}
       <StaffHeader staffName={staffName} activePage="Dashboard" />
 
-      <main className="px-6 py-6 space-y-4">
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         {/* Workload summary (manager only) */}
         {role === "manager" && (
           <>

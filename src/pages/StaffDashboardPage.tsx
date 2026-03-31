@@ -29,7 +29,7 @@ export default function StaffDashboardPage() {
       </header>
 
       {/* Body */}
-      <main className="max-w-2xl mx-auto px-6 py-16 text-center space-y-4">
+      <main className="max-w-7xl mx-auto px-6 py-8 text-center space-y-6">
         <h2 className="text-2xl font-bold text-foreground">Staff Dashboard</h2>
         <p className="text-muted-foreground">
           This is the staff operations area. Ticket management, assignment, and
