@@ -279,7 +279,7 @@ export const translations = {
     chartTitle: "Ouvertes vs Résolues par Catégorie",
     chartDescription: "Comptages de toutes les demandes — aucune information personnelle incluse",
     noRequestsRecorded: "Aucune demande enregistrée pour le moment.",
-    openLabel: "Ouvertes / En Cours",
+    openLabel: "Ouvert",
     resolvedLabel: "Résolues / Fermées",
     privacyNotice: "Cette page affiche uniquement des comptages agrégés. Aucun nom, adresse e-mail, adresse physique, numéro de téléphone ou autre information personnelle n'est affiché ou renvoyé dans les réponses de l'API (S2-06 · F16 — Tableau de Bord Public Zéro-PII).",
     lastUpdated: "Dernière mise à jour :",
