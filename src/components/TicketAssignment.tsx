@@ -141,7 +141,7 @@ export default function TicketAssignment({ ticketId, userId }: { ticketId: strin
             <SelectValue placeholder="Unassigned" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
+            {role === "manager" && <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>}
             {staffList.map((s) => (
               <SelectItem key={s.id} value={s.id}>
                 {s.full_name}
