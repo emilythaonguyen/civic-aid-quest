@@ -87,7 +87,7 @@ export default function InternalComments({ requestId, userId }: InternalComments
   };
 
   return (
-    <div className="border-l-4 border-amber-400 bg-amber-50/50 rounded-lg p-4 space-y-4">
+    <div className="border-l-4 border-amber-400 bg-amber-50/50 dark:bg-amber-950/30 dark:border-amber-500/50 rounded-lg p-4 space-y-4">
       <h3 className="text-sm font-semibold text-foreground">
         Internal Notes — Not Visible to Citizen
       </h3>
@@ -101,7 +101,7 @@ export default function InternalComments({ requestId, userId }: InternalComments
       ) : (
         <div className="space-y-3">
           {comments.map((c) => (
-            <div key={c.id} className="text-sm border-b border-amber-200 pb-3 last:border-0 last:pb-0">
+            <div key={c.id} className="text-sm border-b border-amber-200 dark:border-amber-800/40 pb-3 last:border-0 last:pb-0">
               <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
                 <span className="font-medium text-foreground">{c.author_name}</span>
                 <span>·</span>
@@ -119,7 +119,7 @@ export default function InternalComments({ requestId, userId }: InternalComments
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder="Write an internal note…"
-          className="text-sm min-h-[80px] bg-white"
+          className="text-sm min-h-[80px] bg-white dark:bg-muted"
         />
         <div className="flex items-center gap-3">
           <Button size="sm" onClick={handlePost} disabled={posting || !body.trim()}>
