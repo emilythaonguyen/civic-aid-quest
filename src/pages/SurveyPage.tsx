@@ -9,12 +9,28 @@ import { translations, isValidLanguage, type Language } from "@/i18n/citizenTran
 import { translateFields } from "@/lib/translateToEnglish";
 
 // Map English default question text → translation key for static lookup
+// Include all known variants that may exist in the database
 const QUESTION_TEXT_MAP: Record<string, keyof typeof import("@/i18n/citizenTranslations").translations.en> = {
+  // Intro variants
   "Thank you for using our service. Please take a moment to share your experience.": "surveyIntroDefault",
+  "Thank you for using our civic services portal. We'd love to hear about your experience to help us serve you better.": "surveyIntroDefault",
+  // Q1 variants (rating)
   "How would you rate the overall quality of service you received?": "surveyQ1",
+  "How would you rate your overall experience with our service today?": "surveyQ1",
+  // Q2 variants (yes/no)
   "Was your issue resolved in a timely manner?": "surveyQ2",
+  "Was your request resolved in a timely manner?": "surveyQ2",
+  "Was your issue resolved to your satisfaction?": "surveyQ2",
+  "Was your request resolved in a reasonable timeframe?": "surveyQ2",
+  // Q3 variants (rating or open_text)
   "How would you rate the communication you received throughout the process?": "surveyQ3",
+  "What could we have done better to improve your experience?": "surveyQ5",
+  "What could we do to improve our service for future requests?": "surveyQ5",
+  // Q4 variants (yes/no)
   "Would you recommend this service to others?": "surveyQ4",
+  "Would you recommend our services to friends or family?": "surveyQ4",
+  "Would you recommend our civic services portal to others?": "surveyQ4",
+  // Q5 variants (open_text)
   "Please share any additional feedback or suggestions for improvement.": "surveyQ5",
 };
 
