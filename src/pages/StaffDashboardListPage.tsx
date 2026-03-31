@@ -36,7 +36,7 @@ export default function StaffDashboardListPage() {
   const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
   const [workloadStaffFilter, setWorkloadStaffFilter] = useState<string | null>(null);
-  const [dateSort, setDateSort] = useState<"default" | "newest" | "oldest">("default");
+  
 
   // Assignment data
   const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId

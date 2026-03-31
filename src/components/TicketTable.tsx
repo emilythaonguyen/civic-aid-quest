@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 function priorityColor(priority: string | null) {
   switch (priority) {
@@ -51,19 +52,36 @@ export interface TicketRow {
 interface TicketTableProps {
   title: string;
   tickets: TicketRow[];
-  skipPrioritySort?: boolean;
 }
 
-export default function TicketTable({ title, tickets, skipPrioritySort }: TicketTableProps) {
+type DateSort = "default" | "newest" | "oldest";
+
+export default function TicketTable({ title, tickets }: TicketTableProps) {
   const navigate = useNavigate();
+  const [dateSort, setDateSort] = useState<DateSort>("default");
+
+  const cycleSort = () => {
+    setDateSort((prev) =>
+      prev === "default" ? "newest" : prev === "newest" ? "oldest" : "default"
+    );
+  };
 
   const sorted = useMemo(() => {
-    if (skipPrioritySort) return tickets;
+    if (dateSort !== "default") {
+      return [...tickets].sort((a, b) => {
+        const da = new Date(a.created_at).getTime();
+        const db = new Date(b.created_at).getTime();
+        return dateSort === "newest" ? db - da : da - db;
+      });
+    }
+    // Default: sort by priority
     const order: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
     return [...tickets].sort(
       (a, b) => (order[a.priority ?? ""] ?? 3) - (order[b.priority ?? ""] ?? 3)
     );
-  }, [tickets, skipPrioritySort]);
+  }, [tickets, dateSort]);
+
+  const SortIcon = dateSort === "newest" ? ArrowDown : dateSort === "oldest" ? ArrowUp : ArrowUpDown;
 
   return (
     <div className="space-y-2">
@@ -85,7 +103,15 @@ export default function TicketTable({ title, tickets, skipPrioritySort }: Ticket
                 <TableHead>Category</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Location</TableHead>
-                <TableHead className="w-[130px]">Submitted</TableHead>
+                <TableHead
+                  className="w-[130px] cursor-pointer select-none hover:text-foreground transition-colors"
+                  onClick={cycleSort}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    Submitted
+                    <SortIcon className="h-3.5 w-3.5" />
+                  </span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
