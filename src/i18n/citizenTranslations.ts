@@ -903,7 +903,7 @@ export const translations = {
     chartTitle: "Ouvè vs Rezoud pa Kategori",
     chartDescription: "Kontaj tout demann yo — pa gen enfòmasyon pèsonèl ladan",
     noRequestsRecorded: "Pa gen demann anrejistre ankò.",
-    openLabel: "Ouvè / An Kou",
+    openLabel: "Louvri",
     resolvedLabel: "Rezoud / Fèmen",
     privacyNotice: "Paj sa a montre sèlman kontaj total. Pa gen non, adrès imèl, adrès fizik, nimewo telefòn oswa okenn lòt enfòmasyon pèsonèl ki parèt oswa ki retounen nan repons API (S2-06 · F16 — Tablo Piblik Zewo-PII).",
     lastUpdated: "Dènye mizajou:",
