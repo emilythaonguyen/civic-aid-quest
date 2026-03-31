@@ -17,6 +17,11 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { format } from "date-fns";
 
+interface Attachment {
+  file_url: string;
+  file_name: string;
+}
+
 interface ServiceRequest {
   id: string;
   type: string;
@@ -26,7 +31,7 @@ interface ServiceRequest {
   original_description: string | null;
   status: string;
   created_at: string;
-  attachment_url: string | null; // populated from attachments table
+  attachments: Attachment[];
 }
 
 const DARK_STATUS_STYLES: Record<string, string> = {
@@ -94,19 +99,20 @@ export default function CitizenPortalPage() {
     } else {
       // Fetch attachments for all requests
       const ids = (data ?? []).map((r) => r.id);
-      let attachmentMap: Record<string, string> = {};
+      let attachmentMap: Record<string, Attachment[]> = {};
       if (ids.length > 0) {
         const { data: attachData } = await supabase
           .from("attachments")
-          .select("request_id, file_url")
+          .select("request_id, file_url, file_name")
           .in("request_id", ids);
         if (attachData) {
           for (const a of attachData) {
-            attachmentMap[a.request_id] = a.file_url;
+            if (!attachmentMap[a.request_id]) attachmentMap[a.request_id] = [];
+            attachmentMap[a.request_id].push({ file_url: a.file_url, file_name: a.file_name });
           }
         }
       }
-      setRequests((data ?? []).map((r) => ({ ...r, attachment_url: attachmentMap[r.id] ?? null })));
+      setRequests((data ?? []).map((r) => ({ ...r, attachments: attachmentMap[r.id] ?? [] })));
       if (data && data.length > 0) {
         const ids = data.map((r) => r.id);
         const { data: surveys } = await supabase
@@ -364,16 +370,21 @@ export default function CitizenPortalPage() {
               </div>
               <div>
                 <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.attachment}</p>
-                {selectedRequest.attachment_url ? (
-                  <a
-                    href={selectedRequest.attachment_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm hover:underline"
-                    style={{ color: "#38BDF8" }}
-                  >
-                    {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
+                {selectedRequest.attachments.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedRequest.attachments.map((att, i) => (
+                      <a
+                        key={i}
+                        href={att.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm hover:underline mr-3"
+                        style={{ color: "#38BDF8" }}
+                      >
+                        📎 {att.file_name || `${t.viewAttachedFile} ${i + 1}`} <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    ))}
+                  </div>
                 ) : (
                   <p className="text-sm" style={{ color: "#94A3B8" }}>{t.noAttachment}</p>
                 )}
@@ -390,7 +401,7 @@ export default function CitizenPortalPage() {
       {/* Edit Request Dialog */}
       {editingRequest && (
         <EditRequestDialog
-          request={editingRequest}
+          request={{ id: editingRequest.id, attachmentCount: editingRequest.attachments.length }}
           open={!!editingRequest}
           onOpenChange={(open) => { if (!open) setEditingRequest(null); }}
           onSaved={fetchRequests}

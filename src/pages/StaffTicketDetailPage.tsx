@@ -52,7 +52,7 @@ interface TicketDetail {
   suggestions: unknown;
   latitude: number | null;
   longitude: number | null;
-  attachment_url: string | null; // populated from attachments table
+  attachments: { file_url: string; file_name: string }[];
 }
 
 interface HistoryEntry {
@@ -122,14 +122,13 @@ export default function StaffTicketDetailPage() {
 
         if (tErr) throw tErr;
 
-        // Fetch attachment from attachments table
+        // Fetch attachments from attachments table
         const { data: attachData } = await supabase
           .from("attachments")
-          .select("file_url")
-          .eq("request_id", id)
-          .limit(1);
+          .select("file_url, file_name")
+          .eq("request_id", id);
 
-        const attachmentUrl = attachData && attachData.length > 0 ? attachData[0].file_url : null;
+        const attachments = (attachData ?? []).map((a: any) => ({ file_url: a.file_url, file_name: a.file_name }));
 
         const citizenName = (tData as any).profiles?.full_name ?? "Unknown";
 
@@ -149,7 +148,7 @@ export default function StaffTicketDetailPage() {
           suggestions: (tData as any).suggestions ?? null,
           latitude: (tData as any).latitude ?? null,
           longitude: (tData as any).longitude ?? null,
-          attachment_url: attachmentUrl,
+          attachments,
         };
         setTicket(t);
         setNewStatus(t.status);
@@ -515,34 +514,38 @@ export default function StaffTicketDetailPage() {
         {/* Internal Comments */}
         <InternalComments requestId={ticket.id} userId={user!.id} />
 
-        {/* Citizen Attachment — collapsible */}
-        {ticket.attachment_url && (
+        {/* Citizen Attachments — collapsible */}
+        {ticket.attachments.length > 0 && (
           <Collapsible>
             <div className="border rounded-lg p-4 space-y-3">
               <CollapsibleTrigger className="flex items-center gap-2 w-full text-left">
                 <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform [[data-state=open]_&]:rotate-180" />
-                <h3 className="text-sm font-semibold text-foreground">Citizen Attachment</h3>
+                <h3 className="text-sm font-semibold text-foreground">Citizen Attachments ({ticket.attachments.length})</h3>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className="mt-2 rounded-md border bg-muted/30 p-3">
-                  {/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(ticket.attachment_url) ? (
-                    <a href={ticket.attachment_url} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src={ticket.attachment_url}
-                        alt="Citizen attachment"
-                        className="max-w-full max-h-80 rounded-md object-contain"
-                      />
-                    </a>
-                  ) : (
-                    <a
-                      href={ticket.attachment_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-                    >
-                      📎 View attached file
-                    </a>
-                  )}
+                <div className="mt-2 space-y-3">
+                  {ticket.attachments.map((att, i) => (
+                    <div key={i} className="rounded-md border bg-muted/30 p-3">
+                      {/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(att.file_url) ? (
+                        <a href={att.file_url} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={att.file_url}
+                            alt={att.file_name || `Citizen attachment ${i + 1}`}
+                            className="max-w-full max-h-80 rounded-md object-contain"
+                          />
+                        </a>
+                      ) : (
+                        <a
+                          href={att.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                        >
+                          📎 {att.file_name || `View attached file ${i + 1}`}
+                        </a>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </CollapsibleContent>
             </div>

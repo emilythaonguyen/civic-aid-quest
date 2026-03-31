@@ -4,16 +4,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Loader2, Upload, X, ExternalLink } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 import { translations, type Language } from "@/i18n/citizenTranslations";
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+const MAX_ATTACHMENTS = 3;
+
 interface EditRequestDialogProps {
   request: {
     id: string;
-    attachment_url: string | null;
+    attachmentCount: number;
   };
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -63,6 +65,8 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
     setErrors((p) => ({ ...p, attachment: "" }));
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  const atLimit = request.attachmentCount >= MAX_ATTACHMENTS;
 
   const handleSave = async () => {
     setSaveError("");
@@ -127,16 +131,9 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
             <Label className={labelCls}>{t.attachPhoto}</Label>
             <p className="text-xs text-[hsl(var(--hero-muted))]">{t.attachHelper}</p>
 
-            {request.attachment_url && (
-              <div className="flex items-center gap-3 rounded-md border border-white/15 bg-white/5 p-3">
-                <a
-                  href={request.attachment_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center gap-1 text-sm text-[hsl(var(--hero-accent))] hover:underline truncate"
-                >
-                  {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                </a>
+            {atLimit && !file && (
+              <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-400">
+                {t.maxAttachmentsReached || `Maximum of ${MAX_ATTACHMENTS} attachments reached.`}
               </div>
             )}
 
@@ -155,7 +152,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {!file && (
+            {!file && !atLimit && (
               <div
                 className="mt-1 flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-white/20 bg-[hsl(217_33%_17%)] hover:border-white/40 p-6 transition-colors cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
