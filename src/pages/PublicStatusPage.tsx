@@ -96,7 +96,7 @@ export default function PublicStatusPage() {
   const total = totalOpen + totalResolved;
 
   return (
-    <div className="min-h-screen relative bg-[hsl(var(--hero-bg))]" dir={language === "ar" ? "rtl" : "ltr"}>
+    <div className="min-h-screen relative bg-[hsl(var(--hero-bg))]" dir={language === "ar" || language === "he" ? "rtl" : "ltr"}>
       {/* Grid pattern overlay */}
       <div
         className="pointer-events-none fixed inset-0 z-0 opacity-[0.06]"

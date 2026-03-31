@@ -133,7 +133,7 @@ function getStoredLanguage(): Language {
   return isValidLanguage(stored) ? stored : "en";
 }
 
-const RTL_LANGUAGES: Language[] = ["ar"];
+const RTL_LANGUAGES: Language[] = ["ar", "he"];
 
 function translateQuestionnaire(q: Questionnaire, lang: Language): Questionnaire {
   const t = translations[lang] as any;
