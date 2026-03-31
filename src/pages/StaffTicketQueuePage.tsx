@@ -143,9 +143,10 @@ export default function StaffTicketQueuePage() {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
+    setDateSort("default");
   };
 
-  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
+  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || dateSort !== "default";
 
   if (authLoading) {
     return (
