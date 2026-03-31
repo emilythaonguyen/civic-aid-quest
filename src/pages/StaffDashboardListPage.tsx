@@ -171,7 +171,7 @@ export default function StaffDashboardListPage() {
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null || dateSort !== "newest";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null || dateSort !== "default";
 
   if (authLoading || (!user && !authLoading)) {
     return (
