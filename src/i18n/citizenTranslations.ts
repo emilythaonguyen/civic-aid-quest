@@ -1,6 +1,6 @@
-export type Language = "en" | "es" | "fr" | "pt" | "vi" | "zh" | "ko" | "ar" | "ht" | "de";
+export type Language = "en" | "es" | "fr" | "pt" | "vi" | "zh" | "ko" | "ar" | "ht" | "de" | "he" | "ta";
 
-export const supportedLanguages: Language[] = ["en", "es", "fr", "pt", "vi", "zh", "ko", "ar", "ht", "de"];
+export const supportedLanguages: Language[] = ["en", "es", "fr", "pt", "vi", "zh", "ko", "ar", "ht", "de", "he", "ta"];
 
 export function isValidLanguage(val: string | null): val is Language {
   return supportedLanguages.includes(val as Language);
