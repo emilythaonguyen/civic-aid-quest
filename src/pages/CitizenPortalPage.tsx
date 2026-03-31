@@ -401,7 +401,7 @@ export default function CitizenPortalPage() {
       {/* Edit Request Dialog */}
       {editingRequest && (
         <EditRequestDialog
-          request={editingRequest}
+          request={{ id: editingRequest.id, attachmentCount: editingRequest.attachments.length }}
           open={!!editingRequest}
           onOpenChange={(open) => { if (!open) setEditingRequest(null); }}
           onSaved={fetchRequests}
