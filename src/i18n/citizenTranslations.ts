@@ -1000,6 +1000,12 @@ export const translations = {
     surveySubmitFailed: "Umfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
     surveyLoadError: "Umfrage konnte nicht geladen werden. Der Link ist möglicherweise ungültig, abgelaufen oder nicht erreichbar.",
     surveyNoQuestions: "In dieser Umfrage sind noch keine Fragen konfiguriert. Bitte kontaktieren Sie den Support.",
+    surveyIntroDefault: "Vielen Dank, dass Sie unseren Service nutzen. Bitte nehmen Sie sich einen Moment Zeit, um Ihre Erfahrung zu teilen.",
+    surveyQ1: "Wie würden Sie die Gesamtqualität des erhaltenen Service bewerten?",
+    surveyQ2: "Wurde Ihre Anfrage in einem angemessenen Zeitrahmen gelöst?",
+    surveyQ3: "Wie würden Sie die Kommunikation bewerten, die Sie während des gesamten Prozesses erhalten haben?",
+    surveyQ4: "Würden Sie unsere Dienste Freunden oder der Familie empfehlen?",
+    surveyQ5: "Was hätten wir besser machen können, um Ihre Erfahrung zu verbessern?",
   },
 } as const;
 
