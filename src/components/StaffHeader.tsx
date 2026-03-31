@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import { LogOut } from "lucide-react";
 import HcdDropdown from "@/components/HcdDropdown";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface StaffHeaderProps {
   staffName: string;
@@ -66,6 +67,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
         </nav>
       </div>
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         <span className="text-sm text-muted-foreground min-w-[60px]">
           {staffName || "\u00A0"}
         </span>
