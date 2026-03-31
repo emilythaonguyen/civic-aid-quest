@@ -119,36 +119,22 @@ function getStoredLanguage(): Language {
 
 const RTL_LANGUAGES: Language[] = ["ar"];
 
-async function translateQuestionnaire(q: Questionnaire, lang: Language): Promise<Questionnaire> {
-  try {
-    const textsToTranslate: string[] = [];
-    if (q.survey_intro) textsToTranslate.push(q.survey_intro);
-    for (const question of q.questions) {
-      textsToTranslate.push(question.text);
-    }
+function translateQuestionnaire(q: Questionnaire, lang: Language): Questionnaire {
+  const t = translations[lang] as any;
 
-    if (textsToTranslate.length === 0) return q;
+  const translateText = (text: string): string => {
+    const key = QUESTION_TEXT_MAP[text];
+    if (key && t[key]) return t[key];
+    return text;
+  };
 
-    const { data, error } = await supabase.functions.invoke("translate-from-english", {
-      body: { texts: textsToTranslate, targetLang: lang },
-    });
-
-    if (error || !data?.translatedTexts) return q;
-
-    const translated: string[] = data.translatedTexts;
-    let idx = 0;
-
-    const newIntro = q.survey_intro ? (translated[idx++] || q.survey_intro) : "";
-    const newQuestions = q.questions.map((question) => ({
+  return {
+    survey_intro: q.survey_intro ? translateText(q.survey_intro) : "",
+    questions: q.questions.map((question) => ({
       ...question,
-      text: translated[idx++] || question.text,
-    }));
-
-    return { survey_intro: newIntro, questions: newQuestions };
-  } catch {
-    console.warn("Failed to translate questionnaire, showing English");
-    return q;
-  }
+      text: translateText(question.text),
+    })),
+  };
 }
 
 export default function SurveyPage() {
