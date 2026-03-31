@@ -383,7 +383,7 @@ export const translations = {
     chartTitle: "Abertas vs Resolvidas por Categoria",
     chartDescription: "Contagens de todas as solicitações — nenhuma informação pessoal incluída",
     noRequestsRecorded: "Nenhuma solicitação registrada ainda.",
-    openLabel: "Abertas / Em Andamento",
+    openLabel: "Aberto",
     resolvedLabel: "Resolvidas / Fechadas",
     privacyNotice: "Esta página exibe apenas contagens agregadas. Nenhum nome, endereço de e-mail, endereço físico, número de telefone ou qualquer outra informação pessoal é exibido ou retornado nas respostas da API (S2-06 · F16 — Painel Público Sem PII).",
     lastUpdated: "Última atualização:",
