@@ -405,7 +405,7 @@ export default function StaffTicketDetailPage() {
         </div>
 
         {/* AI Resolution Suggestions */}
-        <div className="border border-blue-200 bg-blue-50 rounded-lg p-4 space-y-3">
+        <div className="border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800/40 rounded-lg p-4 space-y-3">
           <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
           {suggestionsLoading ? (
             <div className="space-y-2">
