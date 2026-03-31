@@ -106,6 +106,8 @@ export const translations = {
     surveyQ3: "How would you rate the communication you received throughout the process?",
     surveyQ4: "Would you recommend this service to others?",
     surveyQ5: "Please share any additional feedback or suggestions for improvement.",
+    lightModeLabel: "Light Mode",
+    darkModeLabel: "Dark Mode",
   },
   es: {
     citizenConnect: "Citizen Connect",
@@ -206,6 +208,8 @@ export const translations = {
     surveyQ3: "¿Cómo calificaría la comunicación que recibió durante el proceso?",
     surveyQ4: "¿Recomendaría nuestro portal de servicios cívicos a otros?",
     surveyQ5: "¿Qué podríamos hacer para mejorar nuestro servicio en futuras solicitudes?",
+    lightModeLabel: "Modo Claro",
+    darkModeLabel: "Modo Oscuro",
   },
   fr: {
     citizenConnect: "Citizen Connect",
@@ -306,6 +310,8 @@ export const translations = {
     surveyQ3: "Comment évalueriez-vous la communication que vous avez reçue tout au long du processus?",
     surveyQ4: "Recommanderiez-vous nos services à des amis ou à votre famille?",
     surveyQ5: "Qu'aurions-nous pu faire mieux pour améliorer votre expérience?",
+    lightModeLabel: "Mode Clair",
+    darkModeLabel: "Mode Sombre",
   },
   pt: {
     citizenConnect: "Citizen Connect",
@@ -406,6 +412,8 @@ export const translations = {
     surveyQ3: "Como você avaliaria a comunicação que recebeu ao longo do processo?",
     surveyQ4: "Você recomendaria nossos serviços a amigos ou familiares?",
     surveyQ5: "O que poderíamos ter feito melhor para melhorar sua experiência?",
+    lightModeLabel: "Modo Claro",
+    darkModeLabel: "Modo Escuro",
   },
   vi: {
     citizenConnect: "Citizen Connect",
@@ -506,6 +514,8 @@ export const translations = {
     surveyQ3: "Bạn đánh giá giao tiếp bạn nhận được trong suốt quá trình như thế nào?",
     surveyQ4: "Bạn có giới thiệu dịch vụ của chúng tôi cho bạn bè hoặc gia đình không?",
     surveyQ5: "Chúng tôi có thể làm gì tốt hơn để cải thiện trải nghiệm của bạn?",
+    lightModeLabel: "Chế Độ Sáng",
+    darkModeLabel: "Chế Độ Tối",
   },
   zh: {
     citizenConnect: "Citizen Connect",
@@ -606,6 +616,8 @@ export const translations = {
     surveyQ3: "您如何评价您在整个过程中收到的沟通？",
     surveyQ4: "您会向朋友或家人推荐我们的服务吗？",
     surveyQ5: "我们可以做哪些改进来提升您的体验？",
+    lightModeLabel: "浅色模式",
+    darkModeLabel: "深色模式",
   },
   ko: {
     citizenConnect: "Citizen Connect",
@@ -706,6 +718,8 @@ export const translations = {
     surveyQ3: "과정 전반에 걸쳐 받으신 의사소통을 어떻게 평가하시겠습니까?",
     surveyQ4: "친구나 가족에게 저희 서비스를 추천하시겠습니까?",
     surveyQ5: "귀하의 경험을 개선하기 위해 저희가 더 잘할 수 있었던 것은 무엇입니까?",
+    lightModeLabel: "라이트 모드",
+    darkModeLabel: "다크 모드",
   },
   ar: {
     citizenConnect: "Citizen Connect",
@@ -806,6 +820,8 @@ export const translations = {
     surveyQ3: "كيف تقيّم التواصل الذي تلقيته طوال العملية؟",
     surveyQ4: "هل توصي بخدماتنا للأصدقاء أو العائلة؟",
     surveyQ5: "ما الذي كان بإمكاننا فعله بشكل أفضل لتحسين تجربتك؟",
+    lightModeLabel: "الوضع الفاتح",
+    darkModeLabel: "الوضع الداكن",
   },
   ht: {
     citizenConnect: "Citizen Connect",
@@ -906,6 +922,8 @@ export const translations = {
     surveyQ3: "Kijan ou ta evalye kominikasyon ou te resevwa pandan tout pwosesis la?",
     surveyQ4: "Èske ou ta rekòmande sèvis nou yo bay zanmi oswa fanmi?",
     surveyQ5: "Kisa nou ta ka fè pi byen pou amelyore experyans ou?",
+    lightModeLabel: "Mòd Klè",
+    darkModeLabel: "Mòd Fonsé",
   },
   de: {
     citizenConnect: "Citizen Connect",
@@ -1006,6 +1024,8 @@ export const translations = {
     surveyQ3: "Wie würden Sie die Kommunikation bewerten, die Sie während des gesamten Prozesses erhalten haben?",
     surveyQ4: "Würden Sie unsere Dienste Freunden oder der Familie empfehlen?",
     surveyQ5: "Was hätten wir besser machen können, um Ihre Erfahrung zu verbessern?",
+    lightModeLabel: "Heller Modus",
+    darkModeLabel: "Dunkler Modus",
   },
   he: {
     citizenConnect: "Citizen Connect",
@@ -1106,6 +1126,8 @@ export const translations = {
     surveyQ3: "כיצד תדרג את התקשורת שקיבלת לאורך התהליך?",
     surveyQ4: "האם תמליץ על השירותים שלנו לחברים או משפחה?",
     surveyQ5: "מה יכולנו לעשות טוב יותר כדי לשפר את חוויתך?",
+    lightModeLabel: "מצב בהיר",
+    darkModeLabel: "מצב כהה",
   },
   ta: {
     citizenConnect: "Citizen Connect",
@@ -1206,6 +1228,8 @@ export const translations = {
     surveyQ3: "செயல்முறை முழுவதும் நீங்கள் பெற்ற தொடர்பை எவ்வாறு மதிப்பிடுவீர்கள்?",
     surveyQ4: "எங்கள் சேவைகளை நண்பர்கள் அல்லது குடும்பத்தினருக்கு பரிந்துரைப்பீர்களா?",
     surveyQ5: "உங்கள் அனுபவத்தை மேம்படுத்த நாங்கள் என்ன சிறப்பாக செய்திருக்கலாம்?",
+    lightModeLabel: "ஒளி பயன்முறை",
+    darkModeLabel: "இருண்ட பயன்முறை",
   },
   ml: {
     citizenConnect: "Citizen Connect",
@@ -1306,6 +1330,8 @@ export const translations = {
     surveyQ3: "പ്രക്രിയയിലുടനീളം നിങ്ങൾക്ക് ലഭിച്ച ആശയവിനിമയം എങ്ങനെ വിലയിരുത്തും?",
     surveyQ4: "നിങ്ങൾ ഞങ്ങളുടെ സേവനങ്ങൾ സുഹൃത്തുക്കൾക്കോ കുടുംബത്തിനോ ശുപാർശ ചെയ്യുമോ?",
     surveyQ5: "നിങ്ങളുടെ അനുഭവം മെച്ചപ്പെടുത്താൻ ഞങ്ങൾ എന്ത് മികച്ചതായി ചെയ്യാമായിരുന്നു?",
+    lightModeLabel: "ലൈറ്റ് മോഡ്",
+    darkModeLabel: "ഡാർക്ക് മോഡ്",
   },
   hi: {
     citizenConnect: "Citizen Connect",
@@ -1406,6 +1432,8 @@ export const translations = {
     surveyQ3: "प्रक्रिया के दौरान आपको मिली संवाद को आप कैसे रेट करेंगे?",
     surveyQ4: "क्या आप हमारी सेवाओं को दोस्तों या परिवार को सुझाएंगे?",
     surveyQ5: "आपके अनुभव को बेहतर बनाने के लिए हम क्या बेहतर कर सकते थे?",
+    lightModeLabel: "लाइट मोड",
+    darkModeLabel: "डार्क मोड",
   },
 } as const;
 
