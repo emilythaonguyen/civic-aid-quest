@@ -36,6 +36,7 @@ export default function StaffDashboardListPage() {
   const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
   const [workloadStaffFilter, setWorkloadStaffFilter] = useState<string | null>(null);
+  const [dateSort, setDateSort] = useState<"newest" | "oldest">("newest");
 
   // Assignment data
   const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId
@@ -137,7 +138,7 @@ export default function StaffDashboardListPage() {
   }, [user, role]);
 
   const filtered = useMemo(() => {
-    return tickets.filter((t) => {
+    const result = tickets.filter((t) => {
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
       if (assignmentFilter === "Unassigned" && assignments[t.id]) return false;
       if (
@@ -153,17 +154,23 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter, workloadStaffFilter]);
+    return result.sort((a, b) => {
+      const da = new Date(a.created_at).getTime();
+      const db = new Date(b.created_at).getTime();
+      return dateSort === "newest" ? db - da : da - db;
+    });
+  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter, workloadStaffFilter, dateSort]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
     setWorkloadStaffFilter(null);
+    setDateSort("newest");
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null;
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null || dateSort !== "newest";
 
   if (authLoading || (!user && !authLoading)) {
     return (
@@ -221,6 +228,19 @@ export default function StaffDashboardListPage() {
                     {s.name}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Date</label>
+            <Select value={dateSort} onValueChange={(v) => setDateSort(v as "newest" | "oldest")}>
+              <SelectTrigger className="w-[150px] h-9 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="oldest">Oldest First</SelectItem>
               </SelectContent>
             </Select>
           </div>
