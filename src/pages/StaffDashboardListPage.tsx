@@ -18,7 +18,7 @@ import TicketTable from "@/components/TicketTable";
 import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, X } from "lucide-react";
 
-const RequestMap = lazy(() => import("@/components/RequestMap"));
+
 
 const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
 
@@ -186,9 +186,6 @@ export default function StaffDashboardListPage() {
               onSelectStaff={setWorkloadStaffFilter}
               selectedStaffId={workloadStaffFilter}
             />
-            <Suspense fallback={<div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>}>
-              <RequestMap />
-            </Suspense>
           </>
         )}
 
