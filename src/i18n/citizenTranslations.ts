@@ -700,6 +700,12 @@ export const translations = {
     surveySubmitFailed: "설문 제출에 실패했습니다. 다시 시도해 주세요.",
     surveyLoadError: "설문을 불러올 수 없습니다. 링크가 유효하지 않거나 만료되었을 수 있습니다.",
     surveyNoQuestions: "이 설문에 아직 질문이 구성되지 않았습니다. 지원팀에 문의해 주세요.",
+    surveyIntroDefault: "저희 서비스를 이용해 주셔서 감사합니다. 잠시 시간을 내어 경험을 공유해 주세요.",
+    surveyQ1: "오늘 받으신 서비스의 전반적인 품질을 어떻게 평가하시겠습니까?",
+    surveyQ2: "귀하의 요청이 합리적인 시간 내에 해결되었습니까?",
+    surveyQ3: "과정 전반에 걸쳐 받으신 의사소통을 어떻게 평가하시겠습니까?",
+    surveyQ4: "친구나 가족에게 저희 서비스를 추천하시겠습니까?",
+    surveyQ5: "귀하의 경험을 개선하기 위해 저희가 더 잘할 수 있었던 것은 무엇입니까?",
   },
   ar: {
     citizenConnect: "Citizen Connect",
