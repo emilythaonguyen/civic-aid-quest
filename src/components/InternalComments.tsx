@@ -119,7 +119,7 @@ export default function InternalComments({ requestId, userId }: InternalComments
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder="Write an internal note…"
-          className="text-sm min-h-[80px] bg-white"
+          className="text-sm min-h-[80px] bg-white dark:bg-muted"
         />
         <div className="flex items-center gap-3">
           <Button size="sm" onClick={handlePost} disabled={posting || !body.trim()}>
