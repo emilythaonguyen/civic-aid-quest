@@ -228,7 +228,7 @@ export default function CitizenPortalPage() {
                           className="border-white/20 text-white hover:bg-white/10 bg-transparent"
                           onClick={() => setEditingRequest(req)}
                         >
-                          {t.attach || "Attach"}
+                          {t.editRequest}
                         </Button>
                       )}
                       <Button
