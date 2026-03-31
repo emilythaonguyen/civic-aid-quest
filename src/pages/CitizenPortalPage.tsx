@@ -126,7 +126,7 @@ export default function CitizenPortalPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[hsl(var(--hero-bg))]" dir={language === "ar" ? "rtl" : "ltr"}>
+    <div className="relative min-h-screen bg-[hsl(var(--hero-bg))]" dir={language === "ar" || language === "he" ? "rtl" : "ltr"}>
       {/* Grid overlay */}
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.06] z-0"

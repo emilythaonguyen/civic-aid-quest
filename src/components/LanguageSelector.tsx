@@ -26,6 +26,8 @@ const languages: { code: Language; flag: string; label: string; shortLabel: stri
   { code: "ar", flag: "🇸🇦", label: "Arabic (العربية)", shortLabel: "Arabic" },
   { code: "ht", flag: "🇭🇹", label: "Haitian Creole (Kreyòl Ayisyen)", shortLabel: "Haitian" },
   { code: "de", flag: "🇩🇪", label: "German (Deutsch)", shortLabel: "German" },
+  { code: "he", flag: "🇮🇱", label: "Hebrew (עברית)", shortLabel: "Hebrew" },
+  { code: "ta", flag: "🇮🇳", label: "Tamil (தமிழ்)", shortLabel: "Tamil" },
 ];
 
 export default function LanguageSelector({ language, onChange, className }: LanguageSelectorProps) {
