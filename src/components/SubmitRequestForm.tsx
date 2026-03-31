@@ -147,7 +147,6 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded, language 
       original_description: description.trim(),
       status: "Open",
       user_id: user!.id,
-      attachment_url: attachmentUrl,
     };
 
     const { data, error } = await supabase
@@ -155,6 +154,24 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded, language 
       .insert(insertPayload)
       .select("id")
       .single();
+
+    if (error || !data) {
+      setSubmitting(false);
+      console.error("Supabase insert error:", error);
+      setSubmitError(error?.message || t.submitFailed);
+      return;
+    }
+
+    // Save attachment to attachments table
+    if (attachmentUrl) {
+      const { error: attachError } = await supabase
+        .from("attachments")
+        .insert({ request_id: data.id, url: attachmentUrl, user_id: user!.id });
+
+      if (attachError) {
+        console.error("Attachment insert error:", attachError);
+      }
+    }
 
     if (error || !data) {
       setSubmitting(false);

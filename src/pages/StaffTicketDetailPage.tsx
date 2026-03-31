@@ -52,7 +52,7 @@ interface TicketDetail {
   suggestions: unknown;
   latitude: number | null;
   longitude: number | null;
-  attachment_url: string | null;
+  attachment_url: string | null; // populated from attachments table
 }
 
 interface HistoryEntry {
@@ -112,7 +112,7 @@ export default function StaffTicketDetailPage() {
         const { data: tData, error: tErr } = await supabase
           .from("requests")
           .select(`
-            id, type, status, location, description, created_at, attachment_url,
+            id, type, status, location, description, created_at,
             triage_type, triage_priority, triage_summary, triage_confidence, triage_completed_at,
             suggestions, latitude, longitude,
             profiles!user_id ( full_name )
@@ -121,6 +121,15 @@ export default function StaffTicketDetailPage() {
           .single();
 
         if (tErr) throw tErr;
+
+        // Fetch attachment from attachments table
+        const { data: attachData } = await supabase
+          .from("attachments")
+          .select("url")
+          .eq("request_id", id)
+          .limit(1);
+
+        const attachmentUrl = attachData && attachData.length > 0 ? attachData[0].url : null;
 
         const citizenName = (tData as any).profiles?.full_name ?? "Unknown";
 
@@ -140,7 +149,7 @@ export default function StaffTicketDetailPage() {
           suggestions: (tData as any).suggestions ?? null,
           latitude: (tData as any).latitude ?? null,
           longitude: (tData as any).longitude ?? null,
-          attachment_url: (tData as any).attachment_url ?? null,
+          attachment_url: attachmentUrl,
         };
         setTicket(t);
         setNewStatus(t.status);
