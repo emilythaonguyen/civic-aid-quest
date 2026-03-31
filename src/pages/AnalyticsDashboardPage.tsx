@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,16 +31,26 @@ interface AnalyticsData {
   totalRequests: number;
 }
 
-const COLORS = [
-  "hsl(var(--primary))",
+const COLORS_LIGHT = [
+  "hsl(222, 47%, 11%)",
   "hsl(220, 70%, 55%)",
   "hsl(142, 60%, 45%)",
   "hsl(38, 90%, 55%)",
   "hsl(0, 70%, 55%)",
 ];
 
+const COLORS_DARK = [
+  "hsl(210, 40%, 70%)",
+  "hsl(220, 80%, 65%)",
+  "hsl(142, 70%, 55%)",
+  "hsl(38, 95%, 65%)",
+  "hsl(0, 80%, 65%)",
+];
+
 export default function AnalyticsDashboardPage() {
   const { user } = useAuth();
+  const { isDark } = useTheme();
+  const COLORS = isDark ? COLORS_DARK : COLORS_LIGHT;
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -276,10 +287,12 @@ export default function AnalyticsDashboardPage() {
                         cy="45%"
                         outerRadius={100}
                         stroke="hsl(var(--background))"
-                        label={({ category, count, percent }) =>
-                          `${category}: ${count} (${(percent * 100).toFixed(0)}%)`
-                        }
-                        labelLine={true}
+                        label={({ category, count, percent, x, y, textAnchor }) => (
+                          <text x={x} y={y} textAnchor={textAnchor} fill="hsl(var(--foreground))" fontSize={12}>
+                            {`${category}: ${count} (${(percent * 100).toFixed(0)}%)`}
+                          </text>
+                        )}
+                        labelLine={{ stroke: "hsl(var(--muted-foreground))" }}
                         isAnimationActive={true}
                         activeIndex={-1}
                         activeShape={null}
@@ -301,7 +314,7 @@ export default function AnalyticsDashboardPage() {
                         }}
                         formatter={(value, name) => [value, name]}
                       />
-                      <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                      <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8, color: "hsl(var(--foreground))" }} />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
