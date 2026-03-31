@@ -30,12 +30,20 @@ interface AnalyticsData {
   totalRequests: number;
 }
 
-const COLORS = [
-  "hsl(var(--primary))",
+const COLORS_LIGHT = [
+  "hsl(222, 47%, 11%)",
   "hsl(220, 70%, 55%)",
   "hsl(142, 60%, 45%)",
   "hsl(38, 90%, 55%)",
   "hsl(0, 70%, 55%)",
+];
+
+const COLORS_DARK = [
+  "hsl(210, 40%, 70%)",
+  "hsl(220, 80%, 65%)",
+  "hsl(142, 70%, 55%)",
+  "hsl(38, 95%, 65%)",
+  "hsl(0, 80%, 65%)",
 ];
 
 export default function AnalyticsDashboardPage() {
