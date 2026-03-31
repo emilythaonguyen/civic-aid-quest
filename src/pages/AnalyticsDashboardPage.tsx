@@ -312,6 +312,7 @@ export default function AnalyticsDashboardPage() {
                       <Tooltip
                         contentStyle={{
                           backgroundColor: "hsl(var(--card))",
+                          color: "hsl(var(--card-foreground))",
                           border: "1px solid hsl(var(--border))",
                           borderRadius: "6px",
                           fontSize: 12,
