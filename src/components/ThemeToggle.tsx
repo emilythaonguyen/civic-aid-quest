@@ -14,10 +14,11 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       variant="ghost"
       size="sm"
       onClick={toggleTheme}
-      className={`h-9 w-9 p-0 ${className ?? ""}`}
+      className={`gap-1.5 text-sm font-normal ${className ?? ""}`}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {isDark ? "Light Mode" : "Dark Mode"}
     </Button>
   );
 }
