@@ -138,7 +138,7 @@ export default function StaffDashboardListPage() {
   }, [user, role]);
 
   const filtered = useMemo(() => {
-    const result = tickets.filter((t) => {
+    return tickets.filter((t) => {
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
       if (assignmentFilter === "Unassigned" && assignments[t.id]) return false;
       if (
@@ -154,24 +154,17 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
-    if (dateSort === "default") return result;
-    return result.sort((a, b) => {
-      const da = new Date(a.created_at).getTime();
-      const db = new Date(b.created_at).getTime();
-      return dateSort === "newest" ? db - da : da - db;
-    });
-  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter, workloadStaffFilter, dateSort]);
+  }, [tickets, categoryFilter, assignmentFilter, assignments, locationFilter, workloadStaffFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
     setWorkloadStaffFilter(null);
-    setDateSort("default");
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null || dateSort !== "default";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null;
 
   if (authLoading || (!user && !authLoading)) {
     return (
