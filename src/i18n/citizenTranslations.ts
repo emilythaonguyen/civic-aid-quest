@@ -300,6 +300,12 @@ export const translations = {
     surveySubmitFailed: "Échec de l'envoi de l'enquête. Veuillez réessayer.",
     surveyLoadError: "Impossible de charger l'enquête. Le lien peut être invalide, expiré ou inaccessible.",
     surveyNoQuestions: "Aucune question n'est configurée dans cette enquête pour le moment. Veuillez contacter le support.",
+    surveyIntroDefault: "Merci d'utiliser notre service. Prenez un moment pour partager votre expérience.",
+    surveyQ1: "Comment évalueriez-vous la qualité globale du service que vous avez reçu?",
+    surveyQ2: "Votre demande a-t-elle été résolue dans un délai raisonnable?",
+    surveyQ3: "Comment évalueriez-vous la communication que vous avez reçue tout au long du processus?",
+    surveyQ4: "Recommanderiez-vous nos services à des amis ou à votre famille?",
+    surveyQ5: "Qu'aurions-nous pu faire mieux pour améliorer votre expérience?",
   },
   pt: {
     citizenConnect: "Citizen Connect",
