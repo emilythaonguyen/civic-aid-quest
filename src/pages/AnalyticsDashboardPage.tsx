@@ -311,12 +311,14 @@ export default function AnalyticsDashboardPage() {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          color: "hsl(var(--card-foreground))",
-                          border: "1px solid hsl(var(--border))",
+                          backgroundColor: isDark ? "#1e293b" : "#ffffff",
+                          color: isDark ? "#f1f5f9" : "#0f172a",
+                          border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #e2e8f0",
                           borderRadius: "6px",
                           fontSize: 12,
                         }}
+                        itemStyle={{ color: isDark ? "#f1f5f9" : "#0f172a" }}
+                        labelStyle={{ color: isDark ? "#f1f5f9" : "#0f172a" }}
                         formatter={(value, name) => [value, name]}
                       />
                       <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8, color: "hsl(var(--foreground))" }} />
