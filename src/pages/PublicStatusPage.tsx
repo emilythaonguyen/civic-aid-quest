@@ -41,6 +41,8 @@ export default function PublicStatusPage() {
   const { isDark } = useTheme();
   const [stats, setStats] = useState<CategoryStat[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [inReviewCount, setInReviewCount] = useState(0);
+  const [escalatedCount, setEscalatedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
