@@ -32,9 +32,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [requestType, setRequestType] = useState(request.type);
-  const [location, setLocation] = useState(request.original_location || request.location);
-  const [description, setDescription] = useState(request.original_description || request.description);
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [removeAttachment, setRemoveAttachment] = useState(false);
@@ -44,9 +41,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
 
   // Reset form when request changes
   useEffect(() => {
-    setRequestType(request.type);
-    setLocation(request.original_location || request.location);
-    setDescription(request.original_description || request.description);
     setFile(null);
     setFilePreview(null);
     setRemoveAttachment(false);
