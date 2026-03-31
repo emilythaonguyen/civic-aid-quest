@@ -241,7 +241,7 @@ export default function PublicStatusPage() {
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.escalated}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
-                  <p className="text-3xl font-bold" style={{ color: resolvedColor }}>{totalResolved}</p>
+                  <p className="text-3xl font-bold" style={{ color: resolvedColor }}>{resolvedCount}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.resolvedClosed}</p>
                 </div>
               </div>
