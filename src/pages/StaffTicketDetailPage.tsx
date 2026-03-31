@@ -381,10 +381,10 @@ export default function StaffTicketDetailPage() {
                     <span
                       className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
                         ticket.triage_priority === "High"
-                          ? "bg-red-100 text-red-800 border-red-200"
+                          ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40"
                           : ticket.triage_priority === "Medium"
-                          ? "bg-amber-100 text-amber-800 border-amber-200"
-                          : "bg-green-100 text-green-800 border-green-200"
+                          ? "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40"
+                          : "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40"
                       }`}
                     >
                       {ticket.triage_priority}
