@@ -166,7 +166,7 @@ export default function SubmitRequestForm({ onSubmitSuccess, embedded, language 
     if (attachmentUrl) {
       const { error: attachError } = await supabase
         .from("attachments")
-        .insert({ request_id: data.id, file_url: attachmentUrl, user_id: user!.id });
+        .insert({ request_id: data.id, file_url: attachmentUrl, user_id: user!.id, file_name: file.name });
 
       if (attachError) {
         console.error("Attachment insert error:", attachError);
