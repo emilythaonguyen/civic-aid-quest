@@ -235,7 +235,7 @@ export default function SurveyPage() {
 
           // Translate questionnaire content if language is not English
           if (language !== "en") {
-            parsed = await translateQuestionnaire(parsed, language);
+            parsed = translateQuestionnaire(parsed, language);
           }
 
           setQuestionnaire(parsed);
