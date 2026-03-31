@@ -148,7 +148,7 @@ export default function StaffTicketDetailPage() {
           suggestions: (tData as any).suggestions ?? null,
           latitude: (tData as any).latitude ?? null,
           longitude: (tData as any).longitude ?? null,
-          attachment_url: attachmentUrl,
+          attachments,
         };
         setTicket(t);
         setNewStatus(t.status);
