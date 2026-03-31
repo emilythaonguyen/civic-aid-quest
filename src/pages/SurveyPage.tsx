@@ -137,7 +137,7 @@ export default function SurveyPage() {
         <ArrowLeft className="h-4 w-4 mr-1" /> {t.surveyBackToPortal}
       </Button>
       <div className="flex items-center gap-2">
-        <ThemeToggle className={isDark ? "text-white hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} />
+        <ThemeToggle className={isDark ? "text-white hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} lightLabel={t.lightModeLabel} darkLabel={t.darkModeLabel} />
         <Button
           size="sm"
           className={isDark
