@@ -275,6 +275,7 @@ export default function AnalyticsDashboardPage() {
                         cx="50%"
                         cy="45%"
                         outerRadius={100}
+                        stroke="hsl(var(--background))"
                         label={({ category, count, percent }) =>
                           `${category}: ${count} (${(percent * 100).toFixed(0)}%)`
                         }
