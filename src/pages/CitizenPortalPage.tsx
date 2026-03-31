@@ -26,7 +26,7 @@ interface ServiceRequest {
   original_description: string | null;
   status: string;
   created_at: string;
-  attachment_url: string | null;
+  attachment_url: string | null; // populated from attachments table
 }
 
 const DARK_STATUS_STYLES: Record<string, string> = {
