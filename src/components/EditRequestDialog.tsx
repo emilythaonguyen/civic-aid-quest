@@ -3,16 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Upload, X, ExternalLink } from "lucide-react";
 import { translations, type Language } from "@/i18n/citizenTranslations";
-import { translateFields } from "@/lib/translateToEnglish";
-import { cn } from "@/lib/utils";
 
-const REQUEST_TYPE_KEYS = ["pothole", "streetlight", "dumping", "graffiti", "other"] as const;
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -39,7 +33,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
-  // Reset form when request changes
   useEffect(() => {
     setFile(null);
     setFilePreview(null);
@@ -74,29 +67,17 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const validate = () => {
-    const e: Record<string, string> = {};
-    if (!requestType) e.request_type = t.requestTypeRequired;
-    if (!location.trim()) e.location = t.locationRequired;
-    if (!description.trim()) {
-      e.description = t.descriptionRequired;
-    } else if (description.trim().length < 20) {
-      e.description = t.descriptionMinLength;
-    }
-    return e;
-  };
-
   const handleSave = async () => {
     setSaveError("");
-    const validationErrors = validate();
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length > 0) return;
+    if (!file && !removeAttachment) {
+      onOpenChange(false);
+      return;
+    }
 
     setSaving(true);
 
     let attachmentUrl: string | null = request.attachment_url;
 
-    // Upload new file if provided
     if (file && user) {
       const tempId = crypto.randomUUID();
       const filePath = `${user.id}/${tempId}/${file.name}`;
@@ -119,22 +100,9 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
       attachmentUrl = null;
     }
 
-    const { translatedLocation, translatedDescription } = await translateFields(
-      location.trim(),
-      description.trim(),
-      language,
-    );
-
-    const { error, count } = await supabase
+    const { error } = await supabase
       .from("requests")
-      .update({
-        type: requestType,
-        location: translatedLocation,
-        description: translatedDescription,
-        original_location: location.trim(),
-        original_description: description.trim(),
-        attachment_url: attachmentUrl,
-      })
+      .update({ attachment_url: attachmentUrl })
       .eq("id", request.id)
       .eq("user_id", user!.id);
 
@@ -151,14 +119,12 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
   };
 
   const labelCls = "text-[hsl(210_20%_80%)]";
-  const inputCls =
-    "bg-[hsl(217_33%_17%)] text-white border-white/15 placeholder:text-[hsl(215_20%_34%)] focus-visible:ring-[hsl(var(--hero-cta))]";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-[hsl(220_45%_16%)] border-white/10 text-white">
         <DialogHeader>
-          <DialogTitle className="text-white">{t.editRequest || "Edit Request"}</DialogTitle>
+          <DialogTitle className="text-white">{t.addAttachment || "Add Attachment"}</DialogTitle>
         </DialogHeader>
 
         {saveError && (
@@ -168,53 +134,10 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
         )}
 
         <div className="space-y-5 pt-2">
-          {/* Request Type */}
-          <div className="space-y-1.5">
-            <Label className={labelCls}>{t.requestType}</Label>
-            <Select value={requestType} onValueChange={(v) => { setRequestType(v); setErrors((p) => ({ ...p, request_type: "" })); }}>
-              <SelectTrigger className={cn(inputCls, errors.request_type ? "border-destructive" : "")}>
-                <SelectValue placeholder={t.selectRequestType} />
-              </SelectTrigger>
-              <SelectContent>
-                {REQUEST_TYPE_KEYS.map((key) => (
-                  <SelectItem key={key} value={key}>{t[key]}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.request_type && <p className="text-sm text-destructive">{errors.request_type}</p>}
-          </div>
-
-          {/* Location */}
-          <div className="space-y-1.5">
-            <Label className={labelCls}>{t.location}</Label>
-            <Input
-              placeholder={t.locationPlaceholder}
-              value={location}
-              onChange={(e) => { setLocation(e.target.value); setErrors((p) => ({ ...p, location: "" })); }}
-              className={cn(inputCls, errors.location ? "border-destructive" : "")}
-            />
-            {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
-          </div>
-
-          {/* Description */}
-          <div className="space-y-1.5">
-            <Label className={labelCls}>{t.description}</Label>
-            <Textarea
-              placeholder={t.descriptionPlaceholder}
-              value={description}
-              onChange={(e) => { setDescription(e.target.value); setErrors((p) => ({ ...p, description: "" })); }}
-              className={cn(inputCls, errors.description ? "border-destructive" : "")}
-              rows={4}
-            />
-            {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
-          </div>
-
-          {/* Attachment */}
           <div className="space-y-1.5">
             <Label className={labelCls}>{t.attachPhoto}</Label>
             <p className="text-xs text-[hsl(var(--hero-muted))]">{t.attachHelper}</p>
 
-            {/* Existing attachment */}
             {request.attachment_url && !removeAttachment && !file && (
               <div className="flex items-center gap-3 rounded-md border border-white/15 bg-white/5 p-3">
                 <a
@@ -236,7 +159,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {/* New file preview */}
             {file && filePreview && (
               <div className="flex items-center gap-3 rounded-md border border-white/15 bg-white/5 p-3">
                 <img src={filePreview} alt="Preview" className="h-14 w-14 rounded object-cover border border-white/10" />
@@ -252,7 +174,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {/* Upload zone — shown when no file is selected */}
             {!file && (removeAttachment || !request.attachment_url) && (
               <div
                 className="mt-1 flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-white/20 bg-[hsl(217_33%_17%)] hover:border-white/40 p-6 transition-colors cursor-pointer"
@@ -276,7 +197,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {/* Replace button when existing attachment is shown */}
             {request.attachment_url && !removeAttachment && !file && (
               <Button
                 type="button"
@@ -289,7 +209,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </Button>
             )}
 
-            {/* Hidden file input for replace flow */}
             {request.attachment_url && !removeAttachment && !file && (
               <input
                 ref={fileInputRef}
