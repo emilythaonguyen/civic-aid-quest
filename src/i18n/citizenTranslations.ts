@@ -591,7 +591,7 @@ export const translations = {
     chartTitle: "按类别的未处理 vs 已解决",
     chartDescription: "所有请求的计数 — 不包含个人信息",
     noRequestsRecorded: "尚无请求记录。",
-    openLabel: "未处理 / 进行中",
+    openLabel: "待处理",
     resolvedLabel: "已解决 / 已关闭",
     privacyNotice: "此页面仅显示汇总计数。不会显示或在 API 响应中返回任何姓名、电子邮件地址、实际地址、电话号码或任何其他个人信息（S2-06 · F16 — 零 PII 公共仪表板）。",
     lastUpdated: "最后更新：",
