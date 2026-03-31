@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import { LogOut } from "lucide-react";
 import HcdDropdown from "@/components/HcdDropdown";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface StaffHeaderProps {
   staffName: string;
