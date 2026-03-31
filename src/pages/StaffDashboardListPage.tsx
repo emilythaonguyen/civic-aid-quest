@@ -281,10 +281,10 @@ export default function StaffDashboardListPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} />
-            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} />
-            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} />
-            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} />
+            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} skipPrioritySort={dateSort !== "newest"} />
+            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} skipPrioritySort={dateSort !== "newest"} />
+            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} skipPrioritySort={dateSort !== "newest"} />
+            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} skipPrioritySort={dateSort !== "newest"} />
           </div>
         )}
       </main>
