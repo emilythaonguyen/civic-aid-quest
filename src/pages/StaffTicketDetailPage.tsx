@@ -24,13 +24,13 @@ const STATUS_OPTIONS = ["Open", "In Review", "Resolved", "Escalated"] as const;
 function statusColor(status: string) {
   switch (status) {
     case "Open":
-      return "bg-blue-100 text-blue-800 border-blue-200";
+      return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800/40";
     case "In Review":
-      return "bg-amber-100 text-amber-800 border-amber-200";
+      return "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40";
     case "Resolved":
-      return "bg-green-100 text-green-800 border-green-200";
+      return "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40";
     case "Escalated":
-      return "bg-red-100 text-red-800 border-red-200";
+      return "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40";
     default:
       return "bg-muted text-muted-foreground";
   }
@@ -381,10 +381,10 @@ export default function StaffTicketDetailPage() {
                     <span
                       className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
                         ticket.triage_priority === "High"
-                          ? "bg-red-100 text-red-800 border-red-200"
+                          ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40"
                           : ticket.triage_priority === "Medium"
-                          ? "bg-amber-100 text-amber-800 border-amber-200"
-                          : "bg-green-100 text-green-800 border-green-200"
+                          ? "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40"
+                          : "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40"
                       }`}
                     >
                       {ticket.triage_priority}
