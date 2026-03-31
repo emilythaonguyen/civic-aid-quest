@@ -67,6 +67,7 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
         </nav>
       </div>
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         <span className="text-sm text-muted-foreground min-w-[60px]">
           {staffName || "\u00A0"}
         </span>
