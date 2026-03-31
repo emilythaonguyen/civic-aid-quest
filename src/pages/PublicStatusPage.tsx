@@ -41,8 +41,10 @@ export default function PublicStatusPage() {
   const { isDark } = useTheme();
   const [stats, setStats] = useState<CategoryStat[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [openCount, setOpenCount] = useState(0);
   const [inReviewCount, setInReviewCount] = useState(0);
   const [escalatedCount, setEscalatedCount] = useState(0);
+  const [resolvedCount, setResolvedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -60,21 +62,27 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const [{ data, error: fetchError }, { count, error: countError }, { count: irCount, error: irError }, { count: escCount, error: escError }] = await Promise.all([
+      const [{ data, error: fetchError }, { count, error: countError }, { count: openCt, error: openErr }, { count: irCount, error: irError }, { count: escCount, error: escError }, { count: resCt, error: resErr }] = await Promise.all([
         supabase.from("requests").select("type, status"),
         supabase.from("requests").select("*", { count: "exact", head: true }),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "open"),
         supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "in_review"),
         supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "escalated"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "resolved"),
       ]);
 
       if (fetchError) throw fetchError;
       if (countError) throw countError;
+      if (openErr) throw openErr;
       if (irError) throw irError;
       if (escError) throw escError;
+      if (resErr) throw resErr;
 
       setTotalCount(count ?? 0);
+      setOpenCount(openCt ?? 0);
       setInReviewCount(irCount ?? 0);
       setEscalatedCount(escCount ?? 0);
+      setResolvedCount(resCt ?? 0);
 
       const rows = data ?? [];
 
@@ -108,8 +116,6 @@ export default function PublicStatusPage() {
     fetchStats();
   }, []);
 
-  const totalOpen = stats.reduce((s, c) => s + c.open, 0);
-  const totalResolved = stats.reduce((s, c) => s + c.resolved, 0);
 
   const resolvedColor = isDark ? RESOLVED_COLOR_DARK : RESOLVED_COLOR_LIGHT;
 
@@ -223,7 +229,7 @@ export default function PublicStatusPage() {
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.totalRequests}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
-                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{totalOpen}</p>
+                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{openCount}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.openInProgress}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
@@ -235,7 +241,7 @@ export default function PublicStatusPage() {
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.escalated}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
-                  <p className="text-3xl font-bold" style={{ color: resolvedColor }}>{totalResolved}</p>
+                  <p className="text-3xl font-bold" style={{ color: resolvedColor }}>{resolvedCount}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.resolvedClosed}</p>
                 </div>
               </div>
