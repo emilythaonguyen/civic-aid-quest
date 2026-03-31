@@ -167,7 +167,7 @@ export default function StaffDashboardListPage() {
     setAssignmentFilter("All");
     setLocationFilter("");
     setWorkloadStaffFilter(null);
-    setDateSort("newest");
+    setDateSort("default");
   };
 
   const hasActiveFilters =
