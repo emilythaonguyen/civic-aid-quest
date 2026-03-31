@@ -355,14 +355,6 @@ export default function StaffTicketDetailPage() {
             </p>
           </div>
 
-          {/* Location Map */}
-          <TicketLocationMap
-            latitude={ticket.latitude}
-            longitude={ticket.longitude}
-            ticketId={ticket.id}
-            address={ticket.location}
-            description={ticket.description}
-          />
         </div>
 
         {/* AI Triage */}
