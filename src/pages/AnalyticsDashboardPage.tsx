@@ -198,8 +198,8 @@ export default function AnalyticsDashboardPage() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-md bg-amber-100">
-                      <Search className="h-4 w-4 text-amber-700" />
+                    <div className="p-2 rounded-md bg-amber-100 dark:bg-amber-950/40">
+                      <Search className="h-4 w-4 text-amber-700 dark:text-amber-400" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">In Review</p>
