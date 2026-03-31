@@ -500,6 +500,12 @@ export const translations = {
     surveySubmitFailed: "Gửi khảo sát thất bại. Vui lòng thử lại.",
     surveyLoadError: "Không thể tải khảo sát. Liên kết có thể không hợp lệ, đã hết hạn hoặc không thể truy cập.",
     surveyNoQuestions: "Chưa có câu hỏi nào được cấu hình trong khảo sát này. Vui lòng liên hệ hỗ trợ.",
+    surveyIntroDefault: "Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Hãy dành một chút thời gian để chia sẻ trải nghiệm của bạn.",
+    surveyQ1: "Bạn đánh giá chất lượng tổng thể của dịch vụ bạn nhận được như thế nào?",
+    surveyQ2: "Yêu cầu của bạn có được giải quyết trong thời gian hợp lý không?",
+    surveyQ3: "Bạn đánh giá giao tiếp bạn nhận được trong suốt quá trình như thế nào?",
+    surveyQ4: "Bạn có giới thiệu dịch vụ của chúng tôi cho bạn bè hoặc gia đình không?",
+    surveyQ5: "Chúng tôi có thể làm gì tốt hơn để cải thiện trải nghiệm của bạn?",
   },
   zh: {
     citizenConnect: "Citizen Connect",
