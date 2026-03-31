@@ -314,7 +314,7 @@ export default function AnalyticsDashboardPage() {
                         }}
                         formatter={(value, name) => [value, name]}
                       />
-                      <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                      <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8, color: "hsl(var(--foreground))" }} />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
