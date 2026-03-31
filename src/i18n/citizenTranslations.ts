@@ -400,6 +400,12 @@ export const translations = {
     surveySubmitFailed: "Falha ao enviar a pesquisa. Tente novamente.",
     surveyLoadError: "Não foi possível carregar a pesquisa. O link pode ser inválido, ter expirado ou ser inacessível.",
     surveyNoQuestions: "Nenhuma pergunta está configurada nesta pesquisa ainda. Por favor, entre em contato com o suporte.",
+    surveyIntroDefault: "Obrigado por usar nosso serviço. Reserve um momento para compartilhar sua experiência.",
+    surveyQ1: "Como você avaliaria a qualidade geral do serviço que recebeu?",
+    surveyQ2: "Sua solicitação foi resolvida em um prazo razoável?",
+    surveyQ3: "Como você avaliaria a comunicação que recebeu ao longo do processo?",
+    surveyQ4: "Você recomendaria nossos serviços a amigos ou familiares?",
+    surveyQ5: "O que poderíamos ter feito melhor para melhorar sua experiência?",
   },
   vi: {
     citizenConnect: "Citizen Connect",
