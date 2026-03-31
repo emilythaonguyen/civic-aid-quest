@@ -152,7 +152,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {!file && (
+            {!file && !atLimit && (
               <div
                 className="mt-1 flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-white/20 bg-[hsl(217_33%_17%)] hover:border-white/40 p-6 transition-colors cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
