@@ -95,16 +95,16 @@ export default function TicketTable({ title, tickets }: TicketTableProps) {
         </div>
       ) : (
         <div className="border rounded-lg">
-          <Table>
+          <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[110px]">Ticket ID</TableHead>
-                <TableHead>Citizen Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Location</TableHead>
+                <TableHead className="w-[10%]">Ticket ID</TableHead>
+                <TableHead className="w-[14%]">Citizen Name</TableHead>
+                <TableHead className="w-[10%]">Category</TableHead>
+                <TableHead className="w-[10%]">Priority</TableHead>
+                <TableHead className="w-[40%]">Location</TableHead>
                 <TableHead
-                  className="w-[130px] cursor-pointer select-none hover:text-foreground transition-colors"
+                  className="w-[16%] cursor-pointer select-none hover:text-foreground transition-colors"
                   onClick={cycleSort}
                 >
                   <span className="inline-flex items-center gap-1">
