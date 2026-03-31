@@ -109,15 +109,15 @@ export default function StaffWorkloadPage() {
           </p>
         ) : (
           <div className="border rounded-lg">
-            <Table>
+            <Table className="table-fixed w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Staff Member</TableHead>
-                  <TableHead className="text-center">Active Tickets</TableHead>
-                  <TableHead className="text-center">Open</TableHead>
-                  <TableHead className="text-center">In Review</TableHead>
-                  <TableHead className="text-center">Escalated</TableHead>
-                  <TableHead className="text-center">Resolved</TableHead>
+                  <TableHead className="w-[30%]">Staff Member</TableHead>
+                  <TableHead className="text-center w-[14%]">Active Tickets</TableHead>
+                  <TableHead className="text-center w-[14%]">Open</TableHead>
+                  <TableHead className="text-center w-[14%]">In Review</TableHead>
+                  <TableHead className="text-center w-[14%]">Escalated</TableHead>
+                  <TableHead className="text-center w-[14%]">Resolved</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

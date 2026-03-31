@@ -93,15 +93,15 @@ export default function StaffWorkloadSummary({ onSelectStaff, selectedStaffId }:
         <p className="text-xs text-muted-foreground py-4 text-center">No staff members found.</p>
       ) : (
         <div className="border rounded-lg">
-          <Table>
+          <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-xs">Staff Member</TableHead>
-                <TableHead className="text-xs text-center">Active</TableHead>
-                <TableHead className="text-xs text-center">Open</TableHead>
-                <TableHead className="text-xs text-center">In Review</TableHead>
-                <TableHead className="text-xs text-center">Escalated</TableHead>
-                <TableHead className="text-xs text-center">Resolved</TableHead>
+                <TableHead className="text-xs w-[30%]">Staff Member</TableHead>
+                <TableHead className="text-xs text-center w-[14%]">Active</TableHead>
+                <TableHead className="text-xs text-center w-[14%]">Open</TableHead>
+                <TableHead className="text-xs text-center w-[14%]">In Review</TableHead>
+                <TableHead className="text-xs text-center w-[14%]">Escalated</TableHead>
+                <TableHead className="text-xs text-center w-[14%]">Resolved</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
