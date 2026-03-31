@@ -1111,7 +1111,7 @@ export const translations = {
     chartTitle: "פתוח לעומת נפתר לפי קטגוריה",
     chartDescription: "ספירה של כל הבקשות — ללא מידע אישי",
     noRequestsRecorded: "עדיין לא נרשמו בקשות.",
-    openLabel: "פתוח / בטיפול",
+    openLabel: "פתוח",
     resolvedLabel: "נפתר / סגור",
     privacyNotice: "דף זה מציג ספירות מצטברות בלבד. לא מוצגים שמות, כתובות דוא\"ל, כתובות פיזיות, מספרי טלפון או כל מידע אישי אחר.",
     lastUpdated: "עודכן לאחרונה:",
