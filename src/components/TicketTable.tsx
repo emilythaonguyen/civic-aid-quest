@@ -51,17 +51,19 @@ export interface TicketRow {
 interface TicketTableProps {
   title: string;
   tickets: TicketRow[];
+  skipPrioritySort?: boolean;
 }
 
-export default function TicketTable({ title, tickets }: TicketTableProps) {
+export default function TicketTable({ title, tickets, skipPrioritySort }: TicketTableProps) {
   const navigate = useNavigate();
 
   const sorted = useMemo(() => {
+    if (skipPrioritySort) return tickets;
     const order: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
     return [...tickets].sort(
       (a, b) => (order[a.priority ?? ""] ?? 3) - (order[b.priority ?? ""] ?? 3)
     );
-  }, [tickets]);
+  }, [tickets, skipPrioritySort]);
 
   return (
     <div className="space-y-2">
