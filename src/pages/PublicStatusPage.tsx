@@ -40,6 +40,7 @@ export default function PublicStatusPage() {
   const { user, signOut } = useAuth();
   const { isDark } = useTheme();
   const [stats, setStats] = useState<CategoryStat[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -57,11 +58,15 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const { data, error: fetchError } = await supabase
-        .from("requests")
-        .select("type, status");
+      const [{ data, error: fetchError }, { count, error: countError }] = await Promise.all([
+        supabase.from("requests").select("type, status"),
+        supabase.from("requests").select("*", { count: "exact", head: true }),
+      ]);
 
       if (fetchError) throw fetchError;
+      if (countError) throw countError;
+
+      setTotalCount(count ?? 0);
 
       const rows = data ?? [];
 
@@ -97,7 +102,6 @@ export default function PublicStatusPage() {
 
   const totalOpen = stats.reduce((s, c) => s + c.open, 0);
   const totalResolved = stats.reduce((s, c) => s + c.resolved, 0);
-  const total = totalOpen + totalResolved;
 
   const resolvedColor = isDark ? RESOLVED_COLOR_DARK : RESOLVED_COLOR_LIGHT;
 
@@ -207,7 +211,7 @@ export default function PublicStatusPage() {
               {/* Summary KPIs */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
-                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{total}</p>
+                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{totalCount}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.totalRequests}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
