@@ -276,8 +276,18 @@ export default function SurveyPage() {
       const originalResponses = { ...responses };
       let finalResponses = { ...responses };
 
-      // Translate open-text responses if language is not English
       if (language !== "en") {
+        // Step 1: Save original responses first (no responses column yet — won't trigger n8n)
+        const { error: origErr } = await supabase
+          .from("surveys")
+          .update({
+            rating: Number.isFinite(ratingValue) ? ratingValue : 0,
+            original_responses: originalResponses,
+          })
+          .eq("id", surveyId);
+        if (origErr) throw origErr;
+
+        // Step 2: Translate open-text fields to English — await fully
         const openTextQuestions = questionnaire.questions.filter((q) => q.type === "open_text");
         for (const q of openTextQuestions) {
           const originalText = finalResponses[q.id];
@@ -286,19 +296,29 @@ export default function SurveyPage() {
             finalResponses[q.id] = translatedDescription;
           }
         }
+
+        // Step 3: Write English text to responses + submitted_at (triggers n8n)
+        const { error: updateErr } = await supabase
+          .from("surveys")
+          .update({
+            responses: finalResponses,
+            submitted_at: new Date().toISOString(),
+          })
+          .eq("id", surveyId);
+        if (updateErr) throw updateErr;
+      } else {
+        // English: single update is fine
+        const { error: updateErr } = await supabase
+          .from("surveys")
+          .update({
+            rating: Number.isFinite(ratingValue) ? ratingValue : 0,
+            responses: finalResponses,
+            original_responses: null,
+            submitted_at: new Date().toISOString(),
+          })
+          .eq("id", surveyId);
+        if (updateErr) throw updateErr;
       }
-
-      const { error: updateErr } = await supabase
-        .from("surveys")
-        .update({
-          rating: Number.isFinite(ratingValue) ? ratingValue : 0,
-          responses: finalResponses,
-          original_responses: language !== "en" ? originalResponses : null,
-          submitted_at: new Date().toISOString(),
-        })
-        .eq("id", surveyId);
-
-      if (updateErr) throw updateErr;
       setSubmitted(true);
     } catch {
       setError(t.surveySubmitFailed);
