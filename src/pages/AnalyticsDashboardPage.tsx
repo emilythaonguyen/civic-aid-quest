@@ -40,11 +40,11 @@ const COLORS_LIGHT = [
 ];
 
 const COLORS_DARK = [
-  "hsl(210, 40%, 70%)",
-  "hsl(220, 80%, 65%)",
-  "hsl(142, 70%, 55%)",
-  "hsl(38, 95%, 65%)",
-  "hsl(0, 80%, 65%)",
+  "hsl(220, 50%, 35%)",
+  "hsl(0, 55%, 40%)",
+  "hsl(142, 45%, 30%)",
+  "hsl(38, 70%, 40%)",
+  "hsl(0, 0%, 90%)",
 ];
 
 export default function AnalyticsDashboardPage() {
