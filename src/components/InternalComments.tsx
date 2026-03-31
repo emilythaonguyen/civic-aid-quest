@@ -101,7 +101,7 @@ export default function InternalComments({ requestId, userId }: InternalComments
       ) : (
         <div className="space-y-3">
           {comments.map((c) => (
-            <div key={c.id} className="text-sm border-b border-amber-200 pb-3 last:border-0 last:pb-0">
+            <div key={c.id} className="text-sm border-b border-amber-200 dark:border-amber-800/40 pb-3 last:border-0 last:pb-0">
               <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
                 <span className="font-medium text-foreground">{c.author_name}</span>
                 <span>·</span>
