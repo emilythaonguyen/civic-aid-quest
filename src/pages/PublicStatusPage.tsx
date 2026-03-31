@@ -102,7 +102,6 @@ export default function PublicStatusPage() {
 
   const totalOpen = stats.reduce((s, c) => s + c.open, 0);
   const totalResolved = stats.reduce((s, c) => s + c.resolved, 0);
-  const total = totalOpen + totalResolved;
 
   const resolvedColor = isDark ? RESOLVED_COLOR_DARK : RESOLVED_COLOR_LIGHT;
 
