@@ -122,12 +122,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
       }
     }
 
-    if (error) {
-      console.error("Update error:", error);
-      setSaving(false);
-      setSaveError(error.message || t.submitFailed);
-      return;
-    }
 
     setSaving(false);
     onSaved();
