@@ -122,14 +122,13 @@ export default function StaffTicketDetailPage() {
 
         if (tErr) throw tErr;
 
-        // Fetch attachment from attachments table
+        // Fetch attachments from attachments table
         const { data: attachData } = await supabase
           .from("attachments")
-          .select("file_url")
-          .eq("request_id", id)
-          .limit(1);
+          .select("file_url, file_name")
+          .eq("request_id", id);
 
-        const attachmentUrl = attachData && attachData.length > 0 ? attachData[0].file_url : null;
+        const attachments = (attachData ?? []).map((a: any) => ({ file_url: a.file_url, file_name: a.file_name }));
 
         const citizenName = (tData as any).profiles?.full_name ?? "Unknown";
 
