@@ -370,16 +370,21 @@ export default function CitizenPortalPage() {
               </div>
               <div>
                 <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.attachment}</p>
-                {selectedRequest.attachment_url ? (
-                  <a
-                    href={selectedRequest.attachment_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm hover:underline"
-                    style={{ color: "#38BDF8" }}
-                  >
-                    {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
+                {selectedRequest.attachments.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedRequest.attachments.map((att, i) => (
+                      <a
+                        key={i}
+                        href={att.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm hover:underline mr-3"
+                        style={{ color: "#38BDF8" }}
+                      >
+                        📎 {att.file_name || `${t.viewAttachedFile} ${i + 1}`} <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    ))}
+                  </div>
                 ) : (
                   <p className="text-sm" style={{ color: "#94A3B8" }}>{t.noAttachment}</p>
                 )}
