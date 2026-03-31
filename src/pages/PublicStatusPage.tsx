@@ -41,6 +41,8 @@ export default function PublicStatusPage() {
   const { isDark } = useTheme();
   const [stats, setStats] = useState<CategoryStat[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [inReviewCount, setInReviewCount] = useState(0);
+  const [escalatedCount, setEscalatedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -58,15 +60,21 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const [{ data, error: fetchError }, { count, error: countError }] = await Promise.all([
+      const [{ data, error: fetchError }, { count, error: countError }, { count: irCount, error: irError }, { count: escCount, error: escError }] = await Promise.all([
         supabase.from("requests").select("type, status"),
         supabase.from("requests").select("*", { count: "exact", head: true }),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "in_review"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "escalated"),
       ]);
 
       if (fetchError) throw fetchError;
       if (countError) throw countError;
+      if (irError) throw irError;
+      if (escError) throw escError;
 
       setTotalCount(count ?? 0);
+      setInReviewCount(irCount ?? 0);
+      setEscalatedCount(escCount ?? 0);
 
       const rows = data ?? [];
 
@@ -209,7 +217,7 @@ export default function PublicStatusPage() {
           ) : (
             <>
               {/* Summary KPIs */}
-              <div className="grid grid-cols-3 gap-4">
+               <div className="grid grid-cols-5 gap-4">
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
                   <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{totalCount}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.totalRequests}</p>
@@ -217,6 +225,14 @@ export default function PublicStatusPage() {
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
                   <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{totalOpen}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.openInProgress}</p>
+                </div>
+                <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
+                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{inReviewCount}</p>
+                  <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.inReview}</p>
+                </div>
+                <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
+                  <p className="text-3xl font-bold" style={{ color: "#F59E0B" }}>{escalatedCount}</p>
+                  <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.escalated}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
                   <p className="text-3xl font-bold" style={{ color: resolvedColor }}>{totalResolved}</p>
