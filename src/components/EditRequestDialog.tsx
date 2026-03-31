@@ -66,6 +66,8 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const atLimit = request.attachmentCount >= MAX_ATTACHMENTS;
+
   const handleSave = async () => {
     setSaveError("");
     if (!file) {
