@@ -287,10 +287,12 @@ export default function AnalyticsDashboardPage() {
                         cy="45%"
                         outerRadius={100}
                         stroke="hsl(var(--background))"
-                        label={({ category, count, percent }) =>
-                          `${category}: ${count} (${(percent * 100).toFixed(0)}%)`
-                        }
-                        labelLine={true}
+                        label={({ category, count, percent, x, y, textAnchor }) => (
+                          <text x={x} y={y} textAnchor={textAnchor} fill="hsl(var(--foreground))" fontSize={12}>
+                            {`${category}: ${count} (${(percent * 100).toFixed(0)}%)`}
+                          </text>
+                        )}
+                        labelLine={{ stroke: "hsl(var(--muted-foreground))" }}
                         isAnimationActive={true}
                         activeIndex={-1}
                         activeShape={null}
