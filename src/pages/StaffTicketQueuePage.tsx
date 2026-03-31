@@ -124,29 +124,22 @@ export default function StaffTicketQueuePage() {
   }, [user, role, staffId]);
 
   const filtered = useMemo(() => {
-    const result = tickets.filter((t) => {
+    return tickets.filter((t) => {
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
       if (assignmentFilter === "My Tickets" && !assignedIds.has(t.id)) return false;
       if (assignmentFilter === "Unassigned" && assignedIds.has(t.id)) return false;
       if (locationFilter && !t.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
       return true;
     });
-    if (dateSort === "default") return result;
-    return result.sort((a, b) => {
-      const da = new Date(a.created_at).getTime();
-      const db = new Date(b.created_at).getTime();
-      return dateSort === "newest" ? db - da : da - db;
-    });
-  }, [tickets, categoryFilter, assignmentFilter, assignedIds, locationFilter, dateSort]);
+  }, [tickets, categoryFilter, assignmentFilter, assignedIds, locationFilter]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
-    setDateSort("default");
   };
 
-  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || dateSort !== "default";
+  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
 
   if (authLoading) {
     return (
