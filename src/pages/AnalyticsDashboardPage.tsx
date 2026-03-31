@@ -49,6 +49,8 @@ const COLORS_DARK = [
 
 export default function AnalyticsDashboardPage() {
   const { user } = useAuth();
+  const { isDark } = useTheme();
+  const COLORS = isDark ? COLORS_DARK : COLORS_LIGHT;
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
