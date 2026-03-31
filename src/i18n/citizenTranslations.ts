@@ -100,6 +100,12 @@ export const translations = {
     surveySubmitFailed: "Failed to submit survey. Please try again.",
     surveyLoadError: "Unable to load survey. The link may be invalid, expired, or inaccessible.",
     surveyNoQuestions: "No questions are configured in this survey yet. Please contact support.",
+    surveyIntroDefault: "Thank you for using our service. Please take a moment to share your experience.",
+    surveyQ1: "How would you rate the overall quality of service you received?",
+    surveyQ2: "Was your issue resolved in a timely manner?",
+    surveyQ3: "How would you rate the communication you received throughout the process?",
+    surveyQ4: "Would you recommend this service to others?",
+    surveyQ5: "Please share any additional feedback or suggestions for improvement.",
   },
   es: {
     citizenConnect: "Citizen Connect",
