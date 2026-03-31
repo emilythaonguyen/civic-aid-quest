@@ -17,6 +17,11 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { format } from "date-fns";
 
+interface Attachment {
+  file_url: string;
+  file_name: string;
+}
+
 interface ServiceRequest {
   id: string;
   type: string;
@@ -26,7 +31,7 @@ interface ServiceRequest {
   original_description: string | null;
   status: string;
   created_at: string;
-  attachment_url: string | null; // populated from attachments table
+  attachments: Attachment[];
 }
 
 const DARK_STATUS_STYLES: Record<string, string> = {
