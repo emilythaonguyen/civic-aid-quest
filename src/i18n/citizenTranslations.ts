@@ -364,7 +364,7 @@ export const translations = {
     stepInProgressDesc: "Trabalho em curso",
     stepResolved: "Resolvido",
     stepResolvedDesc: "Problema resolvido",
-    editRequest: "Adjuntar",
+    editRequest: "Anexar",
     saveChanges: "Salvar Alterações",
     replaceAttachment: "Substituir Anexo",
     surveyTitle: "Pesquisa de Satisfação do Serviço",
