@@ -695,7 +695,7 @@ export const translations = {
     chartTitle: "카테고리별 미처리 vs 해결됨",
     chartDescription: "모든 요청의 수 — 개인 정보 미포함",
     noRequestsRecorded: "아직 기록된 요청이 없습니다.",
-    openLabel: "미처리 / 진행 중",
+    openLabel: "미해결",
     resolvedLabel: "해결됨 / 종료됨",
     privacyNotice: "이 페이지는 집계 수치만 표시합니다. 이름, 이메일 주소, 물리적 주소, 전화번호 또는 기타 개인 정보는 표시되거나 API 응답에 포함되지 않습니다 (S2-06 · F16 — 제로 PII 공개 대시보드).",
     lastUpdated: "마지막 업데이트:",
