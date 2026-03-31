@@ -65,10 +65,10 @@ export default function PublicStatusPage() {
       const [{ data, error: fetchError }, { count, error: countError }, { count: openCt, error: openErr }, { count: irCount, error: irError }, { count: escCount, error: escError }, { count: resCt, error: resErr }] = await Promise.all([
         supabase.from("requests").select("type, status"),
         supabase.from("requests").select("*", { count: "exact", head: true }),
-        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "open"),
-        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "in_review"),
-        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "escalated"),
-        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "resolved"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "Open"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "In Review"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "Escalated"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "Resolved"),
       ]);
 
       if (fetchError) throw fetchError;
