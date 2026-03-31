@@ -600,6 +600,12 @@ export const translations = {
     surveySubmitFailed: "提交调查失败。请重试。",
     surveyLoadError: "无法加载调查。链接可能无效、已过期或无法访问。",
     surveyNoQuestions: "此调查尚未配置任何问题。请联系支持。",
+    surveyIntroDefault: "感谢您使用我们的服务。请花一点时间分享您的体验。",
+    surveyQ1: "您如何评价您收到的服务的整体质量？",
+    surveyQ2: "您的请求是否在合理的时间内得到解决？",
+    surveyQ3: "您如何评价您在整个过程中收到的沟通？",
+    surveyQ4: "您会向朋友或家人推荐我们的服务吗？",
+    surveyQ5: "我们可以做哪些改进来提升您的体验？",
   },
   ko: {
     citizenConnect: "Citizen Connect",
