@@ -8,6 +8,16 @@ import { Loader2, Star, CheckCircle2, ArrowLeft, LogOut } from "lucide-react";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { translateFields } from "@/lib/translateToEnglish";
 
+// Map English default question text → translation key for static lookup
+const QUESTION_TEXT_MAP: Record<string, keyof typeof import("@/i18n/citizenTranslations").translations.en> = {
+  "Thank you for using our service. Please take a moment to share your experience.": "surveyIntroDefault",
+  "How would you rate the overall quality of service you received?": "surveyQ1",
+  "Was your issue resolved in a timely manner?": "surveyQ2",
+  "How would you rate the communication you received throughout the process?": "surveyQ3",
+  "Would you recommend this service to others?": "surveyQ4",
+  "Please share any additional feedback or suggestions for improvement.": "surveyQ5",
+};
+
 interface SurveyQuestion {
   id: string;
   text: string;
@@ -109,36 +119,22 @@ function getStoredLanguage(): Language {
 
 const RTL_LANGUAGES: Language[] = ["ar"];
 
-async function translateQuestionnaire(q: Questionnaire, lang: Language): Promise<Questionnaire> {
-  try {
-    const textsToTranslate: string[] = [];
-    if (q.survey_intro) textsToTranslate.push(q.survey_intro);
-    for (const question of q.questions) {
-      textsToTranslate.push(question.text);
-    }
+function translateQuestionnaire(q: Questionnaire, lang: Language): Questionnaire {
+  const t = translations[lang] as any;
 
-    if (textsToTranslate.length === 0) return q;
+  const translateText = (text: string): string => {
+    const key = QUESTION_TEXT_MAP[text];
+    if (key && t[key]) return t[key];
+    return text;
+  };
 
-    const { data, error } = await supabase.functions.invoke("translate-from-english", {
-      body: { texts: textsToTranslate, targetLang: lang },
-    });
-
-    if (error || !data?.translatedTexts) return q;
-
-    const translated: string[] = data.translatedTexts;
-    let idx = 0;
-
-    const newIntro = q.survey_intro ? (translated[idx++] || q.survey_intro) : "";
-    const newQuestions = q.questions.map((question) => ({
+  return {
+    survey_intro: q.survey_intro ? translateText(q.survey_intro) : "",
+    questions: q.questions.map((question) => ({
       ...question,
-      text: translated[idx++] || question.text,
-    }));
-
-    return { survey_intro: newIntro, questions: newQuestions };
-  } catch {
-    console.warn("Failed to translate questionnaire, showing English");
-    return q;
-  }
+      text: translateText(question.text),
+    })),
+  };
 }
 
 export default function SurveyPage() {
@@ -239,7 +235,7 @@ export default function SurveyPage() {
 
           // Translate questionnaire content if language is not English
           if (language !== "en") {
-            parsed = await translateQuestionnaire(parsed, language);
+            parsed = translateQuestionnaire(parsed, language);
           }
 
           setQuestionnaire(parsed);
