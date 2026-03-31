@@ -60,15 +60,21 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const [{ data, error: fetchError }, { count, error: countError }] = await Promise.all([
+      const [{ data, error: fetchError }, { count, error: countError }, { count: irCount, error: irError }, { count: escCount, error: escError }] = await Promise.all([
         supabase.from("requests").select("type, status"),
         supabase.from("requests").select("*", { count: "exact", head: true }),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "in_review"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "escalated"),
       ]);
 
       if (fetchError) throw fetchError;
       if (countError) throw countError;
+      if (irError) throw irError;
+      if (escError) throw escError;
 
       setTotalCount(count ?? 0);
+      setInReviewCount(irCount ?? 0);
+      setEscalatedCount(escCount ?? 0);
 
       const rows = data ?? [];
 
