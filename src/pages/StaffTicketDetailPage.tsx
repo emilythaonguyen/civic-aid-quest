@@ -52,7 +52,7 @@ interface TicketDetail {
   suggestions: unknown;
   latitude: number | null;
   longitude: number | null;
-  attachment_url: string | null; // populated from attachments table
+  attachments: { file_url: string; file_name: string }[];
 }
 
 interface HistoryEntry {
