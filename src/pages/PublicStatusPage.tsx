@@ -62,21 +62,27 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const [{ data, error: fetchError }, { count, error: countError }, { count: irCount, error: irError }, { count: escCount, error: escError }] = await Promise.all([
+      const [{ data, error: fetchError }, { count, error: countError }, { count: openCt, error: openErr }, { count: irCount, error: irError }, { count: escCount, error: escError }, { count: resCt, error: resErr }] = await Promise.all([
         supabase.from("requests").select("type, status"),
         supabase.from("requests").select("*", { count: "exact", head: true }),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "open"),
         supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "in_review"),
         supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "escalated"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "resolved"),
       ]);
 
       if (fetchError) throw fetchError;
       if (countError) throw countError;
+      if (openErr) throw openErr;
       if (irError) throw irError;
       if (escError) throw escError;
+      if (resErr) throw resErr;
 
       setTotalCount(count ?? 0);
+      setOpenCount(openCt ?? 0);
       setInReviewCount(irCount ?? 0);
       setEscalatedCount(escCount ?? 0);
+      setResolvedCount(resCt ?? 0);
 
       const rows = data ?? [];
 
