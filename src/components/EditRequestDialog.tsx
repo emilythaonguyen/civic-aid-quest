@@ -19,11 +19,6 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 interface EditRequestDialogProps {
   request: {
     id: string;
-    type: string;
-    location: string;
-    description: string;
-    original_location: string | null;
-    original_description: string | null;
     attachment_url: string | null;
   };
   open: boolean;
