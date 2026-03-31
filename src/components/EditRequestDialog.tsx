@@ -76,8 +76,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
 
     setSaving(true);
 
-    let attachmentUrl: string | null = request.attachment_url;
-
     if (file && user) {
       const tempId = crypto.randomUUID();
       const filePath = `${user.id}/${tempId}/${file.name}`;
@@ -95,16 +93,34 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
         .from("request-attachments")
         .getPublicUrl(filePath);
 
-      attachmentUrl = urlData.publicUrl;
-    } else if (removeAttachment) {
-      attachmentUrl = null;
-    }
+      const attachmentUrl = urlData.publicUrl;
 
-    const { error } = await supabase
-      .from("requests")
-      .update({ attachment_url: attachmentUrl })
-      .eq("id", request.id)
-      .eq("user_id", user!.id);
+      // Delete existing attachment(s) for this request by this user, then insert new one
+      await supabase.from("attachments").delete().eq("request_id", request.id).eq("user_id", user.id);
+      const { error } = await supabase
+        .from("attachments")
+        .insert({ request_id: request.id, url: attachmentUrl, user_id: user.id });
+
+      if (error) {
+        console.error("Attachment insert error:", error);
+        setSaving(false);
+        setSaveError(error.message || t.submitFailed);
+        return;
+      }
+    } else if (removeAttachment && user) {
+      const { error } = await supabase
+        .from("attachments")
+        .delete()
+        .eq("request_id", request.id)
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error("Attachment delete error:", error);
+        setSaving(false);
+        setSaveError(error.message || t.submitFailed);
+        return;
+      }
+    }
 
     if (error) {
       console.error("Update error:", error);
