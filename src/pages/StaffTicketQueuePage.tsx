@@ -223,10 +223,10 @@ export default function StaffTicketQueuePage() {
           </div>
         ) : (
           <div className="space-y-6">
-            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} skipPrioritySort={dateSort !== "default"} />
-            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} skipPrioritySort={dateSort !== "default"} />
-            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} skipPrioritySort={dateSort !== "default"} />
-            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} />
+            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} />
+            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} />
+            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} />
           </div>
         )}
       </main>
