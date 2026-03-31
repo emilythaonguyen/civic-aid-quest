@@ -27,6 +27,7 @@ export default function StaffTicketQueuePage() {
   const [tickets, setTickets] = useState<TicketRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dateSort, setDateSort] = useState<"default" | "newest" | "oldest">("default");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [assignmentFilter, setAssignmentFilter] = useState("My Tickets");
   const [locationFilter, setLocationFilter] = useState("");
