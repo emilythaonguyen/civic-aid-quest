@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Loader2, Upload, X, ExternalLink } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 import { translations, type Language } from "@/i18n/citizenTranslations";
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
