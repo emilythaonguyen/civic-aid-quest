@@ -28,6 +28,8 @@ const languages: { code: Language; flag: string; label: string; shortLabel: stri
   { code: "de", flag: "🇩🇪", label: "German (Deutsch)", shortLabel: "German" },
   { code: "he", flag: "🇮🇱", label: "Hebrew (עברית)", shortLabel: "Hebrew" },
   { code: "ta", flag: "🇮🇳", label: "Tamil (தமிழ்)", shortLabel: "Tamil" },
+  { code: "ml", flag: "🇮🇳", label: "Malayalam (മലയാളം)", shortLabel: "Malayalam" },
+  { code: "hi", flag: "🇮🇳", label: "Hindi (हिन्दी)", shortLabel: "Hindi" },
 ];
 
 export default function LanguageSelector({ language, onChange, className }: LanguageSelectorProps) {
