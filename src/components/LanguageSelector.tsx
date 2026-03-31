@@ -44,7 +44,7 @@ export default function LanguageSelector({ language, onChange, className }: Lang
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="p-0">
-        <ScrollArea className="max-h-[min(400px,60vh)]">
+        <ScrollArea className="h-[min(360px,50vh)]">
           <div className="p-1">
             {languages.map((l) => (
               <DropdownMenuItem
