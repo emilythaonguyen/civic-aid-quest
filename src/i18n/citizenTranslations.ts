@@ -487,7 +487,7 @@ export const translations = {
     chartTitle: "Mở vs Đã Giải Quyết theo Danh Mục",
     chartDescription: "Số liệu tất cả yêu cầu — không bao gồm thông tin cá nhân",
     noRequestsRecorded: "Chưa có yêu cầu nào được ghi nhận.",
-    openLabel: "Đang Mở / Đang Xử Lý",
+    openLabel: "Đang Mở",
     resolvedLabel: "Đã Giải Quyết / Đã Đóng",
     privacyNotice: "Trang này chỉ hiển thị số liệu tổng hợp. Không có tên, địa chỉ email, địa chỉ thực, số điện thoại hoặc bất kỳ thông tin cá nhân nào được hiển thị hoặc trả về trong phản hồi API (S2-06 · F16 — Bảng Điều Khiển Công Khai Không PII).",
     lastUpdated: "Cập nhật lần cuối:",
