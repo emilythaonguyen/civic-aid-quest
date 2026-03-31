@@ -87,7 +87,7 @@ export default function InternalComments({ requestId, userId }: InternalComments
   };
 
   return (
-    <div className="border-l-4 border-amber-400 bg-amber-50/50 rounded-lg p-4 space-y-4">
+    <div className="border-l-4 border-amber-400 bg-amber-50/50 dark:bg-amber-950/30 dark:border-amber-500/50 rounded-lg p-4 space-y-4">
       <h3 className="text-sm font-semibold text-foreground">
         Internal Notes — Not Visible to Citizen
       </h3>
