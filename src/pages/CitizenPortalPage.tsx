@@ -99,19 +99,20 @@ export default function CitizenPortalPage() {
     } else {
       // Fetch attachments for all requests
       const ids = (data ?? []).map((r) => r.id);
-      let attachmentMap: Record<string, string> = {};
+      let attachmentMap: Record<string, Attachment[]> = {};
       if (ids.length > 0) {
         const { data: attachData } = await supabase
           .from("attachments")
-          .select("request_id, file_url")
+          .select("request_id, file_url, file_name")
           .in("request_id", ids);
         if (attachData) {
           for (const a of attachData) {
-            attachmentMap[a.request_id] = a.file_url;
+            if (!attachmentMap[a.request_id]) attachmentMap[a.request_id] = [];
+            attachmentMap[a.request_id].push({ file_url: a.file_url, file_name: a.file_name });
           }
         }
       }
-      setRequests((data ?? []).map((r) => ({ ...r, attachment_url: attachmentMap[r.id] ?? null })));
+      setRequests((data ?? []).map((r) => ({ ...r, attachments: attachmentMap[r.id] ?? [] })));
       if (data && data.length > 0) {
         const ids = data.map((r) => r.id);
         const { data: surveys } = await supabase
