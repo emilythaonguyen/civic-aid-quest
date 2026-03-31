@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Loader2, ShieldCheck } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 import LanguageSelector from "@/components/LanguageSelector";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
@@ -25,7 +27,8 @@ interface CategoryStat {
 }
 
 const OPEN_COLOR = "#3B82F6";
-const RESOLVED_COLOR = "#4ADE80";
+const RESOLVED_COLOR_DARK = "#4ADE80";
+const RESOLVED_COLOR_LIGHT = "#16A34A";
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
@@ -35,6 +38,7 @@ function getStoredLanguage(): Language {
 export default function PublicStatusPage() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { isDark } = useTheme();
   const [stats, setStats] = useState<CategoryStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -95,27 +99,48 @@ export default function PublicStatusPage() {
   const totalResolved = stats.reduce((s, c) => s + c.resolved, 0);
   const total = totalOpen + totalResolved;
 
+  const resolvedColor = isDark ? RESOLVED_COLOR_DARK : RESOLVED_COLOR_LIGHT;
+
+  const cardStyle = isDark
+    ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }
+    : { background: "#FFFFFF", border: "1px solid #E2E8F0" };
+
   return (
-    <div className="min-h-screen relative bg-[hsl(var(--hero-bg))]" dir={language === "ar" || language === "he" ? "rtl" : "ltr"}>
-      {/* Grid pattern overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+    <div
+      className="min-h-screen relative"
+      dir={language === "ar" || language === "he" ? "rtl" : "ltr"}
+      style={{ backgroundColor: isDark ? "#0F172A" : "#FFFFFF" }}
+    >
+      {/* Grid pattern overlay — dark only */}
+      {isDark && (
+        <div
+          className="pointer-events-none fixed inset-0 z-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+      )}
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="border-b border-white/10 bg-[hsl(var(--hero-bg))] px-6 py-4 flex items-center justify-between">
+        <header
+          className="px-6 py-4 flex items-center justify-between"
+          style={{
+            backgroundColor: isDark ? "#0F172A" : "#FFFFFF",
+            borderBottom: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
+          }}
+        >
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-white">{t.citizenConnect}</h1>
+            <h1 className="text-xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.citizenConnect}</h1>
             <Button
               size="sm"
               variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              className={isDark
+                ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+              }
               onClick={() => navigate("/status")}
             >
               {t.publicStatus}
@@ -123,20 +148,27 @@ export default function PublicStatusPage() {
             <Button
               size="sm"
               variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              className={isDark
+                ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+              }
               onClick={() => navigate("/portal")}
             >
               {t.myPortal}
             </Button>
           </div>
           <div className="flex items-center gap-4">
-            <LanguageSelector language={language} onChange={handleLanguageChange} className="text-white hover:text-black hover:bg-white/10" />
-            <span className="text-sm text-white">{user?.user_metadata?.full_name || user?.email}</span>
+            <ThemeToggle className={isDark ? "text-white hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} />
+            <LanguageSelector language={language} onChange={handleLanguageChange} className={isDark ? "text-white hover:text-black hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} />
+            <span className="text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{user?.user_metadata?.full_name || user?.email}</span>
             
             <Button
               variant="outline"
               size="sm"
-              className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+              className={isDark
+                ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+              }
               onClick={async () => { await signOut(); navigate("/"); }}
             >
               {t.signOut}
@@ -147,9 +179,17 @@ export default function PublicStatusPage() {
         <main className="max-w-5xl mx-auto px-6 py-10 space-y-8">
           {/* Title */}
           <div>
-            <h2 className="text-2xl font-bold text-white">{t.serviceRequestStatus}</h2>
-            <p className="text-sm text-[#94A3B8] mt-1">{t.statusSubtitle}</p>
-            <span className="inline-block text-xs mt-2 px-2.5 py-1 rounded-md text-[#94A3B8]" style={{ backgroundColor: '#1E293B', border: '1px solid rgba(255,255,255,0.1)' }}>S2-06 · F16</span>
+            <h2 className="text-2xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.serviceRequestStatus}</h2>
+            <p className="text-sm mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.statusSubtitle}</p>
+            <span
+              className="inline-block text-xs mt-2 px-2.5 py-1 rounded-md"
+              style={isDark
+                ? { backgroundColor: "#1E293B", border: "1px solid rgba(255,255,255,0.1)", color: "#94A3B8" }
+                : { backgroundColor: "#F1F5F9", border: "1px solid #E2E8F0", color: "#475569" }
+              }
+            >
+              S2-06 · F16
+            </span>
           </div>
 
           {error && (
@@ -160,35 +200,35 @@ export default function PublicStatusPage() {
 
           {loading ? (
             <div className="flex items-center justify-center py-24">
-              <Loader2 className="h-8 w-8 animate-spin text-[#94A3B8]" />
+              <Loader2 className="h-8 w-8 animate-spin" style={{ color: "#94A3B8" }} />
             </div>
           ) : (
             <>
               {/* Summary KPIs */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="rounded-xl pt-6 text-center pb-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <p className="text-3xl font-bold text-white">{total}</p>
-                  <p className="text-xs text-[#94A3B8] mt-1">{t.totalRequests}</p>
+                <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
+                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{total}</p>
+                  <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.totalRequests}</p>
                 </div>
-                <div className="rounded-xl pt-6 text-center pb-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <p className="text-3xl font-bold text-white">{totalOpen}</p>
-                  <p className="text-xs text-[#94A3B8] mt-1">{t.openInProgress}</p>
+                <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
+                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{totalOpen}</p>
+                  <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.openInProgress}</p>
                 </div>
-                <div className="rounded-xl pt-6 text-center pb-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <p className="text-3xl font-bold text-[#4ADE80]">{totalResolved}</p>
-                  <p className="text-xs text-[#94A3B8] mt-1">{t.resolvedClosed}</p>
+                <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
+                  <p className="text-3xl font-bold" style={{ color: resolvedColor }}>{totalResolved}</p>
+                  <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.resolvedClosed}</p>
                 </div>
               </div>
 
               {/* Grouped Bar Chart */}
-              <div className="rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div className="rounded-xl" style={cardStyle}>
                 <div className="px-6 pt-6 pb-2">
-                  <h3 className="text-base font-semibold text-white">{t.chartTitle}</h3>
-                  <p className="text-sm text-[#94A3B8] mt-1">{t.chartDescription}</p>
+                  <h3 className="text-base font-semibold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.chartTitle}</h3>
+                  <p className="text-sm mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.chartDescription}</p>
                 </div>
                 <div className="px-6 pb-6">
                   {stats.length === 0 ? (
-                    <div className="flex items-center justify-center h-64 text-[#94A3B8] text-sm">
+                    <div className="flex items-center justify-center h-64 text-sm" style={{ color: "#94A3B8" }}>
                       {t.noRequestsRecorded}
                     </div>
                   ) : (
@@ -197,7 +237,7 @@ export default function PublicStatusPage() {
                         data={stats}
                         margin={{ top: 8, right: 16, left: 0, bottom: 40 }}
                       >
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "#E2E8F0"} />
                         <XAxis
                           dataKey="category"
                           tick={{ fontSize: 11, fill: "#64748B" }}
@@ -211,17 +251,17 @@ export default function PublicStatusPage() {
                         />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: "#1E293B",
-                            border: "1px solid rgba(255,255,255,0.1)",
+                            backgroundColor: isDark ? "#1E293B" : "#FFFFFF",
+                            border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
                             borderRadius: "6px",
                             fontSize: 12,
-                            color: "#fff",
+                            color: isDark ? "#fff" : "#0F172A",
                           }}
-                          labelStyle={{ color: "#fff" }}
+                          labelStyle={{ color: isDark ? "#fff" : "#0F172A" }}
                         />
-                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8, color: "#CBD5E1" }} />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8, color: isDark ? "#CBD5E1" : "#64748B" }} />
                         <Bar dataKey="open" name={t.openLabel} fill={OPEN_COLOR} radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="resolved" name={t.resolvedLabel} fill={RESOLVED_COLOR} radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="resolved" name={t.resolvedLabel} fill={resolvedColor} radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   )}
@@ -229,13 +269,13 @@ export default function PublicStatusPage() {
               </div>
 
               {/* Privacy notice footer */}
-              <div className="rounded-md px-4 py-3 flex items-start gap-3 text-xs text-[#94A3B8]" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div className="rounded-md px-4 py-3 flex items-start gap-3 text-xs" style={{ ...cardStyle, color: isDark ? "#94A3B8" : "#475569" }}>
                 <ShieldCheck className="h-4 w-4 mt-0.5 shrink-0" />
                 <span>{t.privacyNotice}</span>
               </div>
 
               {lastUpdated && (
-                <p className="text-xs text-center text-[#94A3B8]">
+                <p className="text-xs text-center" style={{ color: isDark ? "#94A3B8" : "#475569" }}>
                   {t.lastUpdated} {lastUpdated.toLocaleTimeString()}
                 </p>
               )}

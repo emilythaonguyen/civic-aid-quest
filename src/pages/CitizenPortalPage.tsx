@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import RequestStatusHistory from "@/components/RequestStatusHistory";
 import RequestPizzaTracker from "@/components/RequestPizzaTracker";
 import SubmitRequestForm from "@/components/SubmitRequestForm";
 import EditRequestDialog from "@/components/EditRequestDialog";
+import ThemeToggle from "@/components/ThemeToggle";
 
 import LanguageSelector from "@/components/LanguageSelector";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
@@ -27,15 +29,17 @@ interface ServiceRequest {
   attachment_url: string | null;
 }
 
-const STATUS_STYLES: Record<string, string> = {
+const DARK_STATUS_STYLES: Record<string, string> = {
   Open: "bg-white/10 text-white/70 border-white/10",
   "In Review": "bg-amber-500/15 text-amber-400 border-amber-500/20",
   Resolved: "bg-green-500/15 text-green-400 border-green-500/20",
 };
 
-function statusClass(status: string) {
-  return STATUS_STYLES[status] ?? STATUS_STYLES["Open"];
-}
+const LIGHT_STATUS_STYLES: Record<string, string> = {
+  Open: "bg-gray-100 text-gray-600 border-gray-200",
+  "In Review": "bg-amber-50 text-amber-700 border-amber-200",
+  Resolved: "bg-green-50 text-green-700 border-green-200",
+};
 
 function getStoredLanguage(): Language {
   const stored = localStorage.getItem("citizen-lang");
@@ -44,6 +48,7 @@ function getStoredLanguage(): Language {
 
 export default function CitizenPortalPage() {
   const { user, signOut } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const [language, setLanguage] = useState<Language>(getStoredLanguage);
@@ -58,6 +63,11 @@ export default function CitizenPortalPage() {
     const key = type as keyof typeof t;
     if (key in t) return t[key];
     return type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, " ");
+  };
+
+  const statusClass = (status: string) => {
+    const styles = isDark ? DARK_STATUS_STYLES : LIGHT_STATUS_STYLES;
+    return styles[status] ?? styles["Open"];
   };
 
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
@@ -126,25 +136,40 @@ export default function CitizenPortalPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[hsl(var(--hero-bg))]" dir={language === "ar" || language === "he" ? "rtl" : "ltr"}>
-      {/* Grid overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.06] z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+    <div
+      className="relative min-h-screen"
+      dir={language === "ar" || language === "he" ? "rtl" : "ltr"}
+      style={{ backgroundColor: isDark ? "#0F172A" : "#FFFFFF" }}
+    >
+      {/* Grid overlay — dark only */}
+      {isDark && (
+        <div
+          className="pointer-events-none fixed inset-0 opacity-[0.06] z-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+      )}
 
       {/* Header */}
-      <header className="relative z-10 border-b border-white/10 bg-[hsl(var(--hero-bg))] px-6 py-4 flex items-center justify-between">
+      <header
+        className="relative z-10 px-6 py-4 flex items-center justify-between"
+        style={{
+          backgroundColor: isDark ? "#0F172A" : "#FFFFFF",
+          borderBottom: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
+        }}
+      >
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-white">{t.citizenConnect}</h1>
+          <h1 className="text-xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.citizenConnect}</h1>
           <Button
             size="sm"
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+            className={isDark
+              ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+              : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+            }
             onClick={() => navigate("/status")}
           >
             {t.publicStatus}
@@ -152,20 +177,26 @@ export default function CitizenPortalPage() {
           <Button
             size="sm"
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+            className={isDark
+              ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+              : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+            }
             onClick={() => navigate("/portal")}
           >
             {t.myPortal}
           </Button>
         </div>
         <div className="flex items-center gap-4">
-           <LanguageSelector language={language} onChange={handleLanguageChange} className="text-white hover:text-black hover:bg-white/10" />
-           <span className="text-sm text-[hsl(var(--hero-muted))] text-white">{user?.user_metadata?.full_name || user?.email}</span>
-          
+          <ThemeToggle className={isDark ? "text-white hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} />
+          <LanguageSelector language={language} onChange={handleLanguageChange} className={isDark ? "text-white hover:text-black hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} />
+          <span className="text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{user?.user_metadata?.full_name || user?.email}</span>
           <Button
             variant="outline"
             size="sm"
-            className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+            className={isDark
+              ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+              : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+            }
             onClick={handleSignOut}
           >
             {t.signOut}
@@ -176,56 +207,63 @@ export default function CitizenPortalPage() {
       <main className="relative z-10 max-w-2xl mx-auto px-4 py-10 space-y-10">
         {/* Welcome */}
         <section className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-white">{t.pageTitle}</h2>
-          <p className="text-[hsl(var(--hero-muted))]">{t.pageSubtitle}</p>
+          <h2 className="text-2xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.pageTitle}</h2>
+          <p style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.pageSubtitle}</p>
         </section>
 
         {/* Submit Request Form */}
         <section>
-          <SubmitRequestForm onSubmitSuccess={fetchRequests} embedded language={language} dark />
+          <SubmitRequestForm onSubmitSuccess={fetchRequests} embedded language={language} dark={isDark} />
         </section>
 
         {/* My Requests */}
         <section className="space-y-4">
-          <h3 className="text-lg font-semibold text-white text-center">{t.myRequests}</h3>
+          <h3 className="text-lg font-semibold text-center" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.myRequests}</h3>
 
           {loading ? (
             <div className="flex justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--hero-muted))]" />
+              <Loader2 className="h-6 w-6 animate-spin" style={{ color: "#94A3B8" }} />
             </div>
           ) : fetchError ? (
             <p className="text-center text-sm text-red-400">{t.loadError}</p>
           ) : requests.length === 0 ? (
-            <p className="text-center text-sm text-[hsl(var(--hero-muted))]">{t.noRequests}</p>
+            <p className="text-center text-sm" style={{ color: "#94A3B8" }}>{t.noRequests}</p>
           ) : (
             <div className="space-y-3">
               {requests.map((req) => (
                 <div
                   key={req.id}
-                  className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 space-y-3"
+                  className="rounded-xl p-4 space-y-3"
+                  style={isDark
+                    ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(16px)" }
+                    : { background: "#FFFFFF", border: "1px solid #E2E8F0" }
+                  }
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-[hsl(var(--hero-accent))]">
+                        <span className="font-mono text-xs" style={{ color: "#2563EB" }}>
                           #{req.id.slice(0, 8)}
                         </span>
                         <Badge variant="outline" className={statusClass(req.status)}>
                           {req.status}
                         </Badge>
-                        <span className="text-xs text-[hsl(var(--hero-muted))] whitespace-nowrap">
+                        <span className="text-xs whitespace-nowrap" style={{ color: isDark ? "#94A3B8" : "#475569" }}>
                           {format(new Date(req.created_at), "MMM dd, yyyy")}
                         </span>
                       </div>
-                      <p className="font-medium text-sm text-white">{formatType(req.type)}</p>
-                      <p className="text-xs text-[hsl(var(--hero-muted))]">{req.original_location || req.location}</p>
+                      <p className="font-medium text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{formatType(req.type)}</p>
+                      <p className="text-xs" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{req.original_location || req.location}</p>
                     </div>
                     <div className="flex items-center gap-3">
                       {req.status === "Open" && (
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+                          className={isDark
+                            ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+                            : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+                          }
                           onClick={() => setEditingRequest(req)}
                         >
                           {t.editRequest}
@@ -234,7 +272,10 @@ export default function CitizenPortalPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-white/20 text-white hover:bg-white/10 bg-transparent"
+                        className={isDark
+                          ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
+                          : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+                        }
                         onClick={() => setSelectedRequest(req)}
                       >
                         {t.view}
@@ -246,7 +287,10 @@ export default function CitizenPortalPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="border-white/20 text-white hover:bg-white/10 bg-transparent disabled:opacity-40"
+                            className={isDark
+                              ? "border-white/20 text-white hover:bg-white/10 bg-transparent disabled:opacity-40"
+                              : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent disabled:opacity-40"
+                            }
                             disabled={surveyDisabled}
                             onClick={() => !surveyDisabled && navigate(`/survey?id=${surveyId}`)}
                           >
@@ -256,7 +300,7 @@ export default function CitizenPortalPage() {
                       })()}
                     </div>
                   </div>
-                  <RequestPizzaTracker status={req.status} language={language} dark />
+                  <RequestPizzaTracker status={req.status} language={language} dark={isDark} />
                 </div>
               ))}
             </div>
@@ -266,58 +310,62 @@ export default function CitizenPortalPage() {
 
       {/* Request Detail Modal */}
       <Dialog open={!!selectedRequest} onOpenChange={(open) => { if (!open) setSelectedRequest(null); }}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-[hsl(220_45%_16%)] border-white/10 text-white">
+        <DialogContent className={isDark
+          ? "max-w-md max-h-[90vh] overflow-y-auto bg-[hsl(220_45%_16%)] border-white/10 text-white"
+          : "max-w-md max-h-[90vh] overflow-y-auto bg-white border-[#E2E8F0] text-[#0F172A]"
+        }>
           <DialogHeader>
-            <DialogTitle className="text-white">{t.requestDetails}</DialogTitle>
+            <DialogTitle style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.requestDetails}</DialogTitle>
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 pt-2">
-              <RequestPizzaTracker status={selectedRequest.status} language={language} dark />
+              <RequestPizzaTracker status={selectedRequest.status} language={language} dark={isDark} />
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.requestId}</p>
-                <p className="font-mono text-sm break-all text-white">{selectedRequest.id}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.requestId}</p>
+                <p className="font-mono text-sm break-all" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{selectedRequest.id}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.status}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.status}</p>
                 <Badge variant="outline" className={statusClass(selectedRequest.status)}>
                   {selectedRequest.status}
                 </Badge>
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.requestType}</p>
-                <p className="text-sm text-white">{formatType(selectedRequest.type)}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.requestType}</p>
+                <p className="text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{formatType(selectedRequest.type)}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.location}</p>
-                <p className="text-sm text-white">{selectedRequest.original_location || selectedRequest.location}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.location}</p>
+                <p className="text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{selectedRequest.original_location || selectedRequest.location}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.description}</p>
-                <p className="text-sm whitespace-pre-wrap text-white">{selectedRequest.original_description || selectedRequest.description}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.description}</p>
+                <p className="text-sm whitespace-pre-wrap" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{selectedRequest.original_description || selectedRequest.description}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.dateSubmitted}</p>
-                <p className="text-sm text-white">
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.dateSubmitted}</p>
+                <p className="text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>
                   {format(new Date(selectedRequest.created_at), "MMM dd, yyyy 'at' hh:mm a")}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-1">{t.attachment}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: "#94A3B8" }}>{t.attachment}</p>
                 {selectedRequest.attachment_url ? (
                   <a
                     href={selectedRequest.attachment_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-[hsl(var(--hero-accent))] hover:underline"
+                    className="inline-flex items-center gap-1 text-sm hover:underline"
+                    style={{ color: "#38BDF8" }}
                   >
                     {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ) : (
-                  <p className="text-sm text-[hsl(var(--hero-muted))]">{t.noAttachment}</p>
+                  <p className="text-sm" style={{ color: "#94A3B8" }}>{t.noAttachment}</p>
                 )}
               </div>
               <div>
-                <p className="text-xs font-medium text-[hsl(var(--hero-muted))] mb-2">{t.statusHistory}</p>
+                <p className="text-xs font-medium mb-2" style={{ color: "#94A3B8" }}>{t.statusHistory}</p>
                 <RequestStatusHistory requestId={selectedRequest.id} />
               </div>
             </div>
