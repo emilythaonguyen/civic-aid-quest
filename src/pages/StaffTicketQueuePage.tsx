@@ -153,7 +153,7 @@ export default function StaffTicketQueuePage() {
     <div className="min-h-screen bg-background">
       <StaffHeader staffName={staffName} activePage="My Tickets" />
 
-      <main className="px-6 py-6 space-y-4">
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         <h2 className="text-xl font-bold text-foreground">
           {staffName ? `${staffName}'s Tickets` : "Staff Tickets"}
         </h2>

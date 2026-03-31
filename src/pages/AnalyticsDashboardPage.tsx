@@ -147,7 +147,7 @@ export default function AnalyticsDashboardPage() {
       <StaffHeader staffName={staffName} activePage="Analytics" />
 
       {/* Main content */}
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         {/* Page title */}
         <div className="flex items-center justify-between">
           <div>
