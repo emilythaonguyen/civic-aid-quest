@@ -27,6 +27,7 @@ export default function StaffTicketQueuePage() {
   const [tickets, setTickets] = useState<TicketRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dateSort, setDateSort] = useState<"default" | "newest" | "oldest">("default");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [assignmentFilter, setAssignmentFilter] = useState("My Tickets");
   const [locationFilter, setLocationFilter] = useState("");
@@ -123,22 +124,29 @@ export default function StaffTicketQueuePage() {
   }, [user, role, staffId]);
 
   const filtered = useMemo(() => {
-    return tickets.filter((t) => {
+    const result = tickets.filter((t) => {
       if (categoryFilter !== "All" && t.category !== categoryFilter) return false;
       if (assignmentFilter === "My Tickets" && !assignedIds.has(t.id)) return false;
       if (assignmentFilter === "Unassigned" && assignedIds.has(t.id)) return false;
       if (locationFilter && !t.location.toLowerCase().includes(locationFilter.toLowerCase())) return false;
       return true;
     });
-  }, [tickets, categoryFilter, assignmentFilter, assignedIds, locationFilter]);
+    if (dateSort === "default") return result;
+    return result.sort((a, b) => {
+      const da = new Date(a.created_at).getTime();
+      const db = new Date(b.created_at).getTime();
+      return dateSort === "newest" ? db - da : da - db;
+    });
+  }, [tickets, categoryFilter, assignmentFilter, assignedIds, locationFilter, dateSort]);
 
   const clearFilters = () => {
     setCategoryFilter("All");
     setAssignmentFilter("All");
     setLocationFilter("");
+    setDateSort("default");
   };
 
-  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "";
+  const hasActiveFilters = categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || dateSort !== "default";
 
   if (authLoading) {
     return (
@@ -184,6 +192,19 @@ export default function StaffTicketQueuePage() {
                 <SelectItem value="Unassigned">Unassigned</SelectItem>
               </SelectContent>
             </Select>
+           </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">Date</label>
+            <Select value={dateSort} onValueChange={(v) => setDateSort(v as "default" | "newest" | "oldest")}>
+              <SelectTrigger className="w-[150px] h-9 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Default</SelectItem>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="oldest">Oldest First</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
@@ -222,10 +243,10 @@ export default function StaffTicketQueuePage() {
           </div>
         ) : (
           <div className="space-y-6">
-            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} />
-            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} />
-            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} />
-            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} />
+            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} skipPrioritySort={dateSort !== "default"} />
           </div>
         )}
       </main>
