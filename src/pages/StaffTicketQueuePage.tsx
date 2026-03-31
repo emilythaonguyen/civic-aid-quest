@@ -187,19 +187,6 @@ export default function StaffTicketQueuePage() {
             </Select>
            </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-muted-foreground">Date</label>
-            <Select value={dateSort} onValueChange={(v) => setDateSort(v as "default" | "newest" | "oldest")}>
-              <SelectTrigger className="w-[150px] h-9 text-sm">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="default">Default</SelectItem>
-                <SelectItem value="newest">Newest First</SelectItem>
-                <SelectItem value="oldest">Oldest First</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
             <Input
               placeholder="Filter by location…"
