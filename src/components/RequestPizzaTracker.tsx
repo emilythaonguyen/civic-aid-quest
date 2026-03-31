@@ -5,7 +5,7 @@ import { translations, type Language } from "@/i18n/citizenTranslations";
 const STEP_KEYS = [
   { key: "Open", labelKey: "stepSubmitted" as const, descKey: "stepSubmittedDesc" as const, icon: Clock },
   { key: "In Review", labelKey: "stepInReview" as const, descKey: "stepInReviewDesc" as const, icon: Search },
-  { key: "In Progress", labelKey: "stepInProgress" as const, descKey: "stepInProgressDesc" as const, icon: Wrench },
+  { key: "Escalated", labelKey: "stepInProgress" as const, descKey: "stepInProgressDesc" as const, icon: Wrench },
   { key: "Resolved", labelKey: "stepResolved" as const, descKey: "stepResolvedDesc" as const, icon: PartyPopper },
 ];
 
