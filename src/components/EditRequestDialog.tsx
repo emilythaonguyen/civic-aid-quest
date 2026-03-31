@@ -99,7 +99,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
       await supabase.from("attachments").delete().eq("request_id", request.id).eq("user_id", user.id);
       const { error } = await supabase
         .from("attachments")
-        .insert({ request_id: request.id, url: attachmentUrl, user_id: user.id });
+        .insert({ request_id: request.id, file_url: attachmentUrl, user_id: user.id });
 
       if (error) {
         console.error("Attachment insert error:", error);

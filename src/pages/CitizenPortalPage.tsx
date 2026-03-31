@@ -98,11 +98,11 @@ export default function CitizenPortalPage() {
       if (ids.length > 0) {
         const { data: attachData } = await supabase
           .from("attachments")
-          .select("request_id, url")
+          .select("request_id, file_url")
           .in("request_id", ids);
         if (attachData) {
           for (const a of attachData) {
-            attachmentMap[a.request_id] = a.url;
+            attachmentMap[a.request_id] = a.file_url;
           }
         }
       }
