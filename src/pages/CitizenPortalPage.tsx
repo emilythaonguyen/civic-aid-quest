@@ -84,7 +84,7 @@ export default function CitizenPortalPage() {
     setFetchError(false);
     const { data, error } = await supabase
       .from("requests")
-      .select("id, type, location, description, original_location, original_description, status, created_at, attachment_url")
+      .select("id, type, location, description, original_location, original_description, status, created_at")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -92,7 +92,21 @@ export default function CitizenPortalPage() {
       console.error("Failed to fetch requests:", error);
       setFetchError(true);
     } else {
-      setRequests(data ?? []);
+      // Fetch attachments for all requests
+      const ids = (data ?? []).map((r) => r.id);
+      let attachmentMap: Record<string, string> = {};
+      if (ids.length > 0) {
+        const { data: attachData } = await supabase
+          .from("attachments")
+          .select("request_id, url")
+          .in("request_id", ids);
+        if (attachData) {
+          for (const a of attachData) {
+            attachmentMap[a.request_id] = a.url;
+          }
+        }
+      }
+      setRequests((data ?? []).map((r) => ({ ...r, attachment_url: attachmentMap[r.id] ?? null })));
       if (data && data.length > 0) {
         const ids = data.map((r) => r.id);
         const { data: surveys } = await supabase
