@@ -36,7 +36,7 @@ export default function StaffDashboardListPage() {
   const [assignmentFilter, setAssignmentFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("");
   const [workloadStaffFilter, setWorkloadStaffFilter] = useState<string | null>(null);
-  const [dateSort, setDateSort] = useState<"newest" | "oldest">("newest");
+  const [dateSort, setDateSort] = useState<"default" | "newest" | "oldest">("default");
 
   // Assignment data
   const [assignments, setAssignments] = useState<Record<string, string>>({}); // ticketId -> staffId
@@ -154,6 +154,7 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
+    if (dateSort === "default") return result;
     return result.sort((a, b) => {
       const da = new Date(a.created_at).getTime();
       const db = new Date(b.created_at).getTime();
@@ -166,11 +167,11 @@ export default function StaffDashboardListPage() {
     setAssignmentFilter("All");
     setLocationFilter("");
     setWorkloadStaffFilter(null);
-    setDateSort("newest");
+    setDateSort("default");
   };
 
   const hasActiveFilters =
-    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null || dateSort !== "newest";
+    categoryFilter !== "All" || assignmentFilter !== "All" || locationFilter !== "" || workloadStaffFilter !== null || dateSort !== "default";
 
   if (authLoading || (!user && !authLoading)) {
     return (
@@ -234,11 +235,12 @@ export default function StaffDashboardListPage() {
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Date</label>
-            <Select value={dateSort} onValueChange={(v) => setDateSort(v as "newest" | "oldest")}>
+            <Select value={dateSort} onValueChange={(v) => setDateSort(v as "default" | "newest" | "oldest")}>
               <SelectTrigger className="w-[150px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="default">Default</SelectItem>
                 <SelectItem value="newest">Newest First</SelectItem>
                 <SelectItem value="oldest">Oldest First</SelectItem>
               </SelectContent>
@@ -281,10 +283,10 @@ export default function StaffDashboardListPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} skipPrioritySort={dateSort !== "newest"} />
-            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} skipPrioritySort={dateSort !== "newest"} />
-            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} skipPrioritySort={dateSort !== "newest"} />
-            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} skipPrioritySort={dateSort !== "newest"} />
+            <TicketTable title="Escalated" tickets={filtered.filter(t => t.status === "Escalated")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="Open" tickets={filtered.filter(t => t.status === "Open")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="In Review" tickets={filtered.filter(t => t.status === "In Review")} skipPrioritySort={dateSort !== "default"} />
+            <TicketTable title="Resolved" tickets={filtered.filter(t => t.status === "Resolved")} skipPrioritySort={dateSort !== "default"} />
           </div>
         )}
       </main>
