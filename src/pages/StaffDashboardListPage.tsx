@@ -243,6 +243,7 @@ export default function StaffDashboardListPage() {
                 <SelectItem value="oldest">Oldest First</SelectItem>
               </SelectContent>
             </Select>
+          </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
