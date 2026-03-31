@@ -58,11 +58,15 @@ export default function PublicStatusPage() {
     setError("");
 
     try {
-      const { data, error: fetchError } = await supabase
-        .from("requests")
-        .select("type, status");
+      const [{ data, error: fetchError }, { count, error: countError }] = await Promise.all([
+        supabase.from("requests").select("type, status"),
+        supabase.from("requests").select("*", { count: "exact", head: true }),
+      ]);
 
       if (fetchError) throw fetchError;
+      if (countError) throw countError;
+
+      setTotalCount(count ?? 0);
 
       const rows = data ?? [];
 
