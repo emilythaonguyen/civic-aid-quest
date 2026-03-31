@@ -10,10 +10,12 @@ import { translations, type Language } from "@/i18n/citizenTranslations";
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+const MAX_ATTACHMENTS = 3;
+
 interface EditRequestDialogProps {
   request: {
     id: string;
-    attachment_url: string | null;
+    attachmentCount: number;
   };
   open: boolean;
   onOpenChange: (open: boolean) => void;
