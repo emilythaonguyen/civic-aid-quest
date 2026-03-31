@@ -900,6 +900,12 @@ export const translations = {
     surveySubmitFailed: "Echèk soumisyon sondaj la. Tanpri eseye ankò.",
     surveyLoadError: "Pa kapab chaje sondaj la. Lyen an ka envalid, ekspire, oswa pa aksesib.",
     surveyNoQuestions: "Pa gen kesyon konfigire nan sondaj sa a ankò. Tanpri kontakte sipò.",
+    surveyIntroDefault: "Mèsi paske ou itilize sèvis nou an. Tanpri pran yon moman pou pataje eksperyans ou.",
+    surveyQ1: "Kijan ou ta evalye kalite jeneral sèvis ou te resevwa a?",
+    surveyQ2: "Èske demann ou te rezoud nan yon delè rezonab?",
+    surveyQ3: "Kijan ou ta evalye kominikasyon ou te resevwa pandan tout pwosesis la?",
+    surveyQ4: "Èske ou ta rekòmande sèvis nou yo bay zanmi oswa fanmi?",
+    surveyQ5: "Kisa nou ta ka fè pi byen pou amelyore experyans ou?",
   },
   de: {
     citizenConnect: "Citizen Connect",
