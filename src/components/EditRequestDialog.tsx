@@ -28,7 +28,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
 
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [removeAttachment, setRemoveAttachment] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -36,7 +35,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
   useEffect(() => {
     setFile(null);
     setFilePreview(null);
-    setRemoveAttachment(false);
     setErrors({});
     setSaveError("");
   }, [request.id, open]);
@@ -56,7 +54,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
     setErrors((p) => ({ ...p, attachment: "" }));
     setFile(f);
     setFilePreview(URL.createObjectURL(f));
-    setRemoveAttachment(false);
   };
 
   const clearNewFile = () => {
@@ -69,14 +66,14 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
 
   const handleSave = async () => {
     setSaveError("");
-    if (!file && !removeAttachment) {
+    if (!file) {
       onOpenChange(false);
       return;
     }
 
     setSaving(true);
 
-    if (file && user) {
+    if (user) {
       const tempId = crypto.randomUUID();
       const filePath = `${user.id}/${tempId}/${file.name}`;
       const { error: uploadError } = await supabase.storage
@@ -93,13 +90,9 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
         .from("request-attachments")
         .getPublicUrl(filePath);
 
-      const attachmentUrl = urlData.publicUrl;
-
-      // Delete existing attachment(s) for this request by this user, then insert new one
-      await supabase.from("attachments").delete().eq("request_id", request.id).eq("user_id", user.id);
       const { error } = await supabase
         .from("attachments")
-        .insert({ request_id: request.id, file_url: attachmentUrl, user_id: user.id, file_name: file.name });
+        .insert({ request_id: request.id, file_url: urlData.publicUrl, user_id: user.id, file_name: file.name });
 
       if (error) {
         console.error("Attachment insert error:", error);
@@ -107,21 +100,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
         setSaveError(error.message || t.submitFailed);
         return;
       }
-    } else if (removeAttachment && user) {
-      const { error } = await supabase
-        .from("attachments")
-        .delete()
-        .eq("request_id", request.id)
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error("Attachment delete error:", error);
-        setSaving(false);
-        setSaveError(error.message || t.submitFailed);
-        return;
-      }
     }
-
 
     setSaving(false);
     onSaved();
@@ -148,7 +127,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
             <Label className={labelCls}>{t.attachPhoto}</Label>
             <p className="text-xs text-[hsl(var(--hero-muted))]">{t.attachHelper}</p>
 
-            {request.attachment_url && !removeAttachment && !file && (
+            {request.attachment_url && (
               <div className="flex items-center gap-3 rounded-md border border-white/15 bg-white/5 p-3">
                 <a
                   href={request.attachment_url}
@@ -158,14 +137,6 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
                 >
                   {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
                 </a>
-                <button
-                  type="button"
-                  onClick={() => setRemoveAttachment(true)}
-                  className="rounded-full p-1 hover:bg-white/10 transition-colors"
-                  aria-label="Remove attachment"
-                >
-                  <X className="h-4 w-4 text-[hsl(var(--hero-muted))]" />
-                </button>
               </div>
             )}
 
@@ -184,7 +155,7 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {!file && (removeAttachment || !request.attachment_url) && (
+            {!file && (
               <div
                 className="mt-1 flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-white/20 bg-[hsl(217_33%_17%)] hover:border-white/40 p-6 transition-colors cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
@@ -207,37 +178,12 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
               </div>
             )}
 
-            {request.attachment_url && !removeAttachment && !file && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="border-white/20 text-white hover:bg-white/10 bg-transparent mt-2"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {t.replaceAttachment || "Replace Attachment"}
-              </Button>
-            )}
-
-            {request.attachment_url && !removeAttachment && !file && (
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".png,.jpg,.jpeg,.pdf"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) handleFileSelect(f);
-                }}
-              />
-            )}
-
             {errors.attachment && <p className="text-sm text-destructive">{errors.attachment}</p>}
           </div>
 
           <Button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || !file}
             className="w-full rounded-lg bg-[hsl(var(--hero-cta))] text-white hover:bg-[hsl(224_76%_55%)] transition-colors"
           >
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
