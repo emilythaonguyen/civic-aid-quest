@@ -1007,7 +1007,7 @@ export const translations = {
     chartTitle: "Offen vs Gelöst nach Kategorie",
     chartDescription: "Zählungen aller Anfragen — keine persönlichen Informationen enthalten",
     noRequestsRecorded: "Noch keine Anfragen verzeichnet.",
-    openLabel: "Offen / In Bearbeitung",
+    openLabel: "Offen",
     resolvedLabel: "Gelöst / Geschlossen",
     privacyNotice: "Diese Seite zeigt nur aggregierte Zählungen an. Es werden keine Namen, E-Mail-Adressen, physischen Adressen, Telefonnummern oder andere persönliche Informationen angezeigt oder in API-Antworten zurückgegeben (S2-06 · F16 — Null-PII Öffentliches Dashboard).",
     lastUpdated: "Zuletzt aktualisiert:",
