@@ -131,16 +131,9 @@ export default function EditRequestDialog({ request, open, onOpenChange, onSaved
             <Label className={labelCls}>{t.attachPhoto}</Label>
             <p className="text-xs text-[hsl(var(--hero-muted))]">{t.attachHelper}</p>
 
-            {request.attachment_url && (
-              <div className="flex items-center gap-3 rounded-md border border-white/15 bg-white/5 p-3">
-                <a
-                  href={request.attachment_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center gap-1 text-sm text-[hsl(var(--hero-accent))] hover:underline truncate"
-                >
-                  {t.viewAttachedFile} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                </a>
+            {atLimit && !file && (
+              <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-400">
+                {t.maxAttachmentsReached || `Maximum of ${MAX_ATTACHMENTS} attachments reached.`}
               </div>
             )}
 
