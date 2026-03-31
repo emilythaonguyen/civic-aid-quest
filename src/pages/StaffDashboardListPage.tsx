@@ -154,6 +154,7 @@ export default function StaffDashboardListPage() {
         return false;
       return true;
     });
+    if (dateSort === "default") return result;
     return result.sort((a, b) => {
       const da = new Date(a.created_at).getTime();
       const db = new Date(b.created_at).getTime();
