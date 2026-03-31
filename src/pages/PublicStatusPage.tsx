@@ -229,7 +229,7 @@ export default function PublicStatusPage() {
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.totalRequests}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
-                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{totalOpen}</p>
+                  <p className="text-3xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{openCount}</p>
                   <p className="text-xs mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.openInProgress}</p>
                 </div>
                 <div className="rounded-xl pt-6 text-center pb-6" style={cardStyle}>
