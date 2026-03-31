@@ -8,6 +8,16 @@ import { Loader2, Star, CheckCircle2, ArrowLeft, LogOut } from "lucide-react";
 import { translations, isValidLanguage, type Language } from "@/i18n/citizenTranslations";
 import { translateFields } from "@/lib/translateToEnglish";
 
+// Map English default question text → translation key for static lookup
+const QUESTION_TEXT_MAP: Record<string, keyof typeof import("@/i18n/citizenTranslations").translations.en> = {
+  "Thank you for using our service. Please take a moment to share your experience.": "surveyIntroDefault",
+  "How would you rate the overall quality of service you received?": "surveyQ1",
+  "Was your issue resolved in a timely manner?": "surveyQ2",
+  "How would you rate the communication you received throughout the process?": "surveyQ3",
+  "Would you recommend this service to others?": "surveyQ4",
+  "Please share any additional feedback or suggestions for improvement.": "surveyQ5",
+};
+
 interface SurveyQuestion {
   id: string;
   text: string;
