@@ -10,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, ArrowLeft, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, AlertCircle, ChevronDown, Pencil } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { format } from "date-fns";
 import TicketAssignment from "@/components/TicketAssignment";
