@@ -72,6 +72,8 @@ export const translations = {
     chartDescription: "Counts across all requests — no personal information included",
     noRequestsRecorded: "No requests recorded yet.",
     openLabel: "Open",
+    inReviewLabel: "In Review",
+    escalatedLabel: "Escalated",
     resolvedLabel: "Resolved / Closed",
     privacyNotice: "This page displays aggregate counts only. No names, email addresses, physical addresses, phone numbers, or any other personal information are shown or returned in API responses (S2-06 · F16 — Zero-PII Public Dashboard).",
     lastUpdated: "Last updated:",
