@@ -23,10 +23,14 @@ import {
 interface CategoryStat {
   category: string;
   open: number;
+  inReview: number;
+  escalated: number;
   resolved: number;
 }
 
 const OPEN_COLOR = "#3B82F6";
+const IN_REVIEW_COLOR = "#D97706";
+const ESCALATED_COLOR = "#DC2626";
 const RESOLVED_COLOR_DARK = "#4ADE80";
 const RESOLVED_COLOR_LIGHT = "#16A34A";
 
