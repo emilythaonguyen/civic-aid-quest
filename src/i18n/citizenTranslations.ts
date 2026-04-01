@@ -1132,6 +1132,8 @@ export const translations = {
     chartDescription: "ספירה של כל הבקשות — ללא מידע אישי",
     noRequestsRecorded: "עדיין לא נרשמו בקשות.",
     openLabel: "פתוח",
+    inReviewLabel: "בבדיקה",
+    escalatedLabel: "הוסלם",
     resolvedLabel: "נפתר / סגור",
     privacyNotice: "דף זה מציג ספירות מצטברות בלבד. לא מוצגים שמות, כתובות דוא\"ל, כתובות פיזיות, מספרי טלפון או כל מידע אישי אחר.",
     lastUpdated: "עודכן לאחרונה:",
