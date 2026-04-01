@@ -16,7 +16,15 @@ import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, X } from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 
-const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
+const CATEGORY_OPTIONS = ["All", "Pothole", "Graffiti", "Dumping", "Broken Streetlight", "Other"] as const;
+
+const TYPE_DISPLAY: Record<string, string> = {
+  pothole: "Pothole",
+  graffiti: "Graffiti",
+  dumping: "Dumping",
+  streetlight: "Broken Streetlight",
+  other: "Other",
+};
 
 export default function StaffTicketQueuePage() {
   const { user, role, signOut, loading: authLoading } = useAuth();
@@ -105,7 +113,7 @@ export default function StaffTicketQueuePage() {
           .map((r: any) => ({
             id: r.id,
             citizen_name: r.profiles?.full_name ?? "Unknown",
-            category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
+            category: r.type ? (TYPE_DISPLAY[r.type] ?? "Other") : "Other",
             status: r.status ?? "Open",
             priority: r.triage_priority ?? null,
             location: r.location ?? "",
