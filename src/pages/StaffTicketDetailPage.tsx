@@ -514,12 +514,44 @@ export default function StaffTicketDetailPage() {
 
         {/* AI Resolution Suggestions */}
         <div className="border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800/40 rounded-lg p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
+            {!editingSuggestions && !suggestionsLoading && (
+              <button
+                onClick={() => { setEditingSuggestions(true); setSuggestionsMsg(null); }}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                title="Edit suggestions"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
           {suggestionsLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-2/3" />
+            </div>
+          ) : editingSuggestions ? (
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground">One suggestion per line. Use "Action: Detail" format.</p>
+              <Textarea
+                value={suggestionsText}
+                onChange={(e) => setSuggestionsText(e.target.value)}
+                rows={6}
+                className="text-sm"
+              />
+              <div className="flex items-center gap-2">
+                <Button size="sm" onClick={handleSaveSuggestions} disabled={savingSuggestions}>
+                  {savingSuggestions ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => {
+                  setEditingSuggestions(false);
+                  setSuggestionsText(suggestions.map((s) => `${s.action}: ${s.detail}`).join("\n"));
+                }}>
+                  Cancel
+                </Button>
+              </div>
             </div>
           ) : suggestionsFallback ? (
             <p className="text-sm text-muted-foreground">
@@ -536,6 +568,12 @@ export default function StaffTicketDetailPage() {
                 </li>
               ))}
             </ol>
+          )}
+          {suggestionsMsg && (
+            <div className={`flex items-center gap-1 text-xs ${suggestionsMsg.type === "success" ? "text-green-700" : "text-destructive"}`}>
+              {suggestionsMsg.type === "success" ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+              {suggestionsMsg.text}
+            </div>
           )}
         </div>
 
