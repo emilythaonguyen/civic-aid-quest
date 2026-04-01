@@ -128,7 +128,7 @@ export default function StaffDashboardListPage() {
         const mapped: TicketRow[] = (ticketRes.data ?? []).map((r: any) => ({
           id: r.id,
           citizen_name: r.profiles?.full_name ?? "Unknown",
-          category: r.type ? r.type.charAt(0).toUpperCase() + r.type.slice(1) : "Other",
+          category: r.type ? (TYPE_DISPLAY[r.type] ?? "Other") : "Other",
           status: r.status ?? "Open",
           priority: r.triage_priority ?? null,
           location: r.location ?? "",
