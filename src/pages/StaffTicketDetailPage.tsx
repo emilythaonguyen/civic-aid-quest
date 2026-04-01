@@ -10,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, ArrowLeft, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, AlertCircle, ChevronDown, Pencil } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { format } from "date-fns";
 import TicketAssignment from "@/components/TicketAssignment";
@@ -87,6 +88,19 @@ export default function StaffTicketDetailPage() {
   const [suggestions, setSuggestions] = useState<{ action: string; detail: string }[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(true);
   const [suggestionsFallback, setSuggestionsFallback] = useState(false);
+
+  // Editable priority
+  const PRIORITY_OPTIONS = ["Low", "Medium", "High"] as const;
+  const [editingPriority, setEditingPriority] = useState(false);
+  const [newPriority, setNewPriority] = useState("");
+  const [savingPriority, setSavingPriority] = useState(false);
+  const [priorityMsg, setPriorityMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Editable suggestions
+  const [editingSuggestions, setEditingSuggestions] = useState(false);
+  const [suggestionsText, setSuggestionsText] = useState("");
+  const [savingSuggestions, setSavingSuggestions] = useState(false);
+  const [suggestionsMsg, setSuggestionsMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Access control
   useEffect(() => {
@@ -200,6 +214,7 @@ export default function StaffTicketDetailPage() {
     setSuggestionsLoading(true);
     setSuggestionsFallback(false);
     setSuggestions([]);
+    setNewPriority(ticket.triage_priority ?? "");
 
     try {
       let parsed: any = ticket.suggestions;
@@ -223,6 +238,8 @@ export default function StaffTicketDetailPage() {
             : [];
 
       setSuggestions(steps);
+      // Build editable text from suggestions
+      setSuggestionsText(steps.map((s: any) => `${s.action}: ${s.detail}`).join("\n"));
       if (steps.length === 0) setSuggestionsFallback(true);
     } catch {
       setSuggestionsFallback(true);
@@ -230,6 +247,59 @@ export default function StaffTicketDetailPage() {
       setSuggestionsLoading(false);
     }
   }, [ticket]);
+
+  const handleSavePriority = async () => {
+    if (!ticket || !user || !newPriority) return;
+    setSavingPriority(true);
+    setPriorityMsg(null);
+    try {
+      const { error } = await supabase
+        .from("requests")
+        .update({ triage_priority: newPriority })
+        .eq("id", ticket.id);
+      if (error) throw error;
+      setTicket({ ...ticket, triage_priority: newPriority });
+      setEditingPriority(false);
+      setPriorityMsg({ type: "success", text: "Priority updated." });
+    } catch {
+      setPriorityMsg({ type: "error", text: "Failed to update priority." });
+    } finally {
+      setSavingPriority(false);
+    }
+  };
+
+  const handleSaveSuggestions = async () => {
+    if (!ticket || !user) return;
+    setSavingSuggestions(true);
+    setSuggestionsMsg(null);
+    try {
+      // Parse text back into steps format
+      const newSteps = suggestionsText
+        .split("\n")
+        .filter((line) => line.trim())
+        .map((line) => {
+          const colonIdx = line.indexOf(":");
+          if (colonIdx > 0) {
+            return { action: line.slice(0, colonIdx).trim(), detail: line.slice(colonIdx + 1).trim() };
+          }
+          return { action: line.trim(), detail: "" };
+        });
+      const payload = { steps: newSteps };
+      const { error } = await supabase
+        .from("requests")
+        .update({ suggestions: payload })
+        .eq("id", ticket.id);
+      if (error) throw error;
+      setTicket({ ...ticket, suggestions: payload });
+      setSuggestions(newSteps);
+      setEditingSuggestions(false);
+      setSuggestionsMsg({ type: "success", text: "Suggestions updated." });
+    } catch {
+      setSuggestionsMsg({ type: "error", text: "Failed to update suggestions." });
+    } finally {
+      setSavingSuggestions(false);
+    }
+  };
   
 
   const handleSaveStatus = async () => {
@@ -375,24 +445,62 @@ export default function StaffTicketDetailPage() {
           ) : (
             <div className="space-y-3 text-sm">
               <div>
-                <span className="text-muted-foreground">Priority</span>
-                <p className="mt-1">
-                  {ticket.triage_priority ? (
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
-                        ticket.triage_priority === "High"
-                          ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40"
-                          : ticket.triage_priority === "Medium"
-                          ? "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40"
-                          : "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40"
-                      }`}
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Priority</span>
+                  {!editingPriority && (
+                    <button
+                      onClick={() => { setEditingPriority(true); setPriorityMsg(null); }}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      title="Edit priority"
                     >
-                      {ticket.triage_priority}
-                    </span>
-                  ) : (
-                    "—"
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
                   )}
-                </p>
+                </div>
+                {editingPriority ? (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Select value={newPriority} onValueChange={setNewPriority}>
+                      <SelectTrigger className="w-[130px] h-8 text-sm">
+                        <SelectValue placeholder="Select…" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PRIORITY_OPTIONS.map((p) => (
+                          <SelectItem key={p} value={p}>{p}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button size="sm" onClick={handleSavePriority} disabled={savingPriority || !newPriority}>
+                      {savingPriority ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => { setEditingPriority(false); setNewPriority(ticket.triage_priority ?? ""); }}>
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <p className="mt-1">
+                    {ticket.triage_priority ? (
+                      <span
+                        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
+                          ticket.triage_priority === "High"
+                            ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40"
+                            : ticket.triage_priority === "Medium"
+                            ? "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40"
+                            : "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40"
+                        }`}
+                      >
+                        {ticket.triage_priority}
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </p>
+                )}
+                {priorityMsg && (
+                  <div className={`flex items-center gap-1 mt-1 text-xs ${priorityMsg.type === "success" ? "text-green-700" : "text-destructive"}`}>
+                    {priorityMsg.type === "success" ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                    {priorityMsg.text}
+                  </div>
+                )}
               </div>
               <div>
                 <span className="text-muted-foreground">Summary</span>
@@ -406,12 +514,44 @@ export default function StaffTicketDetailPage() {
 
         {/* AI Resolution Suggestions */}
         <div className="border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800/40 rounded-lg p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-foreground">AI Resolution Suggestions</h3>
+            {!editingSuggestions && !suggestionsLoading && (
+              <button
+                onClick={() => { setEditingSuggestions(true); setSuggestionsMsg(null); }}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                title="Edit suggestions"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
           {suggestionsLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-2/3" />
+            </div>
+          ) : editingSuggestions ? (
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground">One suggestion per line. Use "Action: Detail" format.</p>
+              <Textarea
+                value={suggestionsText}
+                onChange={(e) => setSuggestionsText(e.target.value)}
+                rows={6}
+                className="text-sm"
+              />
+              <div className="flex items-center gap-2">
+                <Button size="sm" onClick={handleSaveSuggestions} disabled={savingSuggestions}>
+                  {savingSuggestions ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => {
+                  setEditingSuggestions(false);
+                  setSuggestionsText(suggestions.map((s) => `${s.action}: ${s.detail}`).join("\n"));
+                }}>
+                  Cancel
+                </Button>
+              </div>
             </div>
           ) : suggestionsFallback ? (
             <p className="text-sm text-muted-foreground">
@@ -428,6 +568,12 @@ export default function StaffTicketDetailPage() {
                 </li>
               ))}
             </ol>
+          )}
+          {suggestionsMsg && (
+            <div className={`flex items-center gap-1 text-xs ${suggestionsMsg.type === "success" ? "text-green-700" : "text-destructive"}`}>
+              {suggestionsMsg.type === "success" ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+              {suggestionsMsg.text}
+            </div>
           )}
         </div>
 
