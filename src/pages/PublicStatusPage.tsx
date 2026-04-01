@@ -276,7 +276,7 @@ export default function PublicStatusPage() {
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "#E2E8F0"} />
                         <XAxis
                           dataKey="category"
-                          tick={{ fontSize: 10, fill: "#64748B" }}
+                          tick={{ fontSize: 13, fill: "#64748B" }}
                           angle={-30}
                           textAnchor="end"
                           interval={0}
