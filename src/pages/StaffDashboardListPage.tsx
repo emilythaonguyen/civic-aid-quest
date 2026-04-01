@@ -22,6 +22,14 @@ import { Loader2, X } from "lucide-react";
 
 const CATEGORY_OPTIONS = ["All", "Pothole", "Graffiti", "Dumping", "Broken Streetlight", "Other"] as const;
 
+const TYPE_DISPLAY: Record<string, string> = {
+  pothole: "Pothole",
+  graffiti: "Graffiti",
+  dumping: "Dumping",
+  streetlight: "Broken Streetlight",
+  other: "Other",
+};
+
 
 export default function StaffDashboardListPage() {
   const { user, signOut, role, loading: authLoading } = useAuth();

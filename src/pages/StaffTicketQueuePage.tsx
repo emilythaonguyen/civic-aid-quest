@@ -18,6 +18,14 @@ import StaffHeader from "@/components/StaffHeader";
 
 const CATEGORY_OPTIONS = ["All", "Pothole", "Graffiti", "Dumping", "Broken Streetlight", "Other"] as const;
 
+const TYPE_DISPLAY: Record<string, string> = {
+  pothole: "Pothole",
+  graffiti: "Graffiti",
+  dumping: "Dumping",
+  streetlight: "Broken Streetlight",
+  other: "Other",
+};
+
 export default function StaffTicketQueuePage() {
   const { user, role, signOut, loading: authLoading } = useAuth();
   const { staffId } = useParams<{ staffId: string }>();
