@@ -23,10 +23,14 @@ import {
 interface CategoryStat {
   category: string;
   open: number;
+  inReview: number;
+  escalated: number;
   resolved: number;
 }
 
 const OPEN_COLOR = "#3B82F6";
+const IN_REVIEW_COLOR = "#D97706";
+const ESCALATED_COLOR = "#DC2626";
 const RESOLVED_COLOR_DARK = "#4ADE80";
 const RESOLVED_COLOR_LIGHT = "#16A34A";
 
@@ -86,13 +90,17 @@ export default function PublicStatusPage() {
 
       const rows = data ?? [];
 
-      const map: Record<string, { open: number; resolved: number }> = {};
+      const map: Record<string, { open: number; inReview: number; escalated: number; resolved: number }> = {};
       rows.forEach((r) => {
         const cat = r.type || "Other";
-        if (!map[cat]) map[cat] = { open: 0, resolved: 0 };
+        if (!map[cat]) map[cat] = { open: 0, inReview: 0, escalated: 0, resolved: 0 };
         const s = (r.status ?? "").toLowerCase();
         if (s === "open" || s === "in progress") {
           map[cat].open += 1;
+        } else if (s === "in review") {
+          map[cat].inReview += 1;
+        } else if (s === "escalated") {
+          map[cat].escalated += 1;
         } else if (s === "closed" || s === "resolved") {
           map[cat].resolved += 1;
         }
@@ -258,15 +266,17 @@ export default function PublicStatusPage() {
                       {t.noRequestsRecorded}
                     </div>
                   ) : (
-                    <ResponsiveContainer width="100%" height={320}>
+                    <ResponsiveContainer width="100%" height={300}>
                       <BarChart
                         data={stats}
                         margin={{ top: 8, right: 16, left: 0, bottom: 40 }}
+                        barCategoryGap="20%"
+                        barGap={1}
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "#E2E8F0"} />
                         <XAxis
                           dataKey="category"
-                          tick={{ fontSize: 11, fill: "#64748B" }}
+                          tick={{ fontSize: 10, fill: "#64748B" }}
                           angle={-30}
                           textAnchor="end"
                           interval={0}
@@ -285,9 +295,11 @@ export default function PublicStatusPage() {
                           }}
                           labelStyle={{ color: isDark ? "#fff" : "#0F172A" }}
                         />
-                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8, color: isDark ? "#CBD5E1" : "#64748B" }} />
-                        <Bar dataKey="open" name={t.openLabel} fill={OPEN_COLOR} radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="resolved" name={t.resolvedLabel} fill={resolvedColor} radius={[4, 4, 0, 0]} />
+                        <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8, color: isDark ? "#CBD5E1" : "#64748B" }} />
+                        <Bar dataKey="open" name={t.openLabel} fill={OPEN_COLOR} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="inReview" name={t.inReviewLabel} fill={IN_REVIEW_COLOR} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="escalated" name={t.escalatedLabel} fill={ESCALATED_COLOR} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="resolved" name={t.resolvedLabel} fill={resolvedColor} radius={[3, 3, 0, 0]} maxBarSize={28} />
                       </BarChart>
                     </ResponsiveContainer>
                   )}
