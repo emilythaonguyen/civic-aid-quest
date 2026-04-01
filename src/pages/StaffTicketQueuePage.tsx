@@ -16,7 +16,7 @@ import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, X } from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 
-const CATEGORY_OPTIONS = ["All", "Road", "Lighting", "Sanitation", "Parks", "Other"] as const;
+const CATEGORY_OPTIONS = ["All", "Pothole", "Graffiti", "Dumping", "Broken Streetlight", "Other"] as const;
 
 export default function StaffTicketQueuePage() {
   const { user, role, signOut, loading: authLoading } = useAuth();
