@@ -214,6 +214,7 @@ export default function StaffTicketDetailPage() {
     setSuggestionsLoading(true);
     setSuggestionsFallback(false);
     setSuggestions([]);
+    setNewPriority(ticket.triage_priority ?? "");
 
     try {
       let parsed: any = ticket.suggestions;
@@ -237,6 +238,8 @@ export default function StaffTicketDetailPage() {
             : [];
 
       setSuggestions(steps);
+      // Build editable text from suggestions
+      setSuggestionsText(steps.map((s: any) => `${s.action}: ${s.detail}`).join("\n"));
       if (steps.length === 0) setSuggestionsFallback(true);
     } catch {
       setSuggestionsFallback(true);
@@ -244,6 +247,59 @@ export default function StaffTicketDetailPage() {
       setSuggestionsLoading(false);
     }
   }, [ticket]);
+
+  const handleSavePriority = async () => {
+    if (!ticket || !user || !newPriority) return;
+    setSavingPriority(true);
+    setPriorityMsg(null);
+    try {
+      const { error } = await supabase
+        .from("requests")
+        .update({ triage_priority: newPriority })
+        .eq("id", ticket.id);
+      if (error) throw error;
+      setTicket({ ...ticket, triage_priority: newPriority });
+      setEditingPriority(false);
+      setPriorityMsg({ type: "success", text: "Priority updated." });
+    } catch {
+      setPriorityMsg({ type: "error", text: "Failed to update priority." });
+    } finally {
+      setSavingPriority(false);
+    }
+  };
+
+  const handleSaveSuggestions = async () => {
+    if (!ticket || !user) return;
+    setSavingSuggestions(true);
+    setSuggestionsMsg(null);
+    try {
+      // Parse text back into steps format
+      const newSteps = suggestionsText
+        .split("\n")
+        .filter((line) => line.trim())
+        .map((line) => {
+          const colonIdx = line.indexOf(":");
+          if (colonIdx > 0) {
+            return { action: line.slice(0, colonIdx).trim(), detail: line.slice(colonIdx + 1).trim() };
+          }
+          return { action: line.trim(), detail: "" };
+        });
+      const payload = { steps: newSteps };
+      const { error } = await supabase
+        .from("requests")
+        .update({ suggestions: payload })
+        .eq("id", ticket.id);
+      if (error) throw error;
+      setTicket({ ...ticket, suggestions: payload });
+      setSuggestions(newSteps);
+      setEditingSuggestions(false);
+      setSuggestionsMsg({ type: "success", text: "Suggestions updated." });
+    } catch {
+      setSuggestionsMsg({ type: "error", text: "Failed to update suggestions." });
+    } finally {
+      setSavingSuggestions(false);
+    }
+  };
   
 
   const handleSaveStatus = async () => {
