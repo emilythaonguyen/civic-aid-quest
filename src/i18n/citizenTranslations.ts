@@ -814,6 +814,8 @@ export const translations = {
     chartDescription: "أعداد جميع الطلبات — لا تتضمن معلومات شخصية",
     noRequestsRecorded: "لم يتم تسجيل أي طلبات بعد.",
     openLabel: "مفتوح",
+    inReviewLabel: "قيد المراجعة",
+    escalatedLabel: "تم التصعيد",
     resolvedLabel: "تم حلها / مغلقة",
     privacyNotice: "تعرض هذه الصفحة أعداداً إجمالية فقط. لا يتم عرض أو إرجاع أي أسماء أو عناوين بريد إلكتروني أو عناوين فعلية أو أرقام هواتف أو أي معلومات شخصية أخرى في استجابات API (S2-06 · F16 — لوحة معلومات عامة بدون PII).",
     lastUpdated: "آخر تحديث:",
