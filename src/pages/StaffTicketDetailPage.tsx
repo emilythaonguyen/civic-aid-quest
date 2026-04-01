@@ -89,6 +89,19 @@ export default function StaffTicketDetailPage() {
   const [suggestionsLoading, setSuggestionsLoading] = useState(true);
   const [suggestionsFallback, setSuggestionsFallback] = useState(false);
 
+  // Editable priority
+  const PRIORITY_OPTIONS = ["Low", "Medium", "High"] as const;
+  const [editingPriority, setEditingPriority] = useState(false);
+  const [newPriority, setNewPriority] = useState("");
+  const [savingPriority, setSavingPriority] = useState(false);
+  const [priorityMsg, setPriorityMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Editable suggestions
+  const [editingSuggestions, setEditingSuggestions] = useState(false);
+  const [suggestionsText, setSuggestionsText] = useState("");
+  const [savingSuggestions, setSavingSuggestions] = useState(false);
+  const [suggestionsMsg, setSuggestionsMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
   // Access control
   useEffect(() => {
     if (authLoading) return;
