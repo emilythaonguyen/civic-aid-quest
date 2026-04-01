@@ -178,6 +178,8 @@ export const translations = {
     chartDescription: "Conteos de todas las solicitudes — no se incluye información personal",
     noRequestsRecorded: "Aún no se han registrado solicitudes.",
     openLabel: "Abierto",
+    inReviewLabel: "En Revisión",
+    escalatedLabel: "Escalado",
     resolvedLabel: "Resueltas / Cerradas",
     privacyNotice: "Esta página muestra solo conteos agregados. No se muestran ni se devuelven en las respuestas de la API nombres, direcciones de correo electrónico, direcciones físicas, números de teléfono ni ninguna otra información personal (S2-06 · F16 — Panel Público Sin PII).",
     lastUpdated: "Última actualización:",
