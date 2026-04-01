@@ -90,13 +90,17 @@ export default function PublicStatusPage() {
 
       const rows = data ?? [];
 
-      const map: Record<string, { open: number; resolved: number }> = {};
+      const map: Record<string, { open: number; inReview: number; escalated: number; resolved: number }> = {};
       rows.forEach((r) => {
         const cat = r.type || "Other";
-        if (!map[cat]) map[cat] = { open: 0, resolved: 0 };
+        if (!map[cat]) map[cat] = { open: 0, inReview: 0, escalated: 0, resolved: 0 };
         const s = (r.status ?? "").toLowerCase();
         if (s === "open" || s === "in progress") {
           map[cat].open += 1;
+        } else if (s === "in review") {
+          map[cat].inReview += 1;
+        } else if (s === "escalated") {
+          map[cat].escalated += 1;
         } else if (s === "closed" || s === "resolved") {
           map[cat].resolved += 1;
         }
