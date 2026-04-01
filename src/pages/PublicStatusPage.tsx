@@ -266,15 +266,17 @@ export default function PublicStatusPage() {
                       {t.noRequestsRecorded}
                     </div>
                   ) : (
-                    <ResponsiveContainer width="100%" height={320}>
+                    <ResponsiveContainer width="100%" height={300}>
                       <BarChart
                         data={stats}
                         margin={{ top: 8, right: 16, left: 0, bottom: 40 }}
+                        barCategoryGap="20%"
+                        barGap={1}
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "#E2E8F0"} />
                         <XAxis
                           dataKey="category"
-                          tick={{ fontSize: 11, fill: "#64748B" }}
+                          tick={{ fontSize: 10, fill: "#64748B" }}
                           angle={-30}
                           textAnchor="end"
                           interval={0}
@@ -293,9 +295,11 @@ export default function PublicStatusPage() {
                           }}
                           labelStyle={{ color: isDark ? "#fff" : "#0F172A" }}
                         />
-                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8, color: isDark ? "#CBD5E1" : "#64748B" }} />
-                        <Bar dataKey="open" name={t.openLabel} fill={OPEN_COLOR} radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="resolved" name={t.resolvedLabel} fill={resolvedColor} radius={[4, 4, 0, 0]} />
+                        <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8, color: isDark ? "#CBD5E1" : "#64748B" }} />
+                        <Bar dataKey="open" name={t.openLabel} fill={OPEN_COLOR} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="inReview" name={t.inReviewLabel} fill={IN_REVIEW_COLOR} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="escalated" name={t.escalatedLabel} fill={ESCALATED_COLOR} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="resolved" name={t.resolvedLabel} fill={resolvedColor} radius={[3, 3, 0, 0]} maxBarSize={28} />
                       </BarChart>
                     </ResponsiveContainer>
                   )}
