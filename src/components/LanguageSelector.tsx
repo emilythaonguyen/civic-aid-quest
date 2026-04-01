@@ -17,19 +17,19 @@ interface LanguageSelectorProps {
 
 const languages: { code: Language; flag: string; label: string; shortLabel: string }[] = [
   { code: "en", flag: "🇺🇸", label: "English", shortLabel: "English" },
-  { code: "es", flag: "🇪🇸", label: "Spanish (Español)", shortLabel: "Spanish" },
-  { code: "fr", flag: "🇫🇷", label: "French (Français)", shortLabel: "French" },
-  { code: "pt", flag: "🇵🇹", label: "Portuguese (Português)", shortLabel: "Portuguese" },
-  { code: "vi", flag: "🇻🇳", label: "Vietnamese (Tiếng Việt)", shortLabel: "Vietnamese" },
-  { code: "zh", flag: "🇨🇳", label: "Chinese Simplified (中文)", shortLabel: "Chinese" },
-  { code: "ko", flag: "🇰🇷", label: "Korean (한국어)", shortLabel: "Korean" },
-  { code: "ar", flag: "🇸🇦", label: "Arabic (العربية)", shortLabel: "Arabic" },
-  { code: "ht", flag: "🇭🇹", label: "Haitian Creole (Kreyòl Ayisyen)", shortLabel: "Haitian" },
-  { code: "de", flag: "🇩🇪", label: "German (Deutsch)", shortLabel: "German" },
-  { code: "he", flag: "🇮🇱", label: "Hebrew (עברית)", shortLabel: "Hebrew" },
-  { code: "ta", flag: "🇮🇳", label: "Tamil (தமிழ்)", shortLabel: "Tamil" },
-  { code: "ml", flag: "🇮🇳", label: "Malayalam (മലയാളം)", shortLabel: "Malayalam" },
-  { code: "hi", flag: "🇮🇳", label: "Hindi (हिन्दी)", shortLabel: "Hindi" },
+  { code: "es", flag: "🇪🇸", label: "Spanish (Español)", shortLabel: "Español" },
+  { code: "fr", flag: "🇫🇷", label: "French (Français)", shortLabel: "Français" },
+  { code: "pt", flag: "🇵🇹", label: "Portuguese (Português)", shortLabel: "Português" },
+  { code: "vi", flag: "🇻🇳", label: "Vietnamese (Tiếng Việt)", shortLabel: "Tiếng Việt" },
+  { code: "zh", flag: "🇨🇳", label: "Chinese Simplified (中文)", shortLabel: "中文" },
+  { code: "ko", flag: "🇰🇷", label: "Korean (한국어)", shortLabel: "한국어" },
+  { code: "ar", flag: "🇸🇦", label: "Arabic (العربية)", shortLabel: "العربية" },
+  { code: "ht", flag: "🇭🇹", label: "Haitian Creole (Kreyòl Ayisyen)", shortLabel: "Kreyòl" },
+  { code: "de", flag: "🇩🇪", label: "German (Deutsch)", shortLabel: "Deutsch" },
+  { code: "he", flag: "🇮🇱", label: "Hebrew (עברית)", shortLabel: "עברית" },
+  { code: "ta", flag: "🇮🇳", label: "Tamil (தமிழ்)", shortLabel: "தமிழ்" },
+  { code: "ml", flag: "🇮🇳", label: "Malayalam (മലയാളം)", shortLabel: "മലയാളം" },
+  { code: "hi", flag: "🇮🇳", label: "Hindi (हिन्दी)", shortLabel: "हिन्दी" },
 ];
 
 export default function LanguageSelector({ language, onChange, className }: LanguageSelectorProps) {
