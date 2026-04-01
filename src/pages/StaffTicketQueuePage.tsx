@@ -16,13 +16,13 @@ import type { TicketRow } from "@/components/TicketTable";
 import { Loader2, X } from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 
-const CATEGORY_OPTIONS = ["All", "Pothole", "Graffiti", "Dumping", "Broken Streetlight", "Other"] as const;
+const CATEGORY_OPTIONS = ["All", "Pothole", "Graffiti", "Dumping", "Streetlight", "Other"] as const;
 
 const TYPE_DISPLAY: Record<string, string> = {
   pothole: "Pothole",
   graffiti: "Graffiti",
   dumping: "Dumping",
-  streetlight: "Broken Streetlight",
+  streetlight: "Streetlight",
   other: "Other",
 };
 
