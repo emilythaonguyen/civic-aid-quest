@@ -445,24 +445,62 @@ export default function StaffTicketDetailPage() {
           ) : (
             <div className="space-y-3 text-sm">
               <div>
-                <span className="text-muted-foreground">Priority</span>
-                <p className="mt-1">
-                  {ticket.triage_priority ? (
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
-                        ticket.triage_priority === "High"
-                          ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40"
-                          : ticket.triage_priority === "Medium"
-                          ? "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40"
-                          : "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40"
-                      }`}
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Priority</span>
+                  {!editingPriority && (
+                    <button
+                      onClick={() => { setEditingPriority(true); setPriorityMsg(null); }}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      title="Edit priority"
                     >
-                      {ticket.triage_priority}
-                    </span>
-                  ) : (
-                    "—"
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
                   )}
-                </p>
+                </div>
+                {editingPriority ? (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Select value={newPriority} onValueChange={setNewPriority}>
+                      <SelectTrigger className="w-[130px] h-8 text-sm">
+                        <SelectValue placeholder="Select…" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PRIORITY_OPTIONS.map((p) => (
+                          <SelectItem key={p} value={p}>{p}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button size="sm" onClick={handleSavePriority} disabled={savingPriority || !newPriority}>
+                      {savingPriority ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => { setEditingPriority(false); setNewPriority(ticket.triage_priority ?? ""); }}>
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <p className="mt-1">
+                    {ticket.triage_priority ? (
+                      <span
+                        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
+                          ticket.triage_priority === "High"
+                            ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800/40"
+                            : ticket.triage_priority === "Medium"
+                            ? "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/40"
+                            : "bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-800/40"
+                        }`}
+                      >
+                        {ticket.triage_priority}
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </p>
+                )}
+                {priorityMsg && (
+                  <div className={`flex items-center gap-1 mt-1 text-xs ${priorityMsg.type === "success" ? "text-green-700" : "text-destructive"}`}>
+                    {priorityMsg.type === "success" ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                    {priorityMsg.text}
+                  </div>
+                )}
               </div>
               <div>
                 <span className="text-muted-foreground">Summary</span>
