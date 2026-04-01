@@ -1450,6 +1450,8 @@ export const translations = {
     chartDescription: "सभी अनुरोधों की गिनती — कोई व्यक्तिगत जानकारी शामिल नहीं",
     noRequestsRecorded: "अभी तक कोई अनुरोध दर्ज नहीं.",
     openLabel: "खुला",
+    inReviewLabel: "समीक्षाधीन",
+    escalatedLabel: "एस्केलेटेड",
     resolvedLabel: "हल किया गया / बंद",
     privacyNotice: "यह पेज केवल कुल गणना दिखाता है. नाम, ईमेल पते, भौतिक पते, फ़ोन नंबर या कोई अन्य व्यक्तिगत जानकारी नहीं दिखाई जाती.",
     lastUpdated: "अंतिम अपडेट:",
