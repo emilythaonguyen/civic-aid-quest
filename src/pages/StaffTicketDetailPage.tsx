@@ -580,9 +580,9 @@ export default function StaffTicketDetailPage() {
         {/* Status update */}
         <div className="border rounded-lg p-4 space-y-3">
           <h3 className="text-sm font-semibold text-foreground">Update Status</h3>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Select value={newStatus} onValueChange={setNewStatus}>
-              <SelectTrigger className="w-[180px] h-9 text-sm">
+              <SelectTrigger className="w-full sm:w-[180px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
