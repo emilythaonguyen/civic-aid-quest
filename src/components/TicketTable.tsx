@@ -94,8 +94,8 @@ export default function TicketTable({ title, tickets }: TicketTableProps) {
           No tickets.
         </div>
       ) : (
-        <div className="border rounded-lg">
-          <Table className="table-fixed w-full">
+        <div className="border rounded-lg overflow-x-auto">
+          <Table className="table-fixed w-full min-w-[700px]">
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[10%]">Ticket ID</TableHead>
