@@ -368,9 +368,9 @@ export default function StaffTicketDetailPage() {
       {/* Header */}
       <StaffHeader staffName={staffName} />
 
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 overflow-hidden">
         {/* Back links */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <Link
             to="/staff/dashboard"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
@@ -392,9 +392,9 @@ export default function StaffTicketDetailPage() {
           <h2 className="text-xl font-bold text-foreground">Ticket Details</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
-            <div>
+            <div className="min-w-0">
               <span className="text-muted-foreground">Ticket ID</span>
-              <p className="font-mono mt-0.5">{ticket.id}</p>
+              <p className="font-mono mt-0.5 text-xs sm:text-sm break-all">{ticket.id}</p>
             </div>
             <div>
               <span className="text-muted-foreground">Submitted by</span>
@@ -580,9 +580,9 @@ export default function StaffTicketDetailPage() {
         {/* Status update */}
         <div className="border rounded-lg p-4 space-y-3">
           <h3 className="text-sm font-semibold text-foreground">Update Status</h3>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Select value={newStatus} onValueChange={setNewStatus}>
-              <SelectTrigger className="w-[180px] h-9 text-sm">
+              <SelectTrigger className="w-full sm:w-[180px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
