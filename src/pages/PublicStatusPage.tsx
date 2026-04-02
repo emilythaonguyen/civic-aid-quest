@@ -152,20 +152,20 @@ export default function PublicStatusPage() {
       <div className="relative z-10">
         {/* Header */}
         <header
-          className="px-6 py-4 flex items-center justify-between"
+          className="px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-2"
           style={{
             backgroundColor: isDark ? "#0F172A" : "#FFFFFF",
             borderBottom: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #E2E8F0",
           }}
         >
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.citizenConnect}</h1>
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <h1 className="text-lg sm:text-xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.citizenConnect}</h1>
             <Button
               size="sm"
               variant="outline"
               className={isDark
-                ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
-                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+                ? "border-white/20 text-white hover:bg-white/10 bg-transparent text-xs sm:text-sm"
+                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent text-xs sm:text-sm"
               }
               onClick={() => navigate("/status")}
             >
@@ -175,25 +175,25 @@ export default function PublicStatusPage() {
               size="sm"
               variant="outline"
               className={isDark
-                ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
-                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+                ? "border-white/20 text-white hover:bg-white/10 bg-transparent text-xs sm:text-sm"
+                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent text-xs sm:text-sm"
               }
               onClick={() => navigate("/portal")}
             >
               {t.myPortal}
             </Button>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
             <ThemeToggle className={isDark ? "text-white hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} lightLabel={t.lightModeLabel} darkLabel={t.darkModeLabel} />
             <LanguageSelector language={language} onChange={handleLanguageChange} className={isDark ? "text-white hover:text-black hover:bg-white/10" : "text-[#0F172A] hover:bg-gray-100"} />
-            <span className="text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{user?.user_metadata?.full_name || user?.email}</span>
+            <span className="text-xs sm:text-sm" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{user?.user_metadata?.full_name || user?.email}</span>
             
             <Button
               variant="outline"
               size="sm"
               className={isDark
-                ? "border-white/20 text-white hover:bg-white/10 bg-transparent"
-                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent"
+                ? "border-white/20 text-white hover:bg-white/10 bg-transparent text-xs sm:text-sm"
+                : "border-[#CBD5E1] text-[#0F172A] hover:bg-gray-50 bg-transparent text-xs sm:text-sm"
               }
               onClick={async () => { await signOut(); navigate("/"); }}
             >
