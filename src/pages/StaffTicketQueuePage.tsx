@@ -167,11 +167,11 @@ export default function StaffTicketQueuePage() {
         </h2>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-end gap-3">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-end gap-3">
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Category</label>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[150px] h-9 text-sm">
+              <SelectTrigger className="w-full sm:w-[150px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -184,7 +184,7 @@ export default function StaffTicketQueuePage() {
           <div className="space-y-1">
             <label className="text-xs font-medium text-muted-foreground">Assignment</label>
             <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
-              <SelectTrigger className="w-[150px] h-9 text-sm">
+              <SelectTrigger className="w-full sm:w-[150px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -194,17 +194,17 @@ export default function StaffTicketQueuePage() {
               </SelectContent>
             </Select>
            </div>
-          <div className="space-y-1">
+          <div className="space-y-1 col-span-2 sm:col-span-1">
             <label className="text-xs font-medium text-muted-foreground">Location</label>
             <Input
               placeholder="Filter by location…"
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value)}
-              className="w-[200px] h-9 text-sm"
+              className="w-full sm:w-[200px] h-9 text-sm"
             />
           </div>
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 h-9">
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 h-9 col-span-2 sm:col-span-1">
               <X className="h-3.5 w-3.5" />
               Clear Filters
             </Button>
