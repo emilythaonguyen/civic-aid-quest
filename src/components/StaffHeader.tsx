@@ -46,19 +46,19 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
     item.to ?? (user ? `/staff/tickets/${user.id}` : "#");
 
   return (
-    <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-6">
-      <div className="flex items-center gap-4">
-        <h1 className="text-lg font-bold text-primary">
+    <header className="border-b bg-card px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
+        <h1 className="text-base sm:text-lg font-bold text-primary">
           Civic Service Tracker — Staff Portal
         </h1>
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-2 flex-wrap">
           {visibleItems.map((item) =>
             item.label === activePage ? (
-              <Button key={item.label} size="sm" variant="default" disabled>
+              <Button key={item.label} size="sm" variant="default" disabled className="text-xs sm:text-sm">
                 {item.label}
               </Button>
             ) : (
-              <Button key={item.label} size="sm" variant="outline" asChild>
+              <Button key={item.label} size="sm" variant="outline" asChild className="text-xs sm:text-sm">
                 <Link to={resolveLink(item)}>{item.label}</Link>
               </Button>
             )
@@ -66,13 +66,13 @@ export default function StaffHeader({ staffName, activePage }: StaffHeaderProps)
           {role === "manager" && <HcdDropdown />}
         </nav>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 flex-wrap">
         <ThemeToggle />
-        <span className="text-sm text-muted-foreground min-w-[60px]">
+        <span className="text-xs sm:text-sm text-muted-foreground">
           {staffName || "\u00A0"}
         </span>
         
-        <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
+        <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5 text-xs sm:text-sm">
           <LogOut className="h-3.5 w-3.5" />
           Logout
         </Button>
