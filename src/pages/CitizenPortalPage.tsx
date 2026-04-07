@@ -255,7 +255,7 @@ export default function CitizenPortalPage() {
                         <Badge variant="outline" className={statusClass(req.status)}>
                           {req.status}
                         </Badge>
-                        <span className="text-xs whitespace-nowrap" style={{ color: isDark ? "#94A3B8" : "#475569" }}>
+                        <span className="text-xs whitespace-nowrap" style={{ color: isDark ? "#FFFFFF" : "#475569" }}>
                           {format(new Date(req.created_at), "MMM dd, yyyy")}
                         </span>
                       </div>
