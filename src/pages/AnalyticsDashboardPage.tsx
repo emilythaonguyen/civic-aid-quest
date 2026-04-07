@@ -3,7 +3,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, BarChart3, Clock, FileText, TrendingUp, Search, AlertTriangle } from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
@@ -157,7 +156,6 @@ export default function AnalyticsDashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="text-xs">S2-05 · F7</Badge>
             <Button variant="outline" size="sm" onClick={fetchAnalytics} disabled={loading}>
               {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Refresh"}
             </Button>
