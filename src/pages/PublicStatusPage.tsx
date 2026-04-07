@@ -193,15 +193,6 @@ export default function PublicStatusPage() {
           <div>
             <h2 className="text-2xl font-bold" style={{ color: isDark ? "#FFFFFF" : "#0F172A" }}>{t.serviceRequestStatus}</h2>
             <p className="text-sm mt-1" style={{ color: isDark ? "#94A3B8" : "#475569" }}>{t.statusSubtitle}</p>
-            <span
-              className="inline-block text-xs mt-2 px-2.5 py-1 rounded-md"
-              style={isDark
-                ? { backgroundColor: "#1E293B", border: "1px solid rgba(255,255,255,0.1)", color: "#94A3B8" }
-                : { backgroundColor: "#F1F5F9", border: "1px solid #E2E8F0", color: "#475569" }
-              }
-            >
-              S2-06 · F16
-            </span>
           </div>
 
           {error && (
