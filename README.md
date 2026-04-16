@@ -1,3 +1,6 @@
-# Welcome to your Lovable project
+# Civic Aid Quest
 
-TODO: Document your project here
+A app made in lovable that allows citizens to send civic aid requests, optimized usability on the staff side. 
+
+Created as a capstone project for Axel Informatics!
+
